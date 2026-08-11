@@ -36,8 +36,32 @@
     font-size: 3rem;
     letter-spacing: 4px;
     text-transform: uppercase;
-    color: var(--gold-light);
-    text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+    background: linear-gradient(
+      90deg,
+      #7a5c14 0%,
+      #d4af37 20%,
+      #fff3c4 40%,
+      #f0d97d 50%,
+      #fff3c4 60%,
+      #d4af37 80%,
+      #7a5c14 100%
+    );
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: shimmer 5s linear infinite;
+    filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.4));
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 300% 50%;
+    }
   }
 
   .subtitle {
