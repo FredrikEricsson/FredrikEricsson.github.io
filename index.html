@@ -1,1 +1,140 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BODA CNC-VERKSTAD</title>
+<style>
+  :root {
+    --gold: #d4af37;
+    --gold-light: #f0d97d;
+    --black: #0a0a0a;
+  }
 
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: var(--black);
+    color: var(--gold);
+    font-family: 'Segoe UI', Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    padding: 60px 20px 40px;
+    text-align: center;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+  }
+
+  h1 {
+    font-size: 3rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+  }
+
+  .subtitle {
+    margin-top: 15px;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    color: var(--gold);
+    opacity: 0.85;
+  }
+
+  main {
+    flex: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 50px 20px;
+    text-align: center;
+  }
+
+  main p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 20px;
+    color: #e8d9a0;
+  }
+
+  .services {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-top: 40px;
+  }
+
+  .service-card {
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    padding: 25px 30px;
+    border-radius: 8px;
+    min-width: 200px;
+    transition: all 0.3s ease;
+  }
+
+  .service-card:hover {
+    background-color: rgba(212, 175, 55, 0.08);
+    border-color: var(--gold-light);
+  }
+
+  .service-card h3 {
+    color: var(--gold-light);
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+  }
+
+  .service-card p {
+    font-size: 0.95rem;
+    color: #c9b878;
+    margin-bottom: 0;
+  }
+
+  footer {
+    text-align: center;
+    padding: 25px;
+    font-size: 0.85rem;
+    color: rgba(212, 175, 55, 0.6);
+    border-top: 1px solid rgba(212, 175, 55, 0.3);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Boda CNC-Verkstad</h1>
+  <div class="subtitle">Precision i varje detalj</div>
+</header>
+
+<main>
+  <p>Välkommen till Boda CNC-Verkstad. Vi levererar högkvalitativ CNC-bearbetning
+     med precision, noggrannhet och pålitlighet i varje projekt.</p>
+
+  <div class="services">
+    <div class="service-card">
+      <h3>CNC-fräsning</h3>
+      <p>Exakt bearbetning för alla typer av material.</p>
+    </div>
+    <div class="service-card">
+      <h3>CNC-svarvning</h3>
+      <p>Precisionssvarvade komponenter enligt önskad ritning.</p>
+    </div>
+    <div class="service-card">
+      <h3>Kundanpassning</h3>
+      <p>Skräddarsydda lösningar efter dina specifikationer.</p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  &copy; 2026 Boda CNC-Verkstad. Alla rättigheter förbehållna.
+</footer>
+
+</body>
+</html>
