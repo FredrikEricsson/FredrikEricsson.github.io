@@ -127,9 +127,140 @@
     color: rgba(212, 175, 55, 0.6);
     border-top: 1px solid rgba(212, 175, 55, 0.3);
   }
+
+  /* --- Hamburgermeny --- */
+  .menu-btn {
+    position: fixed;
+    top: 25px;
+    left: 25px;
+    z-index: 1100;
+    width: 44px;
+    height: 44px;
+    background: rgba(10, 10, 10, 0.7);
+    border: 1px solid rgba(212, 175, 55, 0.5);
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+  }
+
+  .menu-btn span {
+    width: 22px;
+    height: 2px;
+    background-color: var(--gold-light);
+    transition: 0.3s ease;
+  }
+
+  .menu-btn.open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .menu-btn.open span:nth-child(2) {
+    opacity: 0;
+  }
+  .menu-btn.open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  .side-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 260px;
+    background-color: #0d0d0d;
+    border-right: 1px solid rgba(212, 175, 55, 0.3);
+    transform: translateX(-100%);
+    transition: transform 0.35s ease;
+    z-index: 1000;
+    padding: 100px 30px 30px;
+  }
+
+  .side-menu.open {
+    transform: translateX(0);
+  }
+
+  .side-menu a {
+    display: block;
+    color: var(--gold);
+    text-decoration: none;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+    transition: color 0.2s ease;
+  }
+
+  .side-menu a:hover {
+    color: var(--gold-light);
+  }
+
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 900;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+
+  .overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 60px 20px;
+    text-align: center;
+    border-top: 1px solid rgba(212, 175, 55, 0.15);
+  }
+
+  section h2 {
+    color: var(--gold-light);
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+
+  section p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #e8d9a0;
+  }
+
+  section a.contact-link {
+    color: var(--gold-light);
+    text-decoration: underline;
+  }
 </style>
 </head>
 <body>
+
+<!-- Hamburgerknapp -->
+<div class="menu-btn" id="menuBtn" onclick="toggleMenu()">
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
+
+<!-- Sidmeny -->
+<nav class="side-menu" id="sideMenu">
+  <a href="#uppdrag" onclick="toggleMenu()">Uppdrag</a>
+  <a href="#om-verkstaden" onclick="toggleMenu()">Om verkstaden</a>
+  <a href="#kontakt" onclick="toggleMenu()">Kontakt</a>
+</nav>
+
+<!-- Overlay -->
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
 <header>
   <h1>Boda CNC-Verkstad</h1>
@@ -143,9 +274,8 @@
   <div class="services">
     <div class="service-card">
       <h3>CNC-fräsning</h3>
-      <p>Exakt bearbetning i olika träsorter.</p>
+      <p>Exakt bearbetning för alla typer av material.</p>
     </div>
-
     <div class="service-card">
       <h3>Kundanpassning</h3>
       <p>Skräddarsydda lösningar efter dina specifikationer.</p>
@@ -153,9 +283,37 @@
   </div>
 </main>
 
+<section id="uppdrag">
+  <h2>Uppdrag</h2>
+  <p>Vi tar oss an uppdrag av alla storlekar, från enstaka prototyper till
+     serietillverkning. Kontakta oss med dina ritningar eller idéer så
+     återkommer vi med offert och tidsplan.</p>
+</section>
+
+<section id="om-verkstaden">
+  <h2>Om verkstaden</h2>
+  <p>Boda CNC-Verkstad grundades med målet att leverera precisionsbearbetning
+     i toppklass. Med moderna CNC-maskiner och lång erfarenhet säkerställer
+     vi hög kvalitet i varje detalj.</p>
+</section>
+
+<section id="kontakt">
+  <h2>Kontakt</h2>
+  <p>Hör av dig för frågor eller offertförfrågningar:<br>
+     <a class="contact-link" href="mailto:info@bodacnc.se">info@bodacnc.se</a></p>
+</section>
+
 <footer>
   &copy; 2026 Boda CNC-Verkstad. Alla rättigheter förbehållna.
 </footer>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('sideMenu').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('open');
+    document.getElementById('menuBtn').classList.toggle('open');
+  }
+</script>
 
 </body>
 </html>
