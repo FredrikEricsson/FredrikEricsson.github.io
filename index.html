@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BODA CNC-VERKSTAD</title>
+<title>BODA CARVE</title>
 <style>
   :root {
     --gold: #d4af37;
@@ -24,52 +24,98 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    padding-top: 72px;
   }
 
-  header {
-    padding: 60px 20px 40px;
-    text-align: center;
-    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+  .topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 72px;
+    background: rgba(8, 8, 8, 0.97);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    z-index: 1200;
   }
 
-  h1 {
-    font-size: 3rem;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    background: linear-gradient(
-      90deg,
-      #7a5c14 0%,
-      #d4af37 20%,
-      #fff3c4 40%,
-      #f0d97d 50%,
-      #fff3c4 60%,
-      #d4af37 80%,
-      #7a5c14 100%
-    );
-    background-size: 300% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    animation: shimmer 5s linear infinite;
-    filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.4));
+  .topbar .brand-block {
+    margin-left: 48px;
+    line-height: 1.3;
   }
 
-  @keyframes shimmer {
-    0% {
-      background-position: 0% 50%;
-    }
-    100% {
-      background-position: 300% 50%;
-    }
+  .topbar .brand {
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+
+  background: linear-gradient(
+    110deg,
+    #7d6825 0%,
+    #b08c2e 25%,
+    #e0bd55 45%,
+    #8f7629 55%,
+    #c5a43e 75%,
+    #6f5a20 100%
+  );
+
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  animation: goldShimmer 15s ease-in-out infinite;
+  filter: drop-shadow(0 0 3px rgba(150, 115, 30, 0.18));
+}
+
+@keyframes goldShimmer {
+  0% {
+    background-position: 100% 50%;
   }
 
-  .subtitle {
-    margin-top: 15px;
-    font-size: 1.1rem;
-    letter-spacing: 2px;
+  50% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+  .topbar .brand-sub {
+    font-size: 0.65rem;
+    letter-spacing: 1.5px;
     color: var(--gold);
-    opacity: 0.85;
+    opacity: 0.75;
+  }
+
+  .topbar .icons {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .topbar .icons a {
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    transition: color 0.2s ease;
+  }
+
+  .topbar .icons a:hover {
+    color: var(--gold-light);
+  }
+
+  .topbar .icons svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
   }
 
   main {
@@ -101,6 +147,8 @@
     border-radius: 8px;
     min-width: 200px;
     transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
   }
 
   .service-card:hover {
@@ -112,12 +160,27 @@
     color: var(--gold-light);
     margin-bottom: 10px;
     font-size: 1.2rem;
+    position: relative;
+    z-index: 1;
   }
 
   .service-card p {
     font-size: 0.95rem;
     color: #c9b878;
     margin-bottom: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .toolpath-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: 0.5;
+    pointer-events: none;
   }
 
   footer {
@@ -131,37 +194,37 @@
   /* --- Hamburgermeny --- */
   .menu-btn {
     position: fixed;
-    top: 25px;
-    left: 25px;
-    z-index: 1100;
-    width: 44px;
-    height: 44px;
-    background: rgba(10, 10, 10, 0.7);
+    top: 13px;
+    left: 20px;
+    z-index: 1300;
+    width: 32px;
+    height: 32px;
+    background: transparent;
     border: 1px solid rgba(212, 175, 55, 0.5);
-    border-radius: 6px;
+    border-radius: 5px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
     cursor: pointer;
   }
 
   .menu-btn span {
-    width: 22px;
+    width: 16px;
     height: 2px;
     background-color: var(--gold-light);
     transition: 0.3s ease;
   }
 
   .menu-btn.open span:nth-child(1) {
-    transform: translateY(7px) rotate(45deg);
+    transform: translateY(6px) rotate(45deg);
   }
   .menu-btn.open span:nth-child(2) {
     opacity: 0;
   }
   .menu-btn.open span:nth-child(3) {
-    transform: translateY(-7px) rotate(-45deg);
+    transform: translateY(-6px) rotate(-45deg);
   }
 
   .side-menu {
@@ -241,9 +304,69 @@
     color: var(--gold-light);
     text-decoration: underline;
   }
+  #kontakt h2 {
+  color: #a88932;
+  background: linear-gradient(
+    110deg,
+    #806a28 0%,
+    #806a28 40%,
+    #c5a43e 48%,
+    #806a28 56%,
+    #806a28 100%
+  );
+  background-size: 250% 100%;
+  background-position: 100% 50%;
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  animation: kontaktReflex 10s ease-in-out infinite;
+}
+
+@keyframes kontaktReflex {
+  0% {
+    background-position: 100% 50%;
+  }
+
+  20% {
+    background-position: 100% 50%;
+  }
+
+  50% {
+    background-position: 0% 50%;
+  }
+
+  70% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 100% 50%;
+  }
+}
 </style>
 </head>
 <body>
+
+<!-- Topplist -->
+<div class="topbar">
+  <div class="brand-block">
+    <div class="brand">Boda Carve</div>
+    <div class="brand-sub">En CNC-verkstad med precision i varje detalj</div>
+  </div>
+  <div class="icons">
+    <a href="tel:+46000000000" aria-label="Telefon">
+      <svg viewBox="0 0 24 24"><path d="M6 3h4l2 5-2.5 1.5a12 12 0 0 0 6 6L17 13l5 2v4a2 2 0 0 1-2 2C10.5 21 3 13.5 3 4a2 2 0 0 1 2-2z" stroke-linejoin="round" stroke-linecap="round"/></svg>
+    </a>
+    <a href="mailto:info@bodatralab.se" aria-label="E-post">
+      <svg viewBox="0 0 24 24"><path d="M3 5h18v14H3z" stroke-linejoin="round"/><path d="M3 6l9 7 9-7" stroke-linejoin="round" stroke-linecap="round"/></svg>
+    </a>
+    <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
+    </a>
+  </div>
+</div>
 
 <!-- Hamburgerknapp -->
 <div class="menu-btn" id="menuBtn" onclick="toggleMenu()">
@@ -255,56 +378,239 @@
 <!-- Sidmeny -->
 <nav class="side-menu" id="sideMenu">
   <a href="#uppdrag" onclick="toggleMenu()">Uppdrag</a>
-  <a href="#om-verkstaden" onclick="toggleMenu()">Om verkstaden</a>
+  <a href="#om-oss" onclick="toggleMenu()">Om oss</a>
   <a href="#kontakt" onclick="toggleMenu()">Kontakt</a>
 </nav>
 
 <!-- Overlay -->
 <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-<header>
-  <h1>Boda CNC-Verkstad</h1>
-  <div class="subtitle">Precision i varje detalj</div>
-</header>
-
 <main>
-  <p>Välkommen till Boda CNC-Verkstad. Vi levererar högkvalitativ CNC-bearbetning
-     med precision, noggrannhet och pålitlighet i varje projekt.</p>
+  <p>Välkommen till Boda Carve. Vi förvandlar trä till skräddarsydda
+     komponenter med hantverksskicklighet, noggrannhet och stolthet
+     genom hela processen.</p>
 
   <div class="services">
     <div class="service-card">
-      <h3>CNC-fräsning</h3>
-      <p>Exakt bearbetning för alla typer av material.</p>
+      <svg class="toolpath-bg" viewBox="0 0 200 150" preserveAspectRatio="none">
+        <g fill="none" stroke="#d4af37" stroke-width="0.6">
+          <path d="M -10 8  C 30 2,  60 18, 90 6  C 120 -4, 150 14, 210 6"/>
+          <path d="M -10 14 C 30 8,  60 24, 90 12 C 120 2,  150 20, 210 12"/>
+          <path d="M -10 20 C 30 14, 60 30, 90 18 C 120 8,  150 26, 210 18"/>
+          <path d="M -10 26 C 30 20, 60 36, 90 24 C 120 14, 150 32, 210 24"/>
+          <path d="M -10 32 C 30 26, 60 42, 90 30 C 120 20, 150 38, 210 30"/>
+          <path d="M -10 38 C 30 46, 60 26, 90 42 C 120 52, 150 30, 210 40"/>
+          <path d="M -10 44 C 30 52, 60 32, 90 48 C 120 58, 150 36, 210 46"/>
+          <path d="M -10 50 C 30 58, 60 38, 90 54 C 120 64, 150 42, 210 52"/>
+          <path d="M -10 56 C 30 64, 60 44, 90 60 C 120 70, 150 48, 210 58"/>
+          <path d="M -10 62 C 30 70, 60 50, 90 66 C 120 76, 150 54, 210 64"/>
+          <path d="M -10 68 C 30 60, 60 78, 90 66 C 120 56, 150 74, 210 66"/>
+          <path d="M -10 74 C 30 66, 60 84, 90 72 C 120 62, 150 80, 210 72"/>
+          <path d="M -10 80 C 30 72, 60 90, 90 78 C 120 68, 150 86, 210 78"/>
+          <path d="M -10 86 C 30 78, 60 96, 90 84 C 120 74, 150 92, 210 84"/>
+          <path d="M -10 92 C 30 100, 60 82, 90 96 C 120 106, 150 86, 210 94"/>
+          <path d="M -10 98 C 30 106, 60 88, 90 102 C 120 112, 150 92, 210 100"/>
+          <path d="M -10 104 C 30 112, 60 94, 90 108 C 120 118, 150 98, 210 106"/>
+          <path d="M -10 110 C 30 118, 60 100, 90 114 C 120 124, 150 104, 210 112"/>
+          <path d="M -10 116 C 30 108, 60 126, 90 114 C 120 104, 150 122, 210 114"/>
+          <path d="M -10 122 C 30 114, 60 132, 90 120 C 120 110, 150 128, 210 120"/>
+          <path d="M -10 128 C 30 120, 60 138, 90 126 C 120 116, 150 134, 210 126"/>
+          <path d="M -10 134 C 30 142, 60 124, 90 138 C 120 148, 150 128, 210 136"/>
+          <path d="M -10 140 C 30 148, 60 130, 90 144 C 120 154, 150 134, 210 142"/>
+          <path d="M -10 146 C 30 138, 60 152, 90 146 C 120 134, 150 150, 210 144"/>
+        </g>
+      </svg>
+      <h3>Fräsning</h3>
+      <p>Exakt bearbetning av olika virkessorter.</p>
     </div>
     <div class="service-card">
-      <h3>Kundanpassning</h3>
-      <p>Skräddarsydda lösningar efter dina specifikationer.</p>
+      <svg class="toolpath-bg" viewBox="0 0 200 150" preserveAspectRatio="none">
+
+        <g fill="none" stroke="#d4af37" stroke-width="0.5" opacity="0.55">
+          <path d="M -10 8  C 30 2,  60 18, 90 6  C 120 -4, 150 14, 210 6"/>
+          <path d="M -10 14 C 30 8,  60 24, 90 12 C 120 2,  150 20, 210 12"/>
+          <path d="M -10 20 C 30 14, 60 30, 90 18 C 120 8,  150 26, 210 18"/>
+          <path d="M -10 26 C 30 20, 60 36, 90 24 C 120 14, 150 32, 210 24"/>
+          <path d="M -10 32 C 30 26, 60 42, 90 30 C 120 20, 150 38, 210 30"/>
+          <path d="M -10 38 C 30 46, 60 26, 90 42 C 120 52, 150 30, 210 40"/>
+          <path d="M -10 44 C 30 52, 60 32, 90 48 C 120 58, 150 36, 210 46"/>
+          <path d="M -10 50 C 30 58, 60 38, 90 54 C 120 64, 150 42, 210 52"/>
+          <path d="M -10 56 C 30 64, 60 44, 90 60 C 120 70, 150 48, 210 58"/>
+          <path d="M -10 62 C 30 70, 60 50, 90 66 C 120 76, 150 54, 210 64"/>
+          <path d="M -10 68 C 30 60, 60 78, 90 66 C 120 56, 150 74, 210 66"/>
+          <path d="M -10 74 C 30 66, 60 84, 90 72 C 120 62, 150 80, 210 72"/>
+          <path d="M -10 80 C 30 72, 60 90, 90 78 C 120 68, 150 86, 210 78"/>
+          <path d="M -10 86 C 30 78, 60 96, 90 84 C 120 74, 150 92, 210 84"/>
+          <path d="M -10 92 C 30 100, 60 82, 90 96 C 120 106, 150 86, 210 94"/>
+          <path d="M -10 98 C 30 106, 60 88, 90 102 C 120 112, 150 92, 210 100"/>
+          <path d="M -10 104 C 30 112, 60 94, 90 108 C 120 118, 150 98, 210 106"/>
+          <path d="M -10 110 C 30 118, 60 100, 90 114 C 120 124, 150 104, 210 112"/>
+          <path d="M -10 116 C 30 108, 60 126, 90 114 C 120 104, 150 122, 210 114"/>
+          <path d="M -10 122 C 30 114, 60 132, 90 120 C 120 110, 150 128, 210 120"/>
+          <path d="M -10 128 C 30 120, 60 138, 90 126 C 120 116, 150 134, 210 126"/>
+          <path d="M -10 134 C 30 142, 60 124, 90 138 C 120 148, 150 128, 210 136"/>
+          <path d="M -10 140 C 30 148, 60 130, 90 144 C 120 154, 150 134, 210 142"/>
+          <path d="M -10 146 C 30 138, 60 152, 90 146 C 120 134, 150 150, 210 144"/>
+        </g>
+
+        <!-- Skjutmått (linjekonst, detaljerat, roterat) -->
+        <g transform="rotate(-9 100 75)">
+          <g fill="none" stroke="#d4af37" stroke-linecap="round" stroke-linejoin="round">
+
+            <!-- Huvudskena -->
+            <rect x="6" y="52" width="190" height="46" rx="5" stroke-width="1.1"/>
+            <line x1="6" y1="75" x2="196" y2="75" stroke-width="0.6" opacity="0.6"/>
+
+            <!-- Övre skala: stora siffror -->
+            <g stroke="none" fill="#d4af37" font-size="7.5" font-family="Segoe UI, Arial, sans-serif">
+              <text x="14"  y="61">0</text>
+              <text x="28"  y="61">5</text>
+              <text x="43"  y="61">10</text>
+              <text x="59"  y="61">15</text>
+              <text x="75"  y="61">20</text>
+              <text x="91"  y="61">25</text>
+            </g>
+            <g stroke-width="0.5">
+              <line x1="16"  y1="63" x2="16"  y2="72"/>
+              <line x1="30"  y1="63" x2="30"  y2="72"/>
+              <line x1="45"  y1="63" x2="45"  y2="72"/>
+              <line x1="61"  y1="63" x2="61"  y2="72"/>
+              <line x1="77"  y1="63" x2="77"  y2="72"/>
+              <line x1="93"  y1="63" x2="93"  y2="72"/>
+              <line x1="19" y1="65" x2="19" y2="72"/>
+              <line x1="22" y1="65" x2="22" y2="72"/>
+              <line x1="25" y1="65" x2="25" y2="72"/>
+              <line x1="33" y1="65" x2="33" y2="72"/>
+              <line x1="36" y1="65" x2="36" y2="72"/>
+              <line x1="39" y1="65" x2="39" y2="72"/>
+              <line x1="42" y1="65" x2="42" y2="72"/>
+              <line x1="49" y1="65" x2="49" y2="72"/>
+              <line x1="52" y1="65" x2="52" y2="72"/>
+              <line x1="55" y1="65" x2="55" y2="72"/>
+              <line x1="58" y1="65" x2="58" y2="72"/>
+              <line x1="65" y1="65" x2="65" y2="72"/>
+              <line x1="68" y1="65" x2="68" y2="72"/>
+              <line x1="71" y1="65" x2="71" y2="72"/>
+              <line x1="74" y1="65" x2="74" y2="72"/>
+              <line x1="81" y1="65" x2="81" y2="72"/>
+              <line x1="84" y1="65" x2="84" y2="72"/>
+              <line x1="87" y1="65" x2="87" y2="72"/>
+              <line x1="90" y1="65" x2="90" y2="72"/>
+            </g>
+            <text x="104" y="58" font-size="7" fill="#d4af37" stroke="none" font-family="Segoe UI, Arial, sans-serif">0.001in</text>
+
+            <!-- Nedre skala: liten sifferrad (nonieskala) -->
+            <g stroke="none" fill="#d4af37" font-size="6" font-family="Segoe UI, Arial, sans-serif" opacity="0.9">
+              <text x="130" y="63">2</text>
+              <text x="140" y="61">4</text>
+              <text x="150" y="63">6</text>
+              <text x="160" y="61">7</text>
+              <text x="170" y="63">8</text>
+              <text x="180" y="61">9</text>
+              <text x="130" y="93">0</text>
+              <text x="141" y="93">1</text>
+              <text x="152" y="93">2</text>
+              <text x="163" y="93">3</text>
+              <text x="174" y="93">4</text>
+              <text x="12"  y="93">0</text>
+              <text x="24"  y="93">2</text>
+              <text x="36"  y="93">4</text>
+              <text x="48"  y="93">6</text>
+              <text x="60"  y="93">8</text>
+              <text x="72"  y="93">1</text>
+              <text x="84"  y="93">3</text>
+              <text x="96"  y="93">5</text>
+              <text x="108" y="93">7</text>
+              <text x="120" y="93">9</text>
+            </g>
+            <g stroke-width="0.4" opacity="0.8">
+              <line x1="14"  y1="80" x2="14"  y2="87"/>
+              <line x1="22"  y1="80" x2="22"  y2="84"/>
+              <line x1="30"  y1="80" x2="30"  y2="87"/>
+              <line x1="38"  y1="80" x2="38"  y2="84"/>
+              <line x1="46"  y1="80" x2="46"  y2="87"/>
+              <line x1="54"  y1="80" x2="54"  y2="84"/>
+              <line x1="62"  y1="80" x2="62"  y2="87"/>
+              <line x1="70"  y1="80" x2="70"  y2="84"/>
+              <line x1="78"  y1="80" x2="78"  y2="87"/>
+              <line x1="86"  y1="80" x2="86"  y2="84"/>
+              <line x1="94"  y1="80" x2="94"  y2="87"/>
+              <line x1="102" y1="80" x2="102" y2="84"/>
+              <line x1="110" y1="80" x2="110" y2="87"/>
+              <line x1="118" y1="80" x2="118" y2="84"/>
+            </g>
+
+            <!-- Fast käke: knivliknande spets (övre) -->
+            <path d="M 6 52 L 6 4 Q 6 -2 -2 4 L -18 40 Q -20 44 -16 46 L 6 58"/>
+            <!-- Fast käke: nedre platt -->
+            <path d="M 6 98 L 6 128 L 20 128 L 20 98"/>
+
+            <!-- Rörlig käke / skjutblock -->
+            <rect x="118" y="40" width="24" height="58" rx="4" stroke-width="1.1"/>
+            <path d="M 118 12 Q 118 6 124 6 L 132 6 Q 136 6 136 12 L 136 40"/>
+            <path d="M 118 128 Q 118 134 124 134 L 132 134 Q 136 134 136 128 L 136 98"/>
+
+            <!-- Låsskruv -->
+            <circle cx="150" cy="30" r="4" stroke-width="0.9"/>
+            <line x1="146" y1="30" x2="154" y2="30" stroke-width="0.6"/>
+            <line x1="150" y1="26" x2="150" y2="34" stroke-width="0.6"/>
+
+            <!-- Tumhjul med räfflor -->
+            <circle cx="163" cy="75" r="10" stroke-width="1"/>
+            <g stroke-width="0.6">
+              <line x1="163" y1="65" x2="163" y2="61"/>
+              <line x1="163" y1="85" x2="163" y2="89"/>
+              <line x1="153" y1="75" x2="149" y2="75"/>
+              <line x1="173" y1="75" x2="177" y2="75"/>
+              <line x1="156.1" y1="68.1" x2="153.2" y2="65.2"/>
+              <line x1="169.9" y1="68.1" x2="172.8" y2="65.2"/>
+              <line x1="156.1" y1="81.9" x2="153.2" y2="84.8"/>
+              <line x1="169.9" y1="81.9" x2="172.8" y2="84.8"/>
+            </g>
+
+            <!-- Liten rund knapp/boss -->
+            <circle cx="184" cy="88" r="5" stroke-width="0.9"/>
+
+            <!-- Nitar -->
+            <circle cx="16" cy="55" r="1.3" fill="#d4af37" stroke="none"/>
+            <circle cx="16" cy="95" r="1.3" fill="#d4af37" stroke="none"/>
+            <circle cx="188" cy="55" r="1.3" fill="#d4af37" stroke="none"/>
+            <circle cx="188" cy="95" r="1.3" fill="#d4af37" stroke="none"/>
+
+            <!-- Djupmätarsticka -->
+            <line x1="128" y1="98" x2="128" y2="142" stroke-width="1"/>
+            <circle cx="128" cy="144" r="2" fill="#d4af37" stroke="none"/>
+          </g>
+        </g>
+      </svg>
+      <h3>Anpassning</h3>
+      <p>Unika lösningar utifrån dina önskemål.</p>
     </div>
   </div>
 </main>
 
 <section id="uppdrag">
   <h2>Uppdrag</h2>
-  <p>Vi tar oss an uppdrag av alla storlekar, från enstaka prototyper till
-     serietillverkning. Kontakta oss med dina ritningar eller idéer så
-     återkommer vi med offert och tidsplan.</p>
+  <p>Vi åtar oss projekt av alla storlekar, från enstaka prototyper till
+     större serier. Skicka dina ritningar eller idéer, så återkommer
+     vi med offert och tidsplan.</p>
 </section>
 
-<section id="om-verkstaden">
-  <h2>Om verkstaden</h2>
-  <p>Boda CNC-Verkstad grundades med målet att leverera precisionsbearbetning
-     i toppklass. Med moderna CNC-maskiner och lång erfarenhet säkerställer
-     vi hög kvalitet i varje detalj.</p>
+<section id="om-oss">
+  <h2>Om oss</h2>
+  <p>Boda Carve grundades av erfarna hantverkare inom snickeri och finish.
+     Genom moderna maskiner och stort engagemang säkerställer vi hög
+     kvalitet i varje led.</p>
 </section>
 
 <section id="kontakt">
   <h2>Kontakt</h2>
-  <p>Hör av dig för frågor eller offertförfrågningar:<br>
-     <a class="contact-link" href="mailto:info@bodacnc.se">info@bodacnc.se</a></p>
+  <p>Hör av dig med frågor eller offertförfrågningar:<br>
+     <a class="contact-link" href="mailto:info@bodatralab.se">info@bodatralab.se</a></p>
 </section>
 
 <footer>
-  &copy; 2026 Boda CNC-Verkstad. Alla rättigheter förbehållna.
+  &copy; 2026 Boda Carve. Alla rättigheter förbehållna.
 </footer>
 
 <script>
