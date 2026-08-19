@@ -6,35 +6,41 @@
 <title>BODA CARVE</title>
 <style>
   :root {
-    --gold: #d4af37;
-    --gold-light: #f0d97d;
-    --black: #0a0a0a;
+    --bg: #0c0b09;
+    --bg-soft: #100e0b;
+    --ink: #e6e1d8;
+    --ink-muted: #918a7c;
+    --ink-faint: #5d574c;
+    --gold: #c9a227;
+    --gold-light: #e0bd55;
+    --rule: rgba(201, 162, 39, 0.16);
+    --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+    --sans: 'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
   }
 
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
 
   body {
-    background-color: var(--black);
-    color: var(--gold);
-    font-family: 'Segoe UI', Arial, sans-serif;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
     padding-top: 72px;
   }
 
+  /* ---------- Topplist (behållen) ---------- */
   .topbar {
     position: fixed;
-    top: 0;
-    left: 0;
+    top: 0; left: 0;
     width: 100%;
     height: 72px;
-    background: rgba(8, 8, 8, 0.97);
-    border-bottom: 1px solid rgba(212, 175, 55, 0.4);
+    background: rgba(8, 8, 8, 0.94);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(201, 162, 39, 0.28);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -42,309 +48,329 @@
     z-index: 1200;
   }
 
-  .topbar .brand-block {
-    margin-left: 48px;
-    line-height: 1.3;
-  }
+  .topbar .brand-block { margin-left: 48px; line-height: 1.3; }
 
   .topbar .brand {
-  font-size: 1.05rem;
-  font-weight: 600;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-
-  background: linear-gradient(
-    110deg,
-    #7d6825 0%,
-    #b08c2e 25%,
-    #e0bd55 45%,
-    #8f7629 55%,
-    #c5a43e 75%,
-    #6f5a20 100%
-  );
-
-  background-size: 250% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-
-  animation: goldShimmer 15s ease-in-out infinite;
-  filter: drop-shadow(0 0 3px rgba(150, 115, 30, 0.18));
-}
-
-@keyframes goldShimmer {
-  0% {
-    background-position: 100% 50%;
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    background: linear-gradient(110deg,
+      #7d6825 0%, #b08c2e 25%, #e0bd55 45%,
+      #8f7629 55%, #c5a43e 75%, #6f5a20 100%);
+    background-size: 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: goldShimmer 15s ease-in-out infinite;
+    filter: drop-shadow(0 0 3px rgba(150, 115, 30, 0.18));
   }
 
-  50% {
-    background-position: 0% 50%;
+  @keyframes goldShimmer {
+    0%   { background-position: 100% 50%; }
+    50%  { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
   }
-
-  100% {
-    background-position: 100% 50%;
-  }
-}
 
   .topbar .brand-sub {
     font-size: 0.65rem;
-    letter-spacing: 1.5px;
-    color: var(--gold);
-    opacity: 0.75;
-  }
-
-  .topbar .icons {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .topbar .icons a {
-    color: var(--gold);
-    display: flex;
-    align-items: center;
-    transition: color 0.2s ease;
-  }
-
-  .topbar .icons a:hover {
-    color: var(--gold-light);
-  }
-
-  .topbar .icons svg {
-    width: 18px;
-    height: 18px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.6;
-  }
-
-  main {
-    flex: 1;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 50px 20px;
-    text-align: center;
-  }
-
-  main p {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    margin-bottom: 20px;
-    color: #e8d9a0;
-  }
-
-  .services {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    flex-wrap: wrap;
-    margin-top: 40px;
-  }
-
-  .service-card {
-    border: 1px solid rgba(212, 175, 55, 0.4);
-    padding: 25px 30px;
-    border-radius: 8px;
-    min-width: 200px;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .service-card:hover {
-    background-color: rgba(212, 175, 55, 0.08);
-    border-color: var(--gold-light);
-  }
-
-  .service-card h3 {
-    color: var(--gold-light);
-    margin-bottom: 10px;
-    font-size: 1.2rem;
-    position: relative;
-    z-index: 1;
-  }
-
-  .service-card p {
-    font-size: 0.95rem;
-    color: #c9b878;
-    margin-bottom: 0;
-    position: relative;
-    z-index: 1;
-  }
-
-  .toolpath-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    opacity: 0.5;
-    pointer-events: none;
-  }
-
-  footer {
-    text-align: center;
-    padding: 25px;
-    font-size: 0.85rem;
-    color: rgba(212, 175, 55, 0.6);
-    border-top: 1px solid rgba(212, 175, 55, 0.3);
-  }
-
-  /* --- Hamburgermeny --- */
-  .menu-btn {
-    position: fixed;
-    top: 13px;
-    left: 20px;
-    z-index: 1300;
-    width: 32px;
-    height: 32px;
-    background: transparent;
-    border: 1px solid rgba(212, 175, 55, 0.5);
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 4px;
-    cursor: pointer;
-  }
-
-  .menu-btn span {
-    width: 16px;
-    height: 2px;
-    background-color: var(--gold-light);
-    transition: 0.3s ease;
-  }
-
-  .menu-btn.open span:nth-child(1) {
-    transform: translateY(6px) rotate(45deg);
-  }
-  .menu-btn.open span:nth-child(2) {
-    opacity: 0;
-  }
-  .menu-btn.open span:nth-child(3) {
-    transform: translateY(-6px) rotate(-45deg);
-  }
-
-  .side-menu {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 260px;
-    background-color: #0d0d0d;
-    border-right: 1px solid rgba(212, 175, 55, 0.3);
-    transform: translateX(-100%);
-    transition: transform 0.35s ease;
-    z-index: 1000;
-    padding: 100px 30px 30px;
-  }
-
-  .side-menu.open {
-    transform: translateX(0);
-  }
-
-  .side-menu a {
-    display: block;
-    color: var(--gold);
-    text-decoration: none;
-    font-size: 1.1rem;
-    letter-spacing: 1px;
-    padding: 16px 0;
-    border-bottom: 1px solid rgba(212, 175, 55, 0.15);
-    transition: color 0.2s ease;
-  }
-
-  .side-menu a:hover {
-    color: var(--gold-light);
-  }
-
-  .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 900;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.35s ease;
-  }
-
-  .overlay.open {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  section {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 60px 20px;
-    text-align: center;
-    border-top: 1px solid rgba(212, 175, 55, 0.15);
-  }
-
-  section h2 {
-    color: var(--gold-light);
-    font-size: 1.8rem;
-    letter-spacing: 2px;
-    margin-bottom: 20px;
+    letter-spacing: 1.6px;
+    color: var(--ink-muted);
     text-transform: uppercase;
   }
 
-  section p {
-    font-size: 1.05rem;
+  .topbar .icons { display: flex; align-items: center; gap: 18px; }
+  .topbar .icons a { color: var(--ink-muted); display: flex; align-items: center; transition: color 0.25s ease; }
+  .topbar .icons a:hover { color: var(--gold-light); }
+  .topbar .icons svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; }
+
+  /* ---------- Hamburgermeny ---------- */
+  .menu-btn {
+    position: fixed; top: 20px; left: 20px; z-index: 1300;
+    width: 32px; height: 32px;
+    background: transparent; border: none;
+    display: flex; flex-direction: column; justify-content: center;
+    align-items: flex-start; gap: 5px; cursor: pointer;
+  }
+  .menu-btn span {
+    width: 20px; height: 1px;
+    background-color: var(--gold-light);
+    transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .menu-btn.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .menu-btn.open span:nth-child(2) { opacity: 0; }
+  .menu-btn.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+  .side-menu {
+    position: fixed; top: 0; left: 0; height: 100%; width: 280px;
+    background-color: var(--bg-soft);
+    border-right: 1px solid var(--rule);
+    transform: translateX(-100%);
+    transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000; padding: 110px 36px 36px;
+  }
+  .side-menu.open { transform: translateX(0); }
+  .side-menu a {
+    display: block; color: var(--ink); text-decoration: none;
+    font-family: var(--serif); font-size: 1.25rem;
+    padding: 18px 0; border-bottom: 1px solid rgba(201, 162, 39, 0.1);
+    transition: color 0.25s ease;
+  }
+  .side-menu a:hover { color: var(--gold-light); }
+
+  .overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.6); z-index: 900;
+    opacity: 0; pointer-events: none; transition: opacity 0.45s ease;
+  }
+  .overlay.open { opacity: 1; pointer-events: auto; }
+
+  /* ---------- Layout ---------- */
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 28px; }
+  .wrap-wide { max-width: 1060px; margin: 0 auto; padding: 0 28px; }
+
+  section { padding: 130px 0; }
+  section + section { border-top: 1px solid rgba(201, 162, 39, 0.09); }
+
+  .eyebrow {
+    font-size: 0.68rem;
+    letter-spacing: 3.4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.75;
+    margin-bottom: 28px;
+  }
+
+  h1, h2, h3 { font-family: var(--serif); font-weight: 400; }
+
+  h1 {
+    font-size: clamp(1.85rem, 4.4vw, 2.85rem);
+    line-height: 1.22;
+    letter-spacing: -0.4px;
+    margin-bottom: 32px;
+  }
+
+  h2 {
+    font-size: clamp(1.6rem, 3.4vw, 2.1rem);
+    line-height: 1.3;
+    margin-bottom: 30px;
+  }
+
+  h3 {
+    font-size: 1.15rem;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+
+  p { margin-bottom: 22px; }
+  p:last-child { margin-bottom: 0; }
+
+  .lead {
+    font-size: 1.16rem;
     line-height: 1.8;
-    color: #e8d9a0;
+    color: var(--ink);
   }
 
-  section a.contact-link {
+  .muted { color: var(--ink-muted); }
+
+  .hero { padding: 120px 0 100px; }
+  .hero h1 { max-width: 24ch; }
+
+  /* ---------- Manifestrad i hero ---------- */
+  .manifest {
+    font-family: var(--serif);
+    font-size: clamp(1.15rem, 2.4vw, 1.5rem);
+    line-height: 1.45;
     color: var(--gold-light);
-    text-decoration: underline;
-  }
-  #kontakt h2 {
-  color: #a88932;
-  background: linear-gradient(
-    110deg,
-    #806a28 0%,
-    #806a28 40%,
-    #c5a43e 48%,
-    #806a28 56%,
-    #806a28 100%
-  );
-  background-size: 250% 100%;
-  background-position: 100% 50%;
-
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-
-  animation: kontaktReflex 10s ease-in-out infinite;
-}
-
-@keyframes kontaktReflex {
-  0% {
-    background-position: 100% 50%;
+    max-width: 26ch;
+    margin: 40px 0 40px;
+    padding-left: 26px;
+    border-left: 1px solid rgba(201, 162, 39, 0.4);
   }
 
-  20% {
-    background-position: 100% 50%;
+  /* ---------- Waterline-toolpath ---------- */
+  .toolpath-wrap {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 10px 28px 130px;
+  }
+  .toolpath-wrap svg { width: 100%; height: auto; display: block; }
+  .toolpath-cap {
+    margin-top: 26px;
+    text-align: center;
+    font-size: 0.68rem;
+    letter-spacing: 2.6px;
+    text-transform: uppercase;
+    color: var(--ink-faint);
   }
 
-  50% {
-    background-position: 0% 50%;
+  /* ---------- Bildplatser ---------- */
+  .plate-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 22px;
+  }
+  .plate {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    border: 1px solid rgba(201, 162, 39, 0.22);
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%),
+      var(--bg-soft);
+    display: flex;
+    align-items: flex-end;
+    padding: 22px;
+    overflow: hidden;
+  }
+  .plate.tall { aspect-ratio: 3 / 4; }
+  .plate span {
+    font-size: 0.76rem;
+    letter-spacing: 0.6px;
+    line-height: 1.55;
+    color: var(--ink-faint);
+  }
+  .plate::before {
+    content: "";
+    position: absolute;
+    top: 18px; left: 18px;
+    width: 14px; height: 14px;
+    border-left: 1px solid rgba(201, 162, 39, 0.45);
+    border-top: 1px solid rgba(201, 162, 39, 0.45);
+  }
+  .plate::after {
+    content: "";
+    position: absolute;
+    bottom: 18px; right: 18px;
+    width: 14px; height: 14px;
+    border-right: 1px solid rgba(201, 162, 39, 0.45);
+    border-bottom: 1px solid rgba(201, 162, 39, 0.45);
   }
 
-  70% {
-    background-position: 0% 50%;
+  /* ---------- Två kolumner: gör / gör inte ---------- */
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+  }
+  .list { list-style: none; }
+  .list li {
+    padding: 13px 0;
+    border-bottom: 1px solid rgba(201, 162, 39, 0.08);
+    font-size: 0.98rem;
+    line-height: 1.6;
+  }
+  .list li:last-child { border-bottom: none; }
+  .list.no li { color: var(--ink-faint); }
+
+  /* ---------- Processteg ---------- */
+  .steps { list-style: none; counter-reset: step; margin-top: 12px; }
+  .steps li {
+    counter-increment: step;
+    position: relative;
+    padding: 0 0 40px 62px;
+    border-left: 1px solid rgba(201, 162, 39, 0.14);
+    margin-left: 12px;
+  }
+  .steps li:last-child { padding-bottom: 0; border-left-color: transparent; }
+  .steps li::before {
+    content: counter(step, decimal-leading-zero);
+    position: absolute;
+    left: -13px; top: 0;
+    width: 26px; height: 26px;
+    background: var(--bg);
+    color: var(--gold);
+    font-family: var(--sans);
+    font-size: 0.66rem;
+    letter-spacing: 1px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .steps h3 { margin-bottom: 8px; }
+  .steps p { font-size: 0.98rem; color: var(--ink-muted); margin-bottom: 0; }
+
+  /* ---------- Kapacitetskort ---------- */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1px;
+    background: rgba(201, 162, 39, 0.12);
+    border: 1px solid rgba(201, 162, 39, 0.12);
+  }
+  .card {
+    background: var(--bg);
+    padding: 40px 32px;
+    transition: background 0.4s ease;
+  }
+  .card:hover { background: var(--bg-soft); }
+  .card .num {
+    font-size: 0.66rem; letter-spacing: 2.4px;
+    color: var(--gold); opacity: 0.6; margin-bottom: 22px;
+  }
+  .card p { font-size: 0.95rem; color: var(--ink-muted); margin-bottom: 0; }
+
+  /* ---------- Citat ---------- */
+  .pull {
+    font-family: var(--serif);
+    font-size: clamp(1.35rem, 3vw, 1.85rem);
+    line-height: 1.5;
+    color: var(--gold-light);
+    text-align: center;
+    max-width: 22ch;
+    margin: 0 auto;
   }
 
-  100% {
-    background-position: 100% 50%;
+  /* ---------- Kontakt ---------- */
+  .contact-link {
+    font-family: var(--serif);
+    font-size: clamp(1.3rem, 3.4vw, 1.9rem);
+    color: var(--gold-light);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(201, 162, 39, 0.35);
+    padding-bottom: 4px;
+    transition: border-color 0.3s ease;
   }
-}
+  .contact-link:hover { border-color: var(--gold-light); }
+
+  .meta {
+    margin-top: 44px;
+    font-size: 0.88rem;
+    color: var(--ink-faint);
+    line-height: 2;
+  }
+
+  footer {
+    padding: 46px 0;
+    border-top: 1px solid rgba(201, 162, 39, 0.09);
+    text-align: center;
+    font-size: 0.76rem;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  /* ---------- Långsam intoning ---------- */
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 1.1s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal.in { opacity: 1; transform: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .topbar .brand { animation: none; }
+    html { scroll-behavior: auto; }
+  }
+
+  @media (max-width: 720px) {
+    body { font-size: 16px; }
+    section { padding: 88px 0; }
+    .hero { padding: 80px 0 70px; }
+    .split { grid-template-columns: 1fr; gap: 46px; }
+    .topbar .brand-block { margin-left: 44px; }
+    .topbar .brand-sub { display: none; }
+    .toolpath-wrap { padding-bottom: 88px; }
+  }
 </style>
 </head>
 <body>
@@ -353,13 +379,13 @@
 <div class="topbar">
   <div class="brand-block">
     <div class="brand">Boda Carve</div>
-    <div class="brand-sub">En CNC-verkstad med precision i varje detalj</div>
+    <div class="brand-sub">CNC &middot; prototyp &middot; trä</div>
   </div>
   <div class="icons">
     <a href="tel:+46000000000" aria-label="Telefon">
       <svg viewBox="0 0 24 24"><path d="M6 3h4l2 5-2.5 1.5a12 12 0 0 0 6 6L17 13l5 2v4a2 2 0 0 1-2 2C10.5 21 3 13.5 3 4a2 2 0 0 1 2-2z" stroke-linejoin="round" stroke-linecap="round"/></svg>
     </a>
-    <a href="mailto:info@bodatralab.se" aria-label="E-post">
+    <a href="mailto:info@bodacarve.se" aria-label="E-post">
       <svg viewBox="0 0 24 24"><path d="M3 5h18v14H3z" stroke-linejoin="round"/><path d="M3 6l9 7 9-7" stroke-linejoin="round" stroke-linecap="round"/></svg>
     </a>
     <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram">
@@ -369,248 +395,251 @@
 </div>
 
 <!-- Hamburgerknapp -->
-<div class="menu-btn" id="menuBtn" onclick="toggleMenu()">
-  <span></span>
-  <span></span>
-  <span></span>
-</div>
+<button class="menu-btn" id="menuBtn" onclick="toggleMenu()" aria-label="Meny">
+  <span></span><span></span><span></span>
+</button>
 
 <!-- Sidmeny -->
 <nav class="side-menu" id="sideMenu">
-  <a href="#uppdrag" onclick="toggleMenu()">Uppdrag</a>
+  <a href="#arbetet" onclick="toggleMenu()">Arbetet</a>
+  <a href="#uppdrag" onclick="toggleMenu()">Ett uppdrag</a>
+  <a href="#maskin" onclick="toggleMenu()">Maskin &amp; material</a>
   <a href="#om-oss" onclick="toggleMenu()">Om oss</a>
   <a href="#kontakt" onclick="toggleMenu()">Kontakt</a>
 </nav>
 
-<!-- Overlay -->
 <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-<main>
-  <p>Välkommen till Boda Carve. Vi förvandlar trä till skräddarsydda
-     komponenter med hantverksskicklighet, noggrannhet och stolthet
-     genom hela processen.</p>
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap reveal">
+    <div class="eyebrow">Boda Carve &mdash; verkstad för prototyper i trä</div>
+    <h1>Boda Carve är en liten CNC-verkstad som tar sig an dubbelkrökta ytor, tunna gods, geometri som inte går att beskriva i ord.</h1>
+    <p class="manifest">Vi räknar inte kvadratmeter. Vi räknar antalet försök som krävs för att lyckas.</p>
+    <p class="lead">Vi arbetar med konstnärer, formgivare och arkitekter &mdash; oftast från en skiss, inte från en färdig fil.</p>
+  </div>
+</section>
 
-  <div class="services">
-    <div class="service-card">
-      <svg class="toolpath-bg" viewBox="0 0 200 150" preserveAspectRatio="none">
-        <g fill="none" stroke="#d4af37" stroke-width="0.6">
-          <path d="M -10 8  C 30 2,  60 18, 90 6  C 120 -4, 150 14, 210 6"/>
-          <path d="M -10 14 C 30 8,  60 24, 90 12 C 120 2,  150 20, 210 12"/>
-          <path d="M -10 20 C 30 14, 60 30, 90 18 C 120 8,  150 26, 210 18"/>
-          <path d="M -10 26 C 30 20, 60 36, 90 24 C 120 14, 150 32, 210 24"/>
-          <path d="M -10 32 C 30 26, 60 42, 90 30 C 120 20, 150 38, 210 30"/>
-          <path d="M -10 38 C 30 46, 60 26, 90 42 C 120 52, 150 30, 210 40"/>
-          <path d="M -10 44 C 30 52, 60 32, 90 48 C 120 58, 150 36, 210 46"/>
-          <path d="M -10 50 C 30 58, 60 38, 90 54 C 120 64, 150 42, 210 52"/>
-          <path d="M -10 56 C 30 64, 60 44, 90 60 C 120 70, 150 48, 210 58"/>
-          <path d="M -10 62 C 30 70, 60 50, 90 66 C 120 76, 150 54, 210 64"/>
-          <path d="M -10 68 C 30 60, 60 78, 90 66 C 120 56, 150 74, 210 66"/>
-          <path d="M -10 74 C 30 66, 60 84, 90 72 C 120 62, 150 80, 210 72"/>
-          <path d="M -10 80 C 30 72, 60 90, 90 78 C 120 68, 150 86, 210 78"/>
-          <path d="M -10 86 C 30 78, 60 96, 90 84 C 120 74, 150 92, 210 84"/>
-          <path d="M -10 92 C 30 100, 60 82, 90 96 C 120 106, 150 86, 210 94"/>
-          <path d="M -10 98 C 30 106, 60 88, 90 102 C 120 112, 150 92, 210 100"/>
-          <path d="M -10 104 C 30 112, 60 94, 90 108 C 120 118, 150 98, 210 106"/>
-          <path d="M -10 110 C 30 118, 60 100, 90 114 C 120 124, 150 104, 210 112"/>
-          <path d="M -10 116 C 30 108, 60 126, 90 114 C 120 104, 150 122, 210 114"/>
-          <path d="M -10 122 C 30 114, 60 132, 90 120 C 120 110, 150 128, 210 120"/>
-          <path d="M -10 128 C 30 120, 60 138, 90 126 C 120 116, 150 134, 210 126"/>
-          <path d="M -10 134 C 30 142, 60 124, 90 138 C 120 148, 150 128, 210 136"/>
-          <path d="M -10 140 C 30 148, 60 130, 90 144 C 120 154, 150 134, 210 142"/>
-          <path d="M -10 146 C 30 138, 60 152, 90 146 C 120 134, 150 150, 210 144"/>
-        </g>
-      </svg>
-      <h3>Fräsning</h3>
-      <p>Exakt bearbetning av olika virkessorter.</p>
-    </div>
-    <div class="service-card">
-      <svg class="toolpath-bg" viewBox="0 0 200 150" preserveAspectRatio="none">
+<!-- Waterline-toolpath, konstant Z -->
+<div class="toolpath-wrap reveal">
+<svg viewBox="-200.0 -198.4 391.4 317.7" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <g fill="none" stroke="#c9a227" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 161 -59 L 162 -58 L 164 -56 L 165 -55 L 166 -53 L 168 -52 L 169 -50 L 170 -49 L 172 -47 L 173 -45 L 174 -44 L 175 -42 L 176 -41 L 177 -39 L 177 -37 L 178 -36 L 179 -34 L 179 -32 L 180 -31 L 180 -29 L 180 -27 L 180 -26 L 180 -24 L 179 -22 L 179 -21 L 178 -19 L 177 -17 L 176 -16 L 174 -14 L 173 -13 L 171 -12 L 169 -10 L 167 -9 L 165 -8 L 163 -7 L 161 -5 L 159 -4 L 156 -3 L 154 -2 L 152 -1 L 149 -0 L 147 1 L 145 2 L 143 3 L 141 5 L 139 6 L 137 7 L 135 8 L 134 10 L 132 11 L 131 13 L 130 15 L 130 16 L 130 18 L 129 20 L 130 21 L 130 23 L 130 25 L 131 26 L 132 28 L 133 30 L 134 31 L 135 33 L 137 34 L 138 36 L 139 37 L 141 39 L 142 40 L 144 42 L 146 43 L 147 45 L 149 46 L 151 47 L 152 49 L 154 50 L 155 52 L 156 53 L 156 55 L 156 57 L 155 58 L 154 60 L 153 62 L 151 63 L 150 65 L 148 66 L 147 67 L 145 69 L 143 70 L 141 71 L 139 73 L 137 74 L 135 75 L 133 76 L 131 77 L 129 79 L 127 80 L 125 81 L 122 82 L 120 83 L 118 84 L 115 85 L 113 86 L 111 87 L 108 88 L 106 89 L 103 90 L 101 91 L 99 92 L 96 93 L 93 94 L 91 95 L 88 95 L 86 96 L 83 97 L 80 98 L 78 98 L 75 99 L 72 100 L 70 100 L 67 101 L 64 102 L 61 102 L 59 103 L 56 103 L 53 104 L 50 104 L 47 105 L 44 105 L 42 105 L 39 106 L 36 106 L 33 106 L 30 107 L 27 107 L 24 107 L 21 107 L 18 108 L 15 108 L 12 108 L 10 108 L 7 108 L 4 108 L 1 108 L -2 108 L -5 108 L -8 108 L -11 108 L -14 108 L -17 108 L -20 108 L -23 107 L -26 107 L -29 107 L -32 107 L -34 106 L -37 106 L -40 106 L -43 105 L -46 105 L -49 104 L -52 104 L -54 104 L -57 103 L -60 103 L -63 102 L -66 101 L -68 101 L -71 100 L -74 100 L -76 99 L -79 98 L -82 97 L -84 97 L -87 96 L -90 95 L -92 94 L -95 93 L -97 93 L -100 92 L -102 91 L -105 90 L -107 89 L -110 88 L -112 87 L -114 86 L -117 85 L -119 84 L -121 83 L -123 82 L -126 80 L -128 79 L -130 78 L -132 77 L -134 76 L -136 74 L -138 73 L -140 72 L -142 71 L -144 69 L -146 68 L -147 67 L -149 65 L -151 64 L -152 62 L -154 61 L -155 59 L -156 58 L -157 56 L -158 55 L -159 53 L -160 51 L -161 50 L -161 48 L -162 46 L -162 45 L -163 43 L -163 41 L -164 40 L -165 38 L -166 36 L -167 35 L -168 33 L -169 32 L -171 30 L -172 29 L -174 27 L -176 26 L -177 25 L -179 23 L -180 22 L -182 20 L -183 19 L -184 17 L -185 16 L -186 14 L -186 12 L -187 11 L -187 9 L -188 7 L -188 6 L -188 4 L -189 2 L -189 0 L -189 -1 L -189 -3 L -189 -5 L -189 -6 L -189 -8 L -189 -10 L -188 -11 L -188 -13 L -188 -15 L -187 -17 L -187 -18 L -187 -20 L -186 -22 L -185 -23 L -185 -25 L -184 -27 L -183 -28 L -183 -30 L -182 -32 L -181 -33 L -180 -35 L -179 -36 L -178 -38 L -177 -40 L -176 -41 L -175 -43 L -174 -44 L -173 -46 L -172 -47 L -170 -49 L -169 -50 L -168 -52 L -166 -53" stroke-width="0.665" opacity="0.320"/>
+    <path d="M 156 -64 L 157 -63 L 159 -62 L 160 -60 L 162 -59 L 163 -57 L 164 -56 L 165 -54 L 167 -52 L 168 -51 L 169 -49 L 170 -48 L 171 -46 L 172 -44 L 173 -43 L 173 -41 L 174 -40 L 174 -38 L 175 -36 L 175 -34 L 175 -33 L 175 -31 L 175 -29 L 175 -28 L 175 -26 L 174 -24 L 174 -23 L 173 -21 L 172 -19 L 171 -18 L 169 -16 L 168 -15 L 166 -13 L 165 -12 L 163 -11 L 161 -10 L 159 -8 L 156 -7 L 154 -6 L 152 -5 L 150 -4 L 148 -3 L 145 -2 L 143 -0 L 141 1 L 139 2 L 137 3 L 135 5 L 134 6 L 132 7 L 131 9 L 130 11 L 129 12 L 129 14 L 128 16 L 128 17 L 128 19 L 129 21 L 129 22 L 130 24 L 131 26 L 132 27 L 133 29 L 134 30 L 135 32 L 136 34 L 138 35 L 139 37 L 140 38 L 142 40 L 143 41 L 144 43 L 146 44 L 147 46 L 148 47 L 149 49 L 150 50 L 150 52 L 150 54 L 150 56 L 149 57 L 148 59 L 147 60 L 146 62 L 144 63 L 143 65 L 141 66 L 140 68 L 138 69 L 136 70 L 134 72 L 132 73 L 130 74 L 128 75 L 126 77 L 124 78 L 122 79 L 120 80 L 117 81 L 115 82 L 113 83 L 110 84 L 108 85 L 106 86 L 103 87 L 101 88 L 98 89 L 96 90 L 93 91 L 91 92 L 88 93 L 86 93 L 83 94 L 80 95 L 78 96 L 75 96 L 72 97 L 70 98 L 67 98 L 64 99 L 61 100 L 58 100 L 56 101 L 53 101 L 50 102 L 47 102 L 44 102 L 41 103 L 39 103 L 36 104 L 33 104 L 30 104 L 27 104 L 24 105 L 21 105 L 18 105 L 15 105 L 12 105 L 9 105 L 7 106 L 4 106 L 1 106 L -2 106 L -5 106 L -8 105 L -11 105 L -14 105 L -17 105 L -20 105 L -23 105 L -26 105 L -29 104 L -32 104 L -35 104 L -37 103 L -40 103 L -43 103 L -46 102 L -49 102 L -52 101 L -55 101 L -57 100 L -60 100 L -63 99 L -66 99 L -68 98 L -71 97 L -74 97 L -77 96 L -79 95 L -82 95 L -85 94 L -87 93 L -90 92 L -92 91 L -95 91 L -97 90 L -100 89 L -102 88 L -105 87 L -107 86 L -109 85 L -112 84 L -114 83 L -116 82 L -119 81 L -121 79 L -123 78 L -125 77 L -127 76 L -129 75 L -131 73 L -133 72 L -135 71 L -137 70 L -139 68 L -140 67 L -142 65 L -144 64 L -145 62 L -146 61 L -148 59 L -149 58 L -150 56 L -151 55 L -152 53 L -152 51 L -153 50 L -153 48 L -154 46 L -154 45 L -155 43 L -155 41 L -156 40 L -156 38 L -157 36 L -158 35 L -159 33 L -160 31 L -161 30 L -162 28 L -163 27 L -165 25 L -166 24 L -168 22 L -170 21 L -171 20 L -173 18 L -175 17 L -176 15 L -178 14 L -179 13 L -180 11 L -182 9 L -183 8 L -183 6 L -184 5 L -185 3 L -185 1 L -186 -0 L -186 -2 L -186 -4 L -187 -6 L -187 -7 L -187 -9 L -187 -11 L -187 -12 L -186 -14 L -186 -16 L -186 -17 L -186 -19 L -185 -21 L -185 -22 L -184 -24 L -184 -26 L -183 -28 L -182 -29 L -182 -31 L -181 -32 L -180 -34 L -179 -36 L -178 -37 L -178 -39 L -177 -41 L -175 -42 L -174 -44 L -173 -45 L -172 -47 L -171 -48 L -170 -50 L -168 -51 L -167 -53 L -166 -55 L -164 -56 L -163 -58 L -161 -59 L -160 -60 L -158 -62 L -157 -63 L -155 -65" stroke-width="0.388" opacity="0.344"/>
+    <path d="M 152 -68 L 154 -66 L 155 -65 L 157 -64 L 158 -62 L 160 -61 L 161 -59 L 162 -57 L 163 -56 L 164 -54 L 165 -53 L 166 -51 L 167 -50 L 168 -48 L 169 -46 L 170 -45 L 170 -43 L 171 -41 L 171 -40 L 171 -38 L 172 -36 L 172 -34 L 172 -33 L 172 -31 L 171 -29 L 171 -28 L 170 -26 L 169 -24 L 169 -23 L 168 -21 L 166 -20 L 165 -18 L 163 -17 L 162 -15 L 160 -14 L 158 -13 L 156 -11 L 154 -10 L 152 -9 L 150 -8 L 148 -7 L 145 -5 L 143 -4 L 141 -3 L 139 -2 L 137 -1 L 135 1 L 134 2 L 132 4 L 131 5 L 129 7 L 128 8 L 128 10 L 127 11 L 127 13 L 127 15 L 127 17 L 127 18 L 128 20 L 128 22 L 129 23 L 130 25 L 131 26 L 132 28 L 133 30 L 134 31 L 135 33 L 137 34 L 138 36 L 139 37 L 140 39 L 141 41 L 143 42 L 143 44 L 144 45 L 145 47 L 145 49 L 145 50 L 145 52 L 145 54 L 144 55 L 143 57 L 142 59 L 141 60 L 140 62 L 138 63 L 137 65 L 135 66 L 134 67 L 132 69 L 130 70 L 128 71 L 126 73 L 124 74 L 122 75 L 120 76 L 118 77 L 115 79 L 113 80 L 111 81 L 109 82 L 106 83 L 104 84 L 101 85 L 99 86 L 97 87 L 94 88 L 92 89 L 89 89 L 86 90 L 84 91 L 81 92 L 79 93 L 76 93 L 73 94 L 71 95 L 68 95 L 65 96 L 62 97 L 60 97 L 57 98 L 54 98 L 51 99 L 48 99 L 45 100 L 43 100 L 40 100 L 37 101 L 34 101 L 31 101 L 28 102 L 25 102 L 22 102 L 19 102 L 16 102 L 13 103 L 11 103 L 8 103 L 5 103 L 2 103 L -1 103 L -4 103 L -7 103 L -10 103 L -13 103 L -16 103 L -19 102 L -22 102 L -25 102 L -28 102 L -31 101 L -33 101 L -36 101 L -39 101 L -42 100 L -45 100 L -48 99 L -51 99 L -53 98 L -56 98 L -59 97 L -62 97 L -65 96 L -67 96 L -70 95 L -73 94 L -76 94 L -78 93 L -81 92 L -83 91 L -86 91 L -89 90 L -91 89 L -94 88 L -96 87 L -99 86 L -101 85 L -104 84 L -106 83 L -108 82 L -111 81 L -113 80 L -115 79 L -117 78 L -119 77 L -121 75 L -124 74 L -126 73 L -127 72 L -129 70 L -131 69 L -133 68 L -135 66 L -136 65 L -138 63 L -139 62 L -140 60 L -142 59 L -143 57 L -144 56 L -145 54 L -145 52 L -146 51 L -147 49 L -147 47 L -148 46 L -148 44 L -149 42 L -149 41 L -150 39 L -150 37 L -151 36 L -151 34 L -152 32 L -152 31 L -153 29 L -154 27 L -155 26 L -156 24 L -157 23 L -159 21 L -160 20 L -162 18 L -164 17 L -165 16 L -167 14 L -169 13 L -171 11 L -173 10 L -174 9 L -176 7 L -177 6 L -178 4 L -179 3 L -180 1 L -181 -1 L -182 -2 L -182 -4 L -183 -6 L -183 -7 L -184 -9 L -184 -11 L -184 -12 L -184 -14 L -184 -16 L -184 -18 L -184 -19 L -183 -21 L -183 -23 L -183 -24 L -182 -26 L -182 -28 L -181 -29 L -181 -31 L -180 -33 L -179 -34 L -178 -36 L -178 -38 L -177 -39 L -176 -41 L -175 -42 L -174 -44 L -173 -46 L -171 -47 L -170 -49 L -169 -50 L -168 -52 L -167 -53 L -165 -55 L -164 -56 L -163 -58 L -161 -59 L -160 -61 L -158 -62 L -157 -64 L -155 -65 L -153 -67 L -152 -68 L -150 -69" stroke-width="0.388" opacity="0.363"/>
+    <path d="M 150 -71 L 151 -69 L 153 -68 L 154 -66 L 155 -65 L 157 -63 L 158 -62 L 159 -60 L 160 -59 L 162 -57 L 163 -55 L 164 -54 L 164 -52 L 165 -51 L 166 -49 L 167 -47 L 167 -46 L 168 -44 L 168 -42 L 168 -41 L 168 -39 L 168 -37 L 168 -35 L 168 -34 L 168 -32 L 167 -30 L 167 -29 L 166 -27 L 165 -25 L 164 -24 L 163 -22 L 162 -21 L 160 -19 L 158 -18 L 157 -17 L 155 -15 L 153 -14 L 151 -13 L 149 -11 L 147 -10 L 145 -9 L 143 -8 L 141 -7 L 139 -5 L 137 -4 L 135 -3 L 133 -1 L 131 -0 L 130 1 L 129 3 L 127 5 L 127 6 L 126 8 L 125 9 L 125 11 L 125 13 L 125 15 L 126 16 L 126 18 L 127 20 L 127 21 L 128 23 L 129 24 L 130 26 L 131 28 L 132 29 L 133 31 L 134 32 L 136 34 L 137 36 L 138 37 L 139 39 L 140 40 L 140 42 L 141 44 L 141 45 L 141 47 L 141 49 L 141 50 L 141 52 L 140 54 L 139 55 L 138 57 L 137 59 L 136 60 L 134 62 L 133 63 L 131 64 L 129 66 L 128 67 L 126 68 L 124 70 L 122 71 L 120 72 L 118 73 L 116 75 L 113 76 L 111 77 L 109 78 L 107 79 L 104 80 L 102 81 L 100 82 L 97 83 L 95 84 L 92 85 L 90 86 L 87 87 L 85 88 L 82 88 L 80 89 L 77 90 L 74 91 L 72 91 L 69 92 L 66 93 L 63 93 L 61 94 L 58 95 L 55 95 L 52 96 L 50 96 L 47 97 L 44 97 L 41 97 L 38 98 L 35 98 L 32 98 L 29 99 L 27 99 L 24 99 L 21 99 L 18 100 L 15 100 L 12 100 L 9 100 L 6 100 L 3 100 L 0 100 L -3 100 L -6 100 L -9 100 L -12 100 L -15 100 L -17 100 L -20 100 L -23 99 L -26 99 L -29 99 L -32 99 L -35 98 L -38 98 L -41 98 L -44 97 L -46 97 L -49 96 L -52 96 L -55 95 L -58 95 L -60 94 L -63 94 L -66 93 L -69 92 L -71 92 L -74 91 L -77 90 L -79 90 L -82 89 L -85 88 L -87 87 L -90 86 L -92 85 L -95 84 L -97 84 L -100 83 L -102 82 L -104 81 L -107 79 L -109 78 L -111 77 L -113 76 L -115 75 L -117 74 L -119 73 L -121 71 L -123 70 L -125 69 L -127 67 L -129 66 L -130 65 L -132 63 L -133 62 L -135 60 L -136 59 L -137 57 L -138 55 L -139 54 L -140 52 L -141 51 L -141 49 L -142 47 L -143 46 L -143 44 L -143 42 L -144 40 L -144 39 L -145 37 L -145 35 L -145 34 L -146 32 L -146 30 L -147 29 L -147 27 L -148 25 L -149 24 L -150 22 L -150 20 L -152 19 L -153 17 L -154 16 L -156 14 L -157 13 L -159 12 L -161 10 L -163 9 L -165 8 L -167 6 L -168 5 L -170 4 L -172 2 L -173 1 L -175 -1 L -176 -2 L -177 -4 L -178 -5 L -179 -7 L -179 -9 L -180 -10 L -180 -12 L -181 -14 L -181 -15 L -181 -17 L -181 -19 L -181 -20 L -181 -22 L -181 -24 L -180 -26 L -180 -27 L -180 -29 L -179 -31 L -179 -32 L -178 -34 L -177 -36 L -177 -37 L -176 -39 L -175 -41 L -174 -42 L -173 -44 L -172 -45 L -171 -47 L -170 -48 L -169 -50 L -168 -52 L -166 -53 L -165 -55 L -164 -56 L -162 -58 L -161 -59 L -160 -61 L -158 -62 L -157 -64 L -155 -65 L -154 -67 L -152 -68 L -150 -69 L -149 -71 L -147 -72 L -145 -74" stroke-width="0.388" opacity="0.379"/>
+    <path d="M 148 -73 L 149 -71 L 151 -70 L 152 -68 L 153 -67 L 155 -65 L 156 -64 L 157 -62 L 158 -61 L 159 -59 L 160 -57 L 161 -56 L 162 -54 L 163 -53 L 163 -51 L 164 -49 L 164 -48 L 165 -46 L 165 -44 L 165 -42 L 165 -41 L 165 -39 L 165 -37 L 165 -36 L 165 -34 L 164 -32 L 163 -31 L 163 -29 L 162 -27 L 161 -26 L 159 -24 L 158 -23 L 156 -21 L 155 -20 L 153 -19 L 151 -17 L 149 -16 L 147 -15 L 145 -13 L 143 -12 L 141 -11 L 139 -10 L 137 -9 L 135 -7 L 133 -6 L 132 -5 L 130 -3 L 129 -2 L 127 -0 L 126 1 L 125 3 L 124 5 L 124 6 L 124 8 L 123 10 L 124 11 L 124 13 L 124 15 L 125 17 L 125 18 L 126 20 L 127 21 L 128 23 L 129 25 L 130 26 L 131 28 L 132 29 L 133 31 L 134 33 L 135 34 L 135 36 L 136 38 L 137 39 L 137 41 L 138 43 L 138 44 L 138 46 L 138 48 L 137 49 L 137 51 L 136 53 L 135 54 L 134 56 L 132 57 L 131 59 L 130 60 L 128 62 L 126 63 L 125 65 L 123 66 L 121 67 L 119 69 L 117 70 L 115 71 L 113 72 L 111 73 L 109 75 L 106 76 L 104 77 L 102 78 L 100 79 L 97 80 L 95 81 L 92 82 L 90 83 L 87 84 L 85 84 L 82 85 L 80 86 L 77 87 L 74 88 L 72 88 L 69 89 L 66 90 L 64 90 L 61 91 L 58 92 L 55 92 L 53 93 L 50 93 L 47 94 L 44 94 L 41 95 L 38 95 L 35 95 L 33 96 L 30 96 L 27 96 L 24 96 L 21 97 L 18 97 L 15 97 L 12 97 L 9 97 L 6 97 L 3 97 L 0 97 L -3 97 L -6 97 L -8 97 L -11 97 L -14 97 L -17 97 L -20 97 L -23 97 L -26 96 L -29 96 L -32 96 L -35 96 L -38 95 L -41 95 L -43 94 L -46 94 L -49 94 L -52 93 L -55 93 L -57 92 L -60 91 L -63 91 L -66 90 L -68 90 L -71 89 L -74 88 L -77 87 L -79 87 L -82 86 L -84 85 L -87 84 L -89 83 L -92 82 L -94 81 L -97 80 L -99 79 L -101 78 L -104 77 L -106 76 L -108 75 L -110 74 L -112 73 L -114 72 L -116 70 L -118 69 L -120 68 L -122 66 L -124 65 L -125 64 L -127 62 L -128 61 L -130 59 L -131 58 L -132 56 L -133 54 L -134 53 L -135 51 L -136 50 L -137 48 L -137 46 L -138 45 L -138 43 L -139 41 L -139 40 L -140 38 L -140 36 L -140 34 L -141 33 L -141 31 L -141 29 L -142 28 L -142 26 L -142 24 L -143 23 L -143 21 L -144 19 L -145 18 L -145 16 L -146 14 L -147 13 L -149 11 L -150 10 L -152 8 L -153 7 L -155 6 L -157 4 L -159 3 L -161 2 L -163 1 L -165 -1 L -167 -2 L -169 -3 L -170 -5 L -172 -6 L -173 -8 L -174 -9 L -175 -11 L -176 -13 L -177 -14 L -177 -16 L -178 -18 L -178 -19 L -178 -21 L -178 -23 L -178 -24 L -178 -26 L -178 -28 L -177 -29 L -177 -31 L -177 -33 L -176 -34 L -175 -36 L -175 -38 L -174 -39 L -173 -41 L -172 -43 L -172 -44 L -171 -46 L -170 -48 L -169 -49 L -167 -51 L -166 -52 L -165 -54 L -164 -55 L -163 -57 L -161 -58 L -160 -60 L -159 -61 L -157 -63 L -156 -64 L -154 -66 L -153 -67 L -151 -69 L -150 -70 L -148 -72 L -146 -73 L -145 -74 L -143 -76 L -141 -77" stroke-width="0.388" opacity="0.394"/>
+    <path d="M 145 -75 L 147 -74 L 148 -72 L 150 -71 L 151 -69 L 152 -68 L 154 -66 L 155 -65 L 156 -63 L 157 -61 L 158 -60 L 159 -58 L 160 -56 L 160 -55 L 161 -53 L 161 -51 L 162 -50 L 162 -48 L 162 -46 L 163 -45 L 163 -43 L 163 -41 L 162 -40 L 162 -38 L 162 -36 L 161 -35 L 160 -33 L 160 -31 L 159 -30 L 157 -28 L 156 -27 L 155 -25 L 153 -24 L 151 -22 L 150 -21 L 148 -20 L 146 -18 L 144 -17 L 142 -16 L 140 -14 L 138 -13 L 136 -12 L 134 -11 L 132 -9 L 131 -8 L 129 -7 L 127 -5 L 126 -4 L 125 -2 L 124 -0 L 123 1 L 122 3 L 122 5 L 122 6 L 122 8 L 122 10 L 122 11 L 123 13 L 123 15 L 124 16 L 124 18 L 125 20 L 126 21 L 127 23 L 128 25 L 129 26 L 130 28 L 131 29 L 131 31 L 132 33 L 133 34 L 134 36 L 134 38 L 134 39 L 135 41 L 135 43 L 134 44 L 134 46 L 134 48 L 133 49 L 132 51 L 131 53 L 130 54 L 129 56 L 127 57 L 126 59 L 124 60 L 122 62 L 121 63 L 119 64 L 117 66 L 115 67 L 113 68 L 111 69 L 109 71 L 107 72 L 105 73 L 102 74 L 100 75 L 98 76 L 95 77 L 93 78 L 91 79 L 88 80 L 86 81 L 83 82 L 81 83 L 78 83 L 75 84 L 73 85 L 70 86 L 67 86 L 65 87 L 62 88 L 59 88 L 56 89 L 54 90 L 51 90 L 48 91 L 45 91 L 42 91 L 40 92 L 37 92 L 34 93 L 31 93 L 28 93 L 25 94 L 22 94 L 19 94 L 16 94 L 13 94 L 10 94 L 8 95 L 5 95 L 2 95 L -1 95 L -4 95 L -7 95 L -10 95 L -13 94 L -16 94 L -19 94 L -22 94 L -25 94 L -28 93 L -31 93 L -33 93 L -36 93 L -39 92 L -42 92 L -45 91 L -48 91 L -51 90 L -53 90 L -56 89 L -59 89 L -62 88 L -65 88 L -67 87 L -70 86 L -73 85 L -75 85 L -78 84 L -80 83 L -83 82 L -86 81 L -88 81 L -90 80 L -93 79 L -95 78 L -98 77 L -100 76 L -102 74 L -104 73 L -107 72 L -109 71 L -111 70 L -113 69 L -115 67 L -116 66 L -118 65 L -120 63 L -122 62 L -123 60 L -124 59 L -126 57 L -127 56 L -128 54 L -129 53 L -130 51 L -131 49 L -132 48 L -133 46 L -133 44 L -134 43 L -134 41 L -135 39 L -135 38 L -135 36 L -136 34 L -136 33 L -136 31 L -137 29 L -137 28 L -137 26 L -137 24 L -138 22 L -138 21 L -138 19 L -139 17 L -139 16 L -140 14 L -140 12 L -141 11 L -141 9 L -142 7 L -143 6 L -144 4 L -146 3 L -148 1 L -150 0 L -152 -1 L -154 -2 L -156 -3 L -158 -4 L -161 -6 L -163 -7 L -165 -8 L -166 -9 L -168 -11 L -169 -12 L -171 -14 L -172 -15 L -173 -17 L -173 -19 L -174 -20 L -174 -22 L -175 -24 L -175 -25 L -175 -27 L -175 -29 L -175 -31 L -174 -32 L -174 -34 L -174 -36 L -173 -37 L -172 -39 L -172 -41 L -171 -42 L -170 -44 L -169 -46 L -169 -47 L -168 -49 L -167 -50 L -165 -52 L -164 -54 L -163 -55 L -162 -57 L -161 -58 L -159 -60 L -158 -61 L -157 -63 L -155 -64 L -154 -66 L -152 -67 L -151 -69 L -150 -70 L -148 -72 L -146 -73 L -145 -74 L -143 -76 L -142 -77 L -140 -79 L -138 -80 L -137 -81" stroke-width="0.388" opacity="0.408"/>
+    <path d="M 144 -77 L 146 -75 L 147 -74 L 148 -72 L 150 -71 L 151 -69 L 152 -68 L 153 -66 L 154 -64 L 155 -63 L 156 -61 L 157 -60 L 158 -58 L 158 -56 L 159 -55 L 159 -53 L 160 -51 L 160 -50 L 160 -48 L 160 -46 L 160 -44 L 160 -43 L 160 -41 L 159 -39 L 159 -38 L 158 -36 L 157 -34 L 156 -33 L 155 -31 L 154 -30 L 152 -28 L 151 -27 L 149 -25 L 148 -24 L 146 -23 L 144 -21 L 142 -20 L 140 -19 L 138 -17 L 136 -16 L 134 -15 L 132 -13 L 131 -12 L 129 -11 L 127 -9 L 126 -8 L 124 -6 L 123 -5 L 122 -3 L 121 -2 L 121 0 L 120 2 L 120 3 L 120 5 L 120 7 L 120 9 L 121 10 L 121 12 L 122 14 L 122 15 L 123 17 L 124 19 L 125 20 L 126 22 L 126 23 L 127 25 L 128 27 L 129 28 L 130 30 L 130 32 L 131 33 L 131 35 L 131 37 L 132 38 L 132 40 L 131 42 L 131 43 L 131 45 L 130 47 L 129 48 L 128 50 L 127 52 L 126 53 L 124 55 L 123 56 L 121 58 L 120 59 L 118 60 L 116 62 L 114 63 L 112 64 L 110 66 L 108 67 L 106 68 L 104 69 L 102 70 L 100 71 L 98 73 L 95 74 L 93 75 L 90 76 L 88 77 L 86 78 L 83 78 L 81 79 L 78 80 L 75 81 L 73 82 L 70 83 L 68 83 L 65 84 L 62 85 L 59 85 L 57 86 L 54 86 L 51 87 L 48 88 L 45 88 L 43 88 L 40 89 L 37 89 L 34 90 L 31 90 L 28 90 L 25 91 L 22 91 L 20 91 L 17 91 L 14 91 L 11 92 L 8 92 L 5 92 L 2 92 L -1 92 L -4 92 L -7 92 L -10 92 L -13 92 L -16 91 L -19 91 L -22 91 L -25 91 L -27 91 L -30 90 L -33 90 L -36 90 L -39 89 L -42 89 L -45 89 L -48 88 L -50 88 L -53 87 L -56 86 L -59 86 L -61 85 L -64 85 L -67 84 L -70 83 L -72 83 L -75 82 L -77 81 L -80 80 L -83 79 L -85 78 L -88 77 L -90 76 L -92 75 L -95 74 L -97 73 L -99 72 L -101 71 L -104 70 L -106 69 L -108 68 L -110 66 L -112 65 L -113 64 L -115 62 L -117 61 L -118 59 L -120 58 L -121 56 L -122 55 L -124 53 L -125 52 L -126 50 L -127 49 L -128 47 L -128 45 L -129 44 L -130 42 L -130 40 L -130 39 L -131 37 L -131 35 L -132 34 L -132 32 L -132 30 L -132 28 L -133 27 L -133 25 L -133 23 L -133 22 L -133 20 L -134 18 L -134 17 L -134 15 L -134 13 L -135 12 L -135 10 L -135 8 L -135 6 L -136 5 L -136 3 L -137 1 L -137 -0 L -138 -2 L -139 -3 L -141 -5 L -143 -6 L -145 -7 L -147 -8 L -150 -9 L -153 -10 L -155 -11 L -157 -12 L -160 -13 L -162 -14 L -164 -15 L -165 -17 L -167 -18 L -168 -20 L -169 -22 L -170 -23 L -170 -25 L -171 -26 L -171 -28 L -171 -30 L -171 -32 L -171 -33 L -171 -35 L -171 -37 L -170 -38 L -170 -40 L -169 -42 L -169 -43 L -168 -45 L -167 -47 L -166 -48 L -165 -50 L -164 -52 L -163 -53 L -162 -55 L -161 -56 L -160 -58 L -159 -59 L -158 -61 L -156 -62 L -155 -64 L -154 -65 L -152 -67 L -151 -68 L -149 -70 L -148 -71 L -146 -73 L -145 -74 L -143 -76 L -142 -77 L -140 -79 L -139 -80 L -137 -81 L -135 -83 L -133 -84" stroke-width="0.388" opacity="0.422"/>
+    <path d="M 142 -79 L 144 -77 L 145 -76 L 146 -74 L 148 -73 L 149 -71 L 150 -70 L 151 -68 L 152 -67 L 153 -65 L 154 -63 L 155 -62 L 155 -60 L 156 -58 L 156 -57 L 157 -55 L 157 -53 L 157 -52 L 158 -50 L 158 -48 L 157 -47 L 157 -45 L 157 -43 L 156 -41 L 156 -40 L 155 -38 L 154 -37 L 153 -35 L 152 -33 L 151 -32 L 149 -30 L 148 -29 L 146 -27 L 145 -26 L 143 -25 L 141 -23 L 139 -22 L 137 -21 L 135 -20 L 133 -18 L 131 -17 L 130 -16 L 128 -14 L 126 -13 L 125 -11 L 123 -10 L 122 -8 L 121 -7 L 120 -5 L 119 -3 L 119 -2 L 119 -0 L 118 2 L 118 3 L 119 5 L 119 7 L 119 8 L 120 10 L 120 12 L 121 13 L 122 15 L 122 17 L 123 18 L 124 20 L 125 22 L 125 23 L 126 25 L 127 27 L 127 28 L 128 30 L 128 32 L 129 33 L 129 35 L 129 37 L 129 38 L 128 40 L 128 42 L 127 43 L 127 45 L 126 47 L 125 48 L 124 50 L 122 51 L 121 53 L 119 54 L 118 56 L 116 57 L 114 59 L 113 60 L 111 61 L 109 62 L 107 64 L 105 65 L 103 66 L 101 67 L 98 68 L 96 70 L 94 71 L 92 72 L 89 73 L 87 74 L 84 75 L 82 76 L 79 76 L 77 77 L 74 78 L 72 79 L 69 80 L 66 80 L 64 81 L 61 82 L 58 82 L 56 83 L 53 84 L 50 84 L 47 85 L 44 85 L 42 86 L 39 86 L 36 87 L 33 87 L 30 87 L 27 88 L 24 88 L 21 88 L 18 88 L 16 89 L 13 89 L 10 89 L 7 89 L 4 89 L 1 89 L -2 89 L -5 89 L -8 89 L -11 89 L -14 89 L -17 89 L -20 88 L -23 88 L -26 88 L -28 88 L -31 87 L -34 87 L -37 87 L -40 86 L -43 86 L -46 85 L -49 85 L -51 84 L -54 84 L -57 83 L -60 83 L -62 82 L -65 81 L -68 81 L -70 80 L -73 79 L -76 78 L -78 78 L -81 77 L -83 76 L -86 75 L -88 74 L -90 73 L -93 72 L -95 71 L -97 70 L -99 68 L -102 67 L -104 66 L -106 65 L -107 63 L -109 62 L -111 61 L -113 59 L -114 58 L -116 57 L -117 55 L -119 54 L -120 52 L -121 50 L -122 49 L -123 47 L -124 46 L -124 44 L -125 42 L -126 41 L -126 39 L -127 37 L -127 36 L -128 34 L -128 32 L -128 30 L -128 29 L -129 27 L -129 25 L -129 24 L -129 22 L -129 20 L -130 19 L -130 17 L -130 15 L -130 14 L -130 12 L -130 10 L -130 8 L -130 7 L -130 5 L -130 3 L -130 2 L -130 -0 L -130 -2 L -130 -3 L -130 -5 L -130 -7 L -130 -9 L -131 -10 L -131 -12 L -133 -13 L -135 -15 L -137 -15 L -140 -16 L -143 -16 L -146 -17 L -149 -17 L -151 -18 L -154 -19 L -156 -19 L -159 -21 L -161 -22 L -162 -23 L -164 -25 L -165 -26 L -166 -28 L -167 -30 L -167 -31 L -167 -33 L -168 -35 L -168 -36 L -167 -38 L -167 -40 L -167 -41 L -166 -43 L -166 -45 L -165 -46 L -165 -48 L -164 -50 L -163 -51 L -162 -53 L -161 -55 L -160 -56 L -159 -58 L -158 -59 L -157 -61 L -155 -62 L -154 -64 L -153 -65 L -151 -67 L -150 -69 L -149 -70 L -147 -71 L -146 -73 L -144 -74 L -143 -76 L -141 -77 L -140 -79 L -138 -80 L -137 -82 L -135 -83 L -133 -85 L -132 -86 L -130 -87" stroke-width="0.388" opacity="0.436"/>
+    <path d="M 140 -81 L 142 -80 L 143 -78 L 144 -77 L 146 -75 L 147 -74 L 148 -72 L 149 -70 L 150 -69 L 151 -67 L 152 -66 L 153 -64 L 153 -62 L 154 -61 L 154 -59 L 155 -57 L 155 -56 L 155 -54 L 155 -52 L 155 -50 L 155 -49 L 155 -47 L 154 -45 L 154 -44 L 153 -42 L 152 -40 L 152 -39 L 150 -37 L 149 -36 L 148 -34 L 147 -33 L 145 -31 L 143 -30 L 142 -28 L 140 -27 L 138 -26 L 136 -24 L 134 -23 L 132 -22 L 131 -20 L 129 -19 L 127 -18 L 125 -16 L 124 -15 L 122 -13 L 121 -12 L 120 -10 L 119 -9 L 118 -7 L 117 -5 L 117 -4 L 117 -2 L 117 -0 L 117 1 L 117 3 L 117 5 L 118 6 L 118 8 L 119 10 L 119 11 L 120 13 L 121 15 L 121 16 L 122 18 L 123 20 L 123 21 L 124 23 L 125 25 L 125 26 L 126 28 L 126 30 L 126 31 L 126 33 L 126 35 L 126 37 L 125 38 L 125 40 L 124 42 L 123 43 L 123 45 L 121 46 L 120 48 L 119 49 L 118 51 L 116 52 L 114 54 L 113 55 L 111 57 L 109 58 L 107 59 L 105 61 L 103 62 L 101 63 L 99 64 L 97 65 L 95 66 L 93 68 L 90 69 L 88 70 L 86 71 L 83 72 L 81 73 L 78 73 L 76 74 L 73 75 L 71 76 L 68 77 L 65 78 L 63 78 L 60 79 L 57 80 L 54 80 L 52 81 L 49 81 L 46 82 L 43 82 L 40 83 L 38 83 L 35 84 L 32 84 L 29 84 L 26 85 L 23 85 L 20 85 L 17 85 L 14 86 L 12 86 L 9 86 L 6 86 L 3 86 L -0 86 L -3 86 L -6 86 L -9 86 L -12 86 L -15 86 L -18 86 L -21 85 L -24 85 L -27 85 L -30 85 L -32 84 L -35 84 L -38 84 L -41 83 L -44 83 L -47 82 L -49 82 L -52 81 L -55 81 L -58 80 L -61 79 L -63 79 L -66 78 L -69 77 L -71 77 L -74 76 L -76 75 L -79 74 L -81 73 L -84 72 L -86 71 L -89 70 L -91 69 L -93 68 L -95 67 L -97 66 L -100 64 L -102 63 L -103 62 L -105 61 L -107 59 L -109 58 L -110 56 L -112 55 L -113 54 L -115 52 L -116 51 L -117 49 L -118 47 L -119 46 L -120 44 L -121 42 L -122 41 L -122 39 L -123 38 L -123 36 L -124 34 L -124 32 L -124 31 L -125 29 L -125 27 L -125 26 L -125 24 L -125 22 L -126 21 L -126 19 L -126 17 L -126 15 L -126 14 L -126 12 L -126 10 L -126 9 L -126 7 L -126 5 L -126 4 L -125 2 L -125 0 L -125 -1 L -125 -3 L -124 -5 L -124 -7 L -123 -8 L -123 -10 L -123 -12 L -122 -13 L -122 -15 L -122 -17 L -122 -18 L -123 -20 L -124 -22 L -126 -23 L -129 -24 L -132 -24 L -135 -24 L -138 -25 L -140 -25 L -143 -25 L -146 -25 L -149 -25 L -152 -26 L -154 -27 L -157 -28 L -158 -29 L -160 -31 L -161 -32 L -162 -34 L -163 -36 L -163 -37 L -163 -39 L -163 -41 L -163 -42 L -163 -44 L -163 -46 L -162 -47 L -162 -49 L -161 -51 L -160 -52 L -159 -54 L -159 -56 L -158 -57 L -157 -59 L -156 -60 L -154 -62 L -153 -64 L -152 -65 L -151 -67 L -150 -68 L -148 -70 L -147 -71 L -145 -73 L -144 -74 L -143 -76 L -141 -77 L -140 -79 L -138 -80 L -137 -82 L -135 -83 L -134 -84 L -132 -86 L -130 -87 L -129 -89 L -127 -90" stroke-width="0.388" opacity="0.449"/>
+    <path d="M 139 -83 L 140 -81 L 142 -80 L 143 -78 L 144 -77 L 145 -75 L 146 -74 L 147 -72 L 148 -70 L 149 -69 L 150 -67 L 151 -65 L 151 -64 L 152 -62 L 152 -60 L 153 -59 L 153 -57 L 153 -55 L 153 -54 L 153 -52 L 153 -50 L 152 -49 L 152 -47 L 151 -45 L 150 -44 L 149 -42 L 148 -40 L 147 -39 L 146 -37 L 145 -36 L 143 -34 L 142 -33 L 140 -31 L 138 -30 L 136 -29 L 135 -27 L 133 -26 L 131 -25 L 129 -23 L 127 -22 L 126 -21 L 124 -19 L 122 -18 L 121 -16 L 119 -15 L 118 -13 L 117 -12 L 116 -10 L 116 -8 L 115 -7 L 115 -5 L 115 -3 L 115 -2 L 115 0 L 115 2 L 116 4 L 116 5 L 117 7 L 117 9 L 118 10 L 118 12 L 119 14 L 120 15 L 120 17 L 121 19 L 122 20 L 122 22 L 123 24 L 123 25 L 123 27 L 124 29 L 124 30 L 124 32 L 123 34 L 123 35 L 122 37 L 122 39 L 121 40 L 120 42 L 119 44 L 118 45 L 117 47 L 115 48 L 114 50 L 112 51 L 110 52 L 109 54 L 107 55 L 105 57 L 103 58 L 101 59 L 99 60 L 97 61 L 95 63 L 93 64 L 90 65 L 88 66 L 86 67 L 83 68 L 81 69 L 79 70 L 76 71 L 74 72 L 71 73 L 68 73 L 66 74 L 63 75 L 60 76 L 58 76 L 55 77 L 52 78 L 50 78 L 47 79 L 44 79 L 41 80 L 38 80 L 35 81 L 33 81 L 30 81 L 27 82 L 24 82 L 21 82 L 18 83 L 15 83 L 12 83 L 9 83 L 6 83 L 3 83 L 0 83 L -2 83 L -5 83 L -8 83 L -11 83 L -14 83 L -17 83 L -20 83 L -23 82 L -26 82 L -29 82 L -32 82 L -35 81 L -38 81 L -40 80 L -43 80 L -46 79 L -49 79 L -52 78 L -54 78 L -57 77 L -60 77 L -63 76 L -65 75 L -68 74 L -70 74 L -73 73 L -76 72 L -78 71 L -81 70 L -83 69 L -85 68 L -88 67 L -90 66 L -92 65 L -94 64 L -96 62 L -98 61 L -100 60 L -102 59 L -104 57 L -106 56 L -107 54 L -109 53 L -110 51 L -112 50 L -113 48 L -114 47 L -115 45 L -116 44 L -117 42 L -118 40 L -118 39 L -119 37 L -119 35 L -120 34 L -120 32 L -121 30 L -121 29 L -121 27 L -122 25 L -122 24 L -122 22 L -122 20 L -122 18 L -122 17 L -122 15 L -122 13 L -122 12 L -122 10 L -122 8 L -122 7 L -122 5 L -122 3 L -122 1 L -121 -0 L -121 -2 L -121 -4 L -120 -5 L -120 -7 L -119 -9 L -118 -10 L -118 -12 L -117 -14 L -117 -15 L -116 -17 L -116 -19 L -116 -20 L -116 -22 L -116 -24 L -117 -25 L -118 -27 L -120 -28 L -122 -30 L -124 -31 L -127 -31 L -130 -32 L -133 -32 L -136 -32 L -139 -32 L -142 -32 L -145 -32 L -147 -33 L -150 -34 L -152 -35 L -154 -36 L -156 -37 L -157 -39 L -158 -40 L -158 -42 L -159 -44 L -159 -46 L -159 -47 L -159 -49 L -158 -51 L -158 -52 L -157 -54 L -156 -56 L -156 -57 L -155 -59 L -154 -60 L -153 -62 L -152 -64 L -151 -65 L -149 -67 L -148 -68 L -147 -70 L -146 -71 L -144 -73 L -143 -75 L -142 -76 L -140 -78 L -139 -79 L -138 -80 L -136 -82 L -135 -83 L -133 -85 L -132 -86 L -130 -88 L -128 -89 L -127 -91 L -125 -92" stroke-width="0.665" opacity="0.462"/>
+    <path d="M 138 -84 L 139 -83 L 140 -81 L 142 -80 L 143 -78 L 144 -77 L 145 -75 L 146 -74 L 147 -72 L 148 -70 L 148 -69 L 149 -67 L 150 -65 L 150 -64 L 150 -62 L 151 -60 L 151 -59 L 151 -57 L 151 -55 L 150 -53 L 150 -52 L 150 -50 L 149 -48 L 148 -47 L 148 -45 L 147 -44 L 146 -42 L 144 -40 L 143 -39 L 142 -37 L 140 -36 L 138 -35 L 137 -33 L 135 -32 L 133 -30 L 131 -29 L 129 -28 L 128 -26 L 126 -25 L 124 -24 L 123 -22 L 121 -21 L 119 -19 L 118 -18 L 117 -16 L 116 -15 L 115 -13 L 114 -12 L 114 -10 L 113 -8 L 113 -6 L 113 -5 L 113 -3 L 113 -1 L 114 0 L 114 2 L 115 4 L 115 5 L 116 7 L 116 9 L 117 10 L 118 12 L 118 14 L 119 15 L 119 17 L 120 19 L 120 20 L 121 22 L 121 24 L 121 25 L 121 27 L 121 29 L 121 31 L 121 32 L 120 34 L 119 36 L 119 37 L 118 39 L 117 40 L 116 42 L 115 44 L 113 45 L 112 47 L 110 48 L 109 49 L 107 51 L 105 52 L 103 53 L 101 55 L 99 56 L 97 57 L 95 59 L 93 60 L 91 61 L 89 62 L 87 63 L 84 64 L 82 65 L 80 66 L 77 67 L 75 68 L 72 69 L 70 70 L 67 71 L 64 71 L 62 72 L 59 73 L 56 73 L 54 74 L 51 75 L 48 75 L 45 76 L 43 76 L 40 77 L 37 77 L 34 78 L 31 78 L 28 79 L 25 79 L 23 79 L 20 79 L 17 80 L 14 80 L 11 80 L 8 80 L 5 80 L 2 80 L -1 80 L -4 80 L -7 80 L -10 80 L -13 80 L -16 80 L -18 80 L -21 80 L -24 79 L -27 79 L -30 79 L -33 78 L -36 78 L -39 78 L -42 77 L -44 77 L -47 76 L -50 76 L -53 75 L -56 74 L -58 74 L -61 73 L -64 72 L -66 72 L -69 71 L -71 70 L -74 69 L -76 68 L -79 67 L -81 66 L -84 65 L -86 64 L -88 63 L -90 62 L -92 61 L -94 60 L -96 58 L -98 57 L -100 56 L -102 54 L -104 53 L -105 51 L -107 50 L -108 48 L -109 47 L -110 45 L -111 44 L -112 42 L -113 41 L -114 39 L -115 37 L -116 36 L -116 34 L -117 32 L -117 31 L -118 29 L -118 27 L -118 26 L -118 24 L -119 22 L -119 20 L -119 19 L -119 17 L -119 15 L -119 14 L -119 12 L -119 10 L -119 9 L -119 7 L -119 5 L -119 4 L -118 2 L -118 0 L -118 -2 L -117 -3 L -117 -5 L -116 -7 L -116 -8 L -115 -10 L -115 -12 L -114 -13 L -113 -15 L -113 -17 L -112 -18 L -112 -20 L -111 -22 L -111 -23 L -111 -25 L -111 -27 L -112 -28 L -113 -30 L -114 -32 L -115 -33 L -117 -34 L -119 -35 L -122 -36 L -124 -37 L -127 -38 L -130 -38 L -133 -39 L -136 -39 L -139 -39 L -142 -39 L -144 -40 L -147 -41 L -149 -42 L -151 -43 L -152 -45 L -153 -46 L -154 -48 L -154 -50 L -154 -52 L -154 -53 L -153 -55 L -153 -57 L -152 -58 L -152 -60 L -151 -62 L -150 -63 L -149 -65 L -148 -66 L -147 -68 L -146 -70 L -145 -71 L -144 -73 L -142 -74 L -141 -76 L -140 -77 L -139 -79 L -137 -80 L -136 -82 L -134 -83 L -133 -85 L -131 -86 L -130 -88 L -128 -89 L -127 -91 L -125 -92 L -124 -93 L -122 -95" stroke-width="0.388" opacity="0.474"/>
+    <path d="M 136 -87 L 137 -85 L 138 -84 L 140 -82 L 141 -81 L 142 -79 L 143 -78 L 144 -76 L 145 -74 L 146 -73 L 146 -71 L 147 -69 L 147 -68 L 148 -66 L 148 -64 L 148 -63 L 149 -61 L 149 -59 L 149 -58 L 148 -56 L 148 -54 L 147 -53 L 147 -51 L 146 -49 L 145 -48 L 144 -46 L 143 -44 L 142 -43 L 141 -41 L 139 -40 L 138 -38 L 136 -37 L 134 -36 L 133 -34 L 131 -33 L 129 -32 L 127 -30 L 125 -29 L 124 -27 L 122 -26 L 120 -25 L 119 -23 L 117 -22 L 116 -20 L 115 -19 L 114 -17 L 113 -15 L 112 -14 L 112 -12 L 112 -10 L 111 -9 L 111 -7 L 112 -5 L 112 -4 L 112 -2 L 112 -0 L 113 1 L 113 3 L 114 5 L 115 6 L 115 8 L 116 10 L 116 11 L 117 13 L 117 15 L 118 16 L 118 18 L 118 20 L 119 22 L 119 23 L 119 25 L 119 27 L 118 28 L 118 30 L 118 32 L 117 33 L 116 35 L 115 37 L 114 38 L 113 40 L 112 41 L 110 43 L 109 44 L 107 46 L 106 47 L 104 49 L 102 50 L 100 51 L 99 53 L 97 54 L 95 55 L 92 56 L 90 57 L 88 59 L 86 60 L 84 61 L 81 62 L 79 63 L 77 64 L 74 65 L 72 66 L 69 67 L 67 67 L 64 68 L 61 69 L 59 70 L 56 70 L 53 71 L 51 72 L 48 72 L 45 73 L 42 73 L 39 74 L 37 74 L 34 75 L 31 75 L 28 76 L 25 76 L 22 76 L 19 76 L 16 77 L 13 77 L 11 77 L 8 77 L 5 77 L 2 77 L -1 77 L -4 77 L -7 77 L -10 77 L -13 77 L -16 77 L -19 77 L -22 77 L -25 76 L -28 76 L -31 76 L -33 75 L -36 75 L -39 75 L -42 74 L -45 74 L -48 73 L -50 73 L -53 72 L -56 71 L -59 71 L -61 70 L -64 69 L -66 68 L -69 68 L -72 67 L -74 66 L -76 65 L -79 64 L -81 63 L -83 62 L -86 61 L -88 59 L -90 58 L -92 57 L -94 56 L -96 54 L -98 53 L -99 52 L -101 50 L -103 49 L -104 47 L -105 46 L -107 44 L -108 43 L -109 41 L -110 40 L -111 38 L -111 36 L -112 35 L -113 33 L -113 31 L -114 30 L -114 28 L -115 26 L -115 25 L -115 23 L -115 21 L -116 19 L -116 18 L -116 16 L -116 14 L -116 13 L -116 11 L -116 9 L -116 8 L -116 6 L -116 4 L -116 2 L -115 1 L -115 -1 L -115 -3 L -114 -4 L -114 -6 L -113 -8 L -113 -9 L -112 -11 L -111 -13 L -111 -14 L -110 -16 L -109 -18 L -109 -19 L -108 -21 L -108 -23 L -107 -24 L -107 -26 L -107 -28 L -107 -29 L -108 -31 L -108 -33 L -109 -34 L -111 -36 L -112 -37 L -114 -39 L -116 -40 L -118 -41 L -121 -42 L -123 -43 L -126 -43 L -129 -44 L -131 -45 L -134 -45 L -137 -46 L -140 -46 L -142 -47 L -144 -48 L -146 -50 L -147 -51 L -148 -53 L -149 -55 L -149 -56 L -149 -58 L -148 -60 L -148 -61 L -147 -63 L -147 -65 L -146 -66 L -145 -68 L -144 -70 L -143 -71 L -142 -73 L -141 -74 L -140 -76 L -139 -77 L -137 -79 L -136 -81 L -135 -82 L -134 -84 L -132 -85 L -131 -87 L -129 -88 L -128 -90 L -126 -91 L -125 -92 L -123 -94 L -122 -95 L -120 -97 L -118 -98" stroke-width="0.388" opacity="0.486"/>
+    <path d="M 134 -88 L 136 -87 L 137 -85 L 138 -84 L 139 -82 L 141 -81 L 142 -79 L 142 -77 L 143 -76 L 144 -74 L 145 -72 L 145 -71 L 146 -69 L 146 -67 L 146 -66 L 147 -64 L 147 -62 L 146 -61 L 146 -59 L 146 -57 L 146 -56 L 145 -54 L 144 -52 L 143 -51 L 142 -49 L 141 -47 L 140 -46 L 139 -44 L 137 -43 L 136 -41 L 134 -40 L 133 -39 L 131 -37 L 129 -36 L 127 -34 L 126 -33 L 124 -32 L 122 -30 L 120 -29 L 119 -28 L 117 -26 L 116 -25 L 114 -23 L 113 -22 L 112 -20 L 111 -18 L 111 -17 L 110 -15 L 110 -13 L 110 -12 L 110 -10 L 110 -8 L 110 -7 L 110 -5 L 111 -3 L 111 -1 L 111 0 L 112 2 L 113 4 L 113 5 L 114 7 L 114 9 L 115 10 L 115 12 L 116 14 L 116 15 L 116 17 L 116 19 L 117 20 L 117 22 L 116 24 L 116 26 L 116 27 L 115 29 L 115 31 L 114 32 L 113 34 L 112 35 L 111 37 L 110 38 L 108 40 L 107 42 L 105 43 L 104 44 L 102 46 L 100 47 L 98 48 L 97 50 L 95 51 L 93 52 L 90 54 L 88 55 L 86 56 L 84 57 L 82 58 L 79 59 L 77 60 L 75 61 L 72 62 L 70 63 L 67 64 L 65 65 L 62 65 L 59 66 L 57 67 L 54 68 L 51 68 L 49 69 L 46 70 L 43 70 L 40 71 L 37 71 L 35 72 L 32 72 L 29 72 L 26 73 L 23 73 L 20 73 L 17 74 L 14 74 L 11 74 L 8 74 L 5 74 L 3 74 L -0 74 L -3 74 L -6 74 L -9 74 L -12 74 L -15 74 L -18 74 L -21 74 L -24 73 L -27 73 L -30 73 L -33 72 L -35 72 L -38 72 L -41 71 L -44 71 L -47 70 L -50 70 L -52 69 L -55 68 L -58 68 L -60 67 L -63 66 L -66 65 L -68 64 L -71 64 L -73 63 L -76 62 L -78 61 L -80 60 L -82 59 L -85 57 L -87 56 L -89 55 L -91 54 L -93 52 L -95 51 L -96 50 L -98 48 L -99 47 L -101 45 L -102 44 L -104 42 L -105 41 L -106 39 L -107 38 L -108 36 L -108 34 L -109 33 L -110 31 L -110 29 L -111 28 L -111 26 L -112 24 L -112 23 L -112 21 L -113 19 L -113 17 L -113 16 L -113 14 L -113 12 L -113 11 L -113 9 L -113 7 L -113 6 L -113 4 L -113 2 L -112 0 L -112 -1 L -112 -3 L -111 -5 L -111 -6 L -111 -8 L -110 -10 L -109 -11 L -109 -13 L -108 -15 L -107 -16 L -107 -18 L -106 -20 L -105 -21 L -105 -23 L -104 -25 L -104 -26 L -104 -28 L -104 -30 L -104 -31 L -104 -33 L -105 -35 L -105 -36 L -106 -38 L -108 -40 L -109 -41 L -111 -42 L -113 -44 L -115 -45 L -117 -46 L -119 -47 L -122 -48 L -124 -49 L -127 -50 L -130 -50 L -132 -51 L -135 -52 L -137 -53 L -139 -54 L -141 -55 L -142 -57 L -143 -59 L -144 -60 L -144 -62 L -144 -64 L -143 -65 L -143 -67 L -142 -69 L -141 -70 L -141 -72 L -140 -74 L -139 -75 L -138 -77 L -137 -78 L -136 -80 L -134 -82 L -133 -83 L -132 -85 L -131 -86 L -129 -88 L -128 -89 L -126 -91 L -125 -92 L -124 -94 L -122 -95 L -120 -97 L -119 -98 L -117 -99" stroke-width="0.388" opacity="0.498"/>
+    <path d="M 133 -90 L 134 -89 L 135 -87 L 137 -86 L 138 -84 L 139 -83 L 140 -81 L 141 -79 L 142 -78 L 142 -76 L 143 -74 L 143 -73 L 144 -71 L 144 -69 L 144 -68 L 145 -66 L 145 -64 L 144 -63 L 144 -61 L 144 -59 L 143 -58 L 143 -56 L 142 -54 L 141 -53 L 140 -51 L 139 -49 L 138 -48 L 136 -46 L 135 -45 L 133 -43 L 132 -42 L 130 -41 L 128 -39 L 126 -38 L 125 -37 L 123 -35 L 121 -34 L 119 -32 L 118 -31 L 116 -30 L 115 -28 L 113 -27 L 112 -25 L 111 -24 L 110 -22 L 109 -20 L 109 -19 L 108 -17 L 108 -15 L 108 -14 L 108 -12 L 108 -10 L 108 -8 L 109 -7 L 109 -5 L 109 -3 L 110 -2 L 110 -0 L 111 2 L 111 3 L 112 5 L 112 7 L 113 8 L 113 10 L 114 12 L 114 13 L 114 15 L 114 17 L 114 18 L 114 20 L 114 22 L 114 24 L 113 25 L 113 27 L 112 29 L 111 30 L 110 32 L 109 33 L 108 35 L 107 36 L 105 38 L 104 39 L 102 41 L 101 42 L 99 44 L 97 45 L 95 46 L 93 48 L 92 49 L 89 50 L 87 51 L 85 53 L 83 54 L 81 55 L 79 56 L 76 57 L 74 58 L 71 59 L 69 60 L 66 61 L 64 62 L 61 62 L 59 63 L 56 64 L 53 65 L 51 65 L 48 66 L 45 67 L 42 67 L 40 68 L 37 68 L 34 69 L 31 69 L 28 69 L 25 70 L 23 70 L 20 70 L 17 71 L 14 71 L 11 71 L 8 71 L 5 71 L 2 71 L -1 71 L -4 71 L -7 71 L -10 71 L -13 71 L -16 71 L -19 71 L -21 71 L -24 70 L -27 70 L -30 70 L -33 69 L -36 69 L -39 69 L -42 68 L -44 68 L -47 67 L -50 66 L -53 66 L -55 65 L -58 64 L -61 64 L -63 63 L -66 62 L -68 61 L -71 60 L -73 59 L -76 58 L -78 57 L -80 56 L -82 55 L -84 54 L -86 52 L -88 51 L -90 50 L -92 49 L -94 47 L -95 46 L -97 44 L -98 43 L -100 41 L -101 40 L -102 38 L -103 37 L -104 35 L -105 33 L -106 32 L -107 30 L -107 28 L -108 27 L -108 25 L -109 23 L -109 22 L -109 20 L -110 18 L -110 17 L -110 15 L -110 13 L -110 12 L -110 10 L -110 8 L -110 6 L -110 5 L -110 3 L -110 1 L -110 -0 L -109 -2 L -109 -4 L -109 -5 L -108 -7 L -108 -9 L -107 -10 L -107 -12 L -106 -14 L -106 -15 L -105 -17 L -104 -19 L -103 -20 L -103 -22 L -102 -24 L -102 -25 L -101 -27 L -101 -29 L -101 -30 L -101 -32 L -101 -34 L -101 -36 L -102 -37 L -102 -39 L -103 -40 L -104 -42 L -105 -44 L -107 -45 L -109 -46 L -110 -48 L -112 -49 L -115 -50 L -117 -51 L -119 -52 L -122 -53 L -124 -54 L -127 -55 L -129 -56 L -131 -57 L -133 -58 L -135 -60 L -137 -61 L -138 -63 L -138 -64 L -139 -66 L -139 -68 L -139 -69 L -138 -71 L -138 -73 L -137 -74 L -136 -76 L -135 -78 L -134 -79 L -133 -81 L -132 -83 L -131 -84 L -130 -86 L -129 -87 L -128 -89 L -126 -90 L -125 -92 L -124 -93 L -122 -95 L -121 -96 L -119 -98 L -118 -99 L -116 -101 L -115 -102" stroke-width="0.388" opacity="0.510"/>
+    <path d="M 132 -92 L 133 -90 L 134 -89 L 135 -87 L 136 -86 L 137 -84 L 138 -83 L 139 -81 L 140 -79 L 141 -78 L 141 -76 L 142 -74 L 142 -73 L 142 -71 L 143 -69 L 143 -68 L 142 -66 L 142 -64 L 142 -62 L 141 -61 L 141 -59 L 140 -57 L 139 -56 L 138 -54 L 137 -53 L 136 -51 L 135 -50 L 133 -48 L 132 -47 L 130 -45 L 128 -44 L 127 -42 L 125 -41 L 123 -40 L 122 -38 L 120 -37 L 118 -36 L 116 -34 L 115 -33 L 113 -31 L 112 -30 L 111 -28 L 110 -27 L 109 -25 L 108 -23 L 107 -22 L 107 -20 L 106 -18 L 106 -17 L 106 -15 L 106 -13 L 106 -12 L 107 -10 L 107 -8 L 108 -6 L 108 -5 L 108 -3 L 109 -1 L 109 0 L 110 2 L 110 4 L 111 5 L 111 7 L 112 9 L 112 10 L 112 12 L 112 14 L 112 15 L 112 17 L 112 19 L 112 21 L 111 22 L 111 24 L 110 26 L 109 27 L 108 29 L 107 30 L 106 32 L 105 33 L 103 35 L 102 36 L 101 38 L 99 39 L 97 41 L 95 42 L 94 43 L 92 45 L 90 46 L 88 47 L 86 48 L 84 50 L 81 51 L 79 52 L 77 53 L 75 54 L 72 55 L 70 56 L 67 57 L 65 58 L 62 59 L 60 59 L 57 60 L 54 61 L 52 62 L 49 62 L 46 63 L 44 64 L 41 64 L 38 65 L 35 65 L 32 66 L 29 66 L 27 67 L 24 67 L 21 67 L 18 68 L 15 68 L 12 68 L 9 68 L 6 68 L 3 68 L 0 68 L -3 68 L -6 68 L -9 68 L -11 68 L -14 68 L -17 68 L -20 68 L -23 67 L -26 67 L -29 67 L -32 66 L -35 66 L -38 66 L -40 65 L -43 65 L -46 64 L -49 63 L -51 63 L -54 62 L -57 61 L -59 61 L -62 60 L -65 59 L -67 58 L -70 57 L -72 56 L -74 55 L -77 54 L -79 53 L -81 52 L -83 51 L -85 49 L -87 48 L -89 47 L -91 45 L -92 44 L -94 42 L -95 41 L -97 39 L -98 38 L -99 36 L -100 35 L -101 33 L -102 32 L -103 30 L -104 28 L -104 27 L -105 25 L -105 23 L -106 22 L -106 20 L -107 18 L -107 17 L -107 15 L -107 13 L -107 11 L -107 10 L -108 8 L -108 6 L -108 5 L -107 3 L -107 1 L -107 -0 L -107 -2 L -107 -4 L -106 -6 L -106 -7 L -106 -9 L -105 -11 L -105 -12 L -104 -14 L -103 -16 L -103 -17 L -102 -19 L -101 -21 L -101 -22 L -100 -24 L -99 -26 L -99 -27 L -98 -29 L -98 -31 L -98 -32 L -98 -34 L -98 -36 L -98 -37 L -98 -39 L -99 -41 L -100 -42 L -101 -44 L -102 -46 L -103 -47 L -105 -49 L -106 -50 L -108 -51 L -110 -53 L -112 -54 L -114 -55 L -116 -56 L -118 -57 L -121 -58 L -123 -59 L -125 -61 L -127 -62 L -129 -63 L -131 -64 L -132 -66 L -133 -67 L -134 -69 L -134 -71 L -134 -73 L -134 -74 L -134 -76 L -133 -78 L -132 -79 L -132 -81 L -131 -83 L -130 -84 L -129 -86 L -128 -87 L -127 -89 L -125 -90 L -124 -92 L -123 -93 L -122 -95 L -120 -97 L -119 -98 L -117 -99 L -116 -101 L -114 -102 L -113 -104 L -111 -105" stroke-width="0.388" opacity="0.522"/>
+    <path d="M 130 -94 L 131 -93 L 132 -91 L 134 -90 L 135 -88 L 136 -86 L 137 -85 L 138 -83 L 138 -81 L 139 -80 L 139 -78 L 140 -76 L 140 -75 L 140 -73 L 141 -71 L 141 -70 L 140 -68 L 140 -66 L 140 -65 L 139 -63 L 139 -61 L 138 -60 L 137 -58 L 136 -56 L 135 -55 L 134 -53 L 132 -52 L 131 -50 L 129 -49 L 128 -47 L 126 -46 L 124 -45 L 123 -43 L 121 -42 L 119 -41 L 117 -39 L 116 -38 L 114 -36 L 113 -35 L 111 -33 L 110 -32 L 108 -30 L 107 -29 L 106 -27 L 106 -26 L 105 -24 L 105 -22 L 104 -20 L 104 -19 L 104 -17 L 105 -15 L 105 -14 L 105 -12 L 105 -10 L 106 -9 L 106 -7 L 107 -5 L 107 -4 L 108 -2 L 108 -0 L 109 1 L 109 3 L 109 5 L 110 7 L 110 8 L 110 10 L 110 12 L 110 13 L 110 15 L 110 17 L 109 18 L 109 20 L 108 22 L 108 23 L 107 25 L 106 27 L 105 28 L 104 30 L 102 31 L 101 33 L 99 34 L 98 36 L 96 37 L 94 39 L 93 40 L 91 41 L 89 43 L 87 44 L 85 45 L 83 46 L 81 47 L 78 48 L 76 50 L 74 51 L 72 52 L 69 53 L 67 54 L 64 55 L 62 55 L 59 56 L 57 57 L 54 58 L 51 59 L 49 59 L 46 60 L 43 61 L 40 61 L 38 62 L 35 62 L 32 63 L 29 63 L 26 64 L 23 64 L 20 64 L 18 64 L 15 65 L 12 65 L 9 65 L 6 65 L 3 65 L -0 65 L -3 65 L -6 65 L -9 65 L -12 65 L -15 65 L -18 65 L -21 65 L -24 64 L -26 64 L -29 64 L -32 63 L -35 63 L -38 62 L -41 62 L -43 61 L -46 61 L -49 60 L -52 60 L -54 59 L -57 58 L -60 57 L -62 56 L -65 55 L -67 55 L -70 54 L -72 53 L -74 51 L -76 50 L -79 49 L -81 48 L -83 47 L -85 45 L -86 44 L -88 43 L -90 41 L -91 40 L -93 38 L -94 37 L -95 35 L -97 34 L -98 32 L -99 31 L -100 29 L -100 27 L -101 26 L -102 24 L -102 22 L -103 21 L -103 19 L -104 17 L -104 16 L -104 14 L -104 12 L -105 11 L -105 9 L -105 7 L -105 5 L -105 4 L -105 2 L -105 0 L -105 -1 L -104 -3 L -104 -5 L -104 -6 L -103 -8 L -103 -10 L -103 -11 L -102 -13 L -102 -15 L -101 -17 L -100 -18 L -100 -20 L -99 -21 L -98 -23 L -98 -25 L -97 -26 L -96 -28 L -96 -30 L -96 -31 L -95 -33 L -95 -35 L -95 -37 L -95 -38 L -95 -40 L -96 -42 L -96 -43 L -97 -45 L -98 -47 L -99 -48 L -100 -50 L -102 -51 L -103 -53 L -105 -54 L -107 -55 L -108 -57 L -110 -58 L -112 -59 L -115 -60 L -117 -62 L -119 -63 L -121 -64 L -123 -65 L -125 -67 L -126 -68 L -128 -69 L -129 -71 L -130 -73 L -130 -74 L -130 -76 L -130 -78 L -130 -79 L -129 -81 L -129 -83 L -128 -84 L -127 -86 L -126 -88 L -125 -89 L -124 -91 L -123 -92 L -122 -94 L -121 -96 L -119 -97 L -118 -99 L -117 -100 L -115 -102 L -114 -103 L -112 -105 L -111 -106 L -109 -107" stroke-width="0.388" opacity="0.533"/>
+    <path d="M 128 -97 L 129 -95 L 130 -94 L 132 -92 L 133 -90 L 134 -89 L 135 -87 L 136 -86 L 136 -84 L 137 -82 L 138 -81 L 138 -79 L 138 -77 L 139 -76 L 139 -74 L 139 -72 L 139 -71 L 138 -69 L 138 -67 L 137 -65 L 137 -64 L 136 -62 L 135 -61 L 134 -59 L 133 -57 L 132 -56 L 130 -54 L 129 -53 L 127 -51 L 126 -50 L 124 -49 L 122 -47 L 121 -46 L 119 -44 L 117 -43 L 115 -42 L 114 -40 L 112 -39 L 111 -37 L 109 -36 L 108 -34 L 107 -33 L 105 -31 L 105 -30 L 104 -28 L 103 -26 L 103 -25 L 103 -23 L 103 -21 L 103 -20 L 103 -18 L 103 -16 L 103 -15 L 104 -13 L 104 -11 L 105 -9 L 105 -8 L 105 -6 L 106 -4 L 106 -3 L 107 -1 L 107 1 L 108 2 L 108 4 L 108 6 L 108 7 L 108 9 L 108 11 L 108 12 L 108 14 L 107 16 L 107 18 L 106 19 L 105 21 L 105 22 L 104 24 L 103 26 L 101 27 L 100 29 L 99 30 L 97 32 L 96 33 L 94 35 L 92 36 L 90 37 L 89 39 L 87 40 L 85 41 L 83 42 L 81 44 L 78 45 L 76 46 L 74 47 L 72 48 L 69 49 L 67 50 L 64 51 L 62 52 L 59 53 L 57 54 L 54 54 L 52 55 L 49 56 L 46 57 L 44 57 L 41 58 L 38 58 L 35 59 L 32 59 L 30 60 L 27 60 L 24 61 L 21 61 L 18 61 L 15 62 L 12 62 L 9 62 L 6 62 L 3 62 L 1 62 L -2 62 L -5 62 L -8 62 L -11 62 L -14 62 L -17 62 L -20 62 L -23 61 L -26 61 L -29 61 L -32 60 L -34 60 L -37 59 L -40 59 L -43 58 L -46 58 L -48 57 L -51 56 L -54 56 L -56 55 L -59 54 L -61 53 L -64 52 L -66 51 L -69 50 L -71 49 L -73 48 L -75 47 L -78 46 L -80 45 L -82 43 L -83 42 L -85 41 L -87 39 L -88 38 L -90 36 L -91 35 L -93 33 L -94 32 L -95 30 L -96 29 L -97 27 L -98 25 L -98 24 L -99 22 L -100 20 L -100 19 L -101 17 L -101 15 L -101 14 L -102 12 L -102 10 L -102 9 L -102 7 L -102 5 L -102 4 L -102 2 L -102 0 L -102 -2 L -102 -3 L -102 -5 L -102 -7 L -101 -8 L -101 -10 L -100 -12 L -100 -13 L -99 -15 L -99 -17 L -98 -18 L -98 -20 L -97 -22 L -96 -23 L -96 -25 L -95 -27 L -94 -28 L -94 -30 L -93 -32 L -93 -33 L -93 -35 L -92 -37 L -92 -38 L -92 -40 L -93 -42 L -93 -44 L -94 -45 L -94 -47 L -95 -49 L -96 -50 L -97 -52 L -98 -53 L -100 -55 L -101 -56 L -103 -58 L -105 -59 L -106 -60 L -108 -62 L -110 -63 L -112 -64 L -114 -65 L -116 -67 L -118 -68 L -120 -69 L -122 -71 L -123 -72 L -124 -74 L -125 -75 L -126 -77 L -126 -79 L -126 -80 L -126 -82 L -126 -84 L -125 -85 L -125 -87 L -124 -89 L -123 -90 L -122 -92 L -121 -94 L -120 -95 L -119 -97 L -118 -98 L -116 -100 L -115 -101 L -114 -103 L -112 -104 L -111 -106 L -109 -107 L -108 -109 L -106 -110" stroke-width="0.388" opacity="0.544"/>
+    <path d="M 126 -99 L 128 -97 L 129 -96 L 130 -94 L 131 -93 L 132 -91 L 133 -89 L 134 -88 L 135 -86 L 135 -84 L 136 -83 L 136 -81 L 137 -79 L 137 -78 L 137 -76 L 137 -74 L 137 -72 L 136 -71 L 136 -69 L 135 -67 L 135 -66 L 134 -64 L 133 -63 L 132 -61 L 131 -59 L 129 -58 L 128 -56 L 126 -55 L 125 -53 L 123 -52 L 121 -51 L 120 -49 L 118 -48 L 116 -47 L 115 -45 L 113 -44 L 111 -42 L 110 -41 L 108 -39 L 107 -38 L 105 -36 L 104 -35 L 103 -33 L 102 -32 L 102 -30 L 101 -28 L 101 -27 L 101 -25 L 101 -23 L 101 -22 L 101 -20 L 101 -18 L 102 -16 L 102 -15 L 102 -13 L 103 -11 L 103 -10 L 104 -8 L 104 -6 L 105 -5 L 105 -3 L 105 -1 L 106 0 L 106 2 L 106 4 L 106 6 L 106 7 L 106 9 L 106 11 L 105 12 L 105 14 L 104 16 L 104 17 L 103 19 L 102 21 L 101 22 L 100 24 L 99 25 L 97 27 L 96 28 L 94 30 L 93 31 L 91 33 L 89 34 L 88 35 L 86 37 L 84 38 L 82 39 L 80 40 L 77 42 L 75 43 L 73 44 L 71 45 L 68 46 L 66 47 L 64 48 L 61 49 L 59 50 L 56 50 L 53 51 L 51 52 L 48 53 L 46 54 L 43 54 L 40 55 L 37 55 L 34 56 L 32 56 L 29 57 L 26 57 L 23 58 L 20 58 L 17 58 L 14 59 L 11 59 L 9 59 L 6 59 L 3 59 L -0 59 L -3 59 L -6 59 L -9 59 L -12 59 L -15 59 L -18 59 L -21 58 L -24 58 L -27 58 L -30 57 L -32 57 L -35 57 L -38 56 L -41 56 L -44 55 L -46 54 L -49 54 L -52 53 L -54 52 L -57 51 L -59 50 L -62 50 L -64 49 L -67 48 L -69 47 L -71 45 L -74 44 L -76 43 L -78 42 L -80 41 L -81 39 L -83 38 L -85 36 L -86 35 L -88 34 L -89 32 L -90 30 L -92 29 L -93 27 L -94 26 L -95 24 L -95 22 L -96 21 L -97 19 L -97 17 L -98 16 L -98 14 L -99 12 L -99 11 L -99 9 L -99 7 L -100 6 L -100 4 L -100 2 L -100 1 L -100 -1 L -100 -3 L -99 -5 L -99 -6 L -99 -8 L -99 -10 L -98 -11 L -98 -13 L -98 -15 L -97 -16 L -97 -18 L -96 -20 L -95 -21 L -95 -23 L -94 -25 L -93 -26 L -93 -28 L -92 -30 L -91 -31 L -91 -33 L -90 -35 L -90 -36 L -90 -38 L -90 -40 L -90 -42 L -90 -43 L -90 -45 L -91 -47 L -91 -48 L -92 -50 L -93 -52 L -94 -53 L -95 -55 L -96 -56 L -98 -58 L -99 -59 L -101 -61 L -102 -62 L -104 -63 L -106 -65 L -108 -66 L -110 -67 L -111 -69 L -113 -70 L -115 -71 L -117 -73 L -118 -74 L -120 -76 L -121 -77 L -122 -79 L -122 -81 L -123 -82 L -123 -84 L -123 -86 L -122 -87 L -122 -89 L -121 -91 L -120 -92 L -120 -94 L -119 -96 L -118 -97 L -117 -99 L -115 -100 L -114 -102 L -113 -103 L -112 -105 L -110 -106 L -109 -108 L -107 -109 L -106 -111 L -104 -112" stroke-width="0.388" opacity="0.556"/>
+    <path d="M 125 -101 L 126 -99 L 127 -98 L 129 -96 L 130 -94 L 131 -93 L 132 -91 L 132 -90 L 133 -88 L 134 -86 L 134 -85 L 135 -83 L 135 -81 L 135 -79 L 135 -78 L 135 -76 L 135 -74 L 134 -73 L 134 -71 L 133 -69 L 132 -68 L 132 -66 L 130 -65 L 129 -63 L 128 -61 L 127 -60 L 125 -58 L 124 -57 L 122 -56 L 121 -54 L 119 -53 L 117 -51 L 115 -50 L 114 -49 L 112 -47 L 110 -46 L 109 -44 L 107 -43 L 106 -41 L 104 -40 L 103 -38 L 102 -37 L 101 -35 L 100 -34 L 100 -32 L 99 -30 L 99 -29 L 99 -27 L 99 -25 L 99 -23 L 99 -22 L 100 -20 L 100 -18 L 100 -17 L 101 -15 L 101 -13 L 102 -12 L 102 -10 L 103 -8 L 103 -7 L 103 -5 L 104 -3 L 104 -1 L 104 0 L 104 2 L 104 4 L 104 5 L 104 7 L 104 9 L 103 10 L 103 12 L 102 14 L 101 15 L 101 17 L 100 19 L 98 20 L 97 22 L 96 23 L 95 25 L 93 26 L 92 28 L 90 29 L 88 31 L 86 32 L 85 33 L 83 34 L 81 36 L 79 37 L 77 38 L 74 39 L 72 40 L 70 42 L 68 43 L 65 44 L 63 45 L 60 46 L 58 46 L 55 47 L 53 48 L 50 49 L 48 50 L 45 50 L 42 51 L 39 52 L 37 52 L 34 53 L 31 53 L 28 54 L 25 54 L 22 55 L 20 55 L 17 55 L 14 55 L 11 56 L 8 56 L 5 56 L 2 56 L -1 56 L -4 56 L -7 56 L -10 56 L -13 56 L -16 56 L -19 55 L -21 55 L -24 55 L -27 55 L -30 54 L -33 54 L -36 53 L -39 53 L -41 52 L -44 52 L -47 51 L -49 50 L -52 49 L -55 49 L -57 48 L -60 47 L -62 46 L -65 45 L -67 44 L -69 43 L -71 42 L -73 40 L -75 39 L -77 38 L -79 37 L -81 35 L -83 34 L -84 32 L -86 31 L -87 29 L -88 28 L -89 26 L -90 25 L -91 23 L -92 21 L -93 20 L -94 18 L -94 16 L -95 15 L -95 13 L -96 11 L -96 10 L -97 8 L -97 6 L -97 5 L -97 3 L -97 1 L -97 -0 L -97 -2 L -97 -4 L -97 -6 L -97 -7 L -97 -9 L -96 -11 L -96 -12 L -96 -14 L -95 -16 L -95 -17 L -94 -19 L -94 -21 L -93 -22 L -93 -24 L -92 -26 L -91 -27 L -91 -29 L -90 -31 L -89 -32 L -89 -34 L -88 -36 L -88 -37 L -87 -39 L -87 -41 L -87 -42 L -87 -44 L -87 -46 L -88 -48 L -88 -49 L -89 -51 L -90 -53 L -91 -54 L -92 -56 L -93 -57 L -94 -59 L -95 -60 L -97 -62 L -98 -63 L -100 -65 L -101 -66 L -103 -68 L -105 -69 L -107 -70 L -108 -72 L -110 -73 L -112 -74 L -114 -76 L -115 -77 L -116 -79 L -118 -80 L -118 -82 L -119 -84 L -119 -85 L -119 -87 L -119 -89 L -119 -90 L -119 -92 L -118 -94 L -117 -95 L -116 -97 L -116 -99 L -115 -100 L -113 -102 L -112 -103 L -111 -105 L -110 -107 L -108 -108 L -107 -110 L -106 -111 L -104 -112 L -102 -114" stroke-width="0.665" opacity="0.567"/>
+    <path d="M 123 -103 L 125 -101 L 126 -100 L 127 -98 L 128 -96 L 129 -95 L 130 -93 L 131 -91 L 131 -90 L 132 -88 L 132 -86 L 133 -85 L 133 -83 L 133 -81 L 133 -80 L 133 -78 L 133 -76 L 132 -75 L 132 -73 L 131 -71 L 130 -70 L 129 -68 L 128 -66 L 127 -65 L 126 -63 L 124 -62 L 123 -60 L 121 -59 L 120 -58 L 118 -56 L 116 -55 L 114 -53 L 113 -52 L 111 -51 L 109 -49 L 108 -48 L 106 -46 L 104 -45 L 103 -43 L 102 -42 L 101 -40 L 100 -39 L 99 -37 L 98 -36 L 98 -34 L 97 -32 L 97 -30 L 97 -29 L 97 -27 L 97 -25 L 98 -24 L 98 -22 L 98 -20 L 99 -19 L 99 -17 L 100 -15 L 100 -14 L 101 -12 L 101 -10 L 101 -8 L 102 -7 L 102 -5 L 102 -3 L 102 -2 L 102 -0 L 102 2 L 102 3 L 102 5 L 102 7 L 101 8 L 101 10 L 100 12 L 99 13 L 98 15 L 97 17 L 96 18 L 95 20 L 93 21 L 92 23 L 90 24 L 89 26 L 87 27 L 85 28 L 84 30 L 82 31 L 80 32 L 78 34 L 76 35 L 74 36 L 71 37 L 69 38 L 67 39 L 65 40 L 62 41 L 60 42 L 57 43 L 55 44 L 52 45 L 50 46 L 47 46 L 44 47 L 42 48 L 39 49 L 36 49 L 33 50 L 30 50 L 28 51 L 25 51 L 22 51 L 19 52 L 16 52 L 13 52 L 10 53 L 7 53 L 4 53 L 1 53 L -2 53 L -4 53 L -7 53 L -10 53 L -13 53 L -16 53 L -19 52 L -22 52 L -25 52 L -28 51 L -31 51 L -34 50 L -36 50 L -39 49 L -42 49 L -45 48 L -47 47 L -50 47 L -53 46 L -55 45 L -58 44 L -60 43 L -62 42 L -65 41 L -67 40 L -69 39 L -71 38 L -73 36 L -75 35 L -77 34 L -79 32 L -80 31 L -82 30 L -83 28 L -85 27 L -86 25 L -87 23 L -88 22 L -89 20 L -90 19 L -91 17 L -91 15 L -92 14 L -93 12 L -93 10 L -94 9 L -94 7 L -94 5 L -94 4 L -95 2 L -95 0 L -95 -2 L -95 -3 L -95 -5 L -95 -7 L -95 -8 L -94 -10 L -94 -12 L -94 -13 L -93 -15 L -93 -17 L -93 -18 L -92 -20 L -92 -22 L -91 -23 L -90 -25 L -90 -27 L -89 -28 L -88 -30 L -88 -32 L -87 -33 L -86 -35 L -86 -37 L -85 -38 L -85 -40 L -85 -42 L -85 -44 L -85 -45 L -85 -47 L -85 -49 L -85 -50 L -86 -52 L -87 -54 L -87 -55 L -88 -57 L -89 -58 L -91 -60 L -92 -62 L -93 -63 L -95 -65 L -96 -66 L -97 -68 L -99 -69 L -101 -70 L -102 -72 L -104 -73 L -106 -75 L -107 -76 L -109 -77 L -111 -79 L -112 -80 L -113 -82 L -114 -83 L -115 -85 L -116 -87 L -116 -88 L -116 -90 L -116 -92 L -116 -94 L -116 -95 L -115 -97 L -114 -99 L -113 -100 L -113 -102 L -112 -103 L -110 -105 L -109 -107 L -108 -108 L -107 -110 L -105 -111 L -104 -113 L -102 -114 L -101 -116 L -99 -117" stroke-width="0.388" opacity="0.577"/>
+    <path d="M 122 -105 L 123 -103 L 124 -101 L 126 -100 L 127 -98 L 128 -97 L 128 -95 L 129 -93 L 130 -92 L 130 -90 L 131 -88 L 131 -87 L 131 -85 L 131 -83 L 131 -82 L 131 -80 L 131 -78 L 130 -77 L 130 -75 L 129 -73 L 128 -72 L 127 -70 L 126 -68 L 125 -67 L 123 -65 L 122 -64 L 120 -62 L 119 -61 L 117 -60 L 115 -58 L 114 -57 L 112 -55 L 110 -54 L 108 -53 L 107 -51 L 105 -50 L 103 -48 L 102 -47 L 100 -46 L 99 -44 L 98 -42 L 97 -41 L 96 -39 L 96 -37 L 95 -36 L 95 -34 L 95 -32 L 95 -31 L 95 -29 L 96 -27 L 96 -26 L 96 -24 L 97 -22 L 97 -21 L 98 -19 L 98 -17 L 98 -15 L 99 -14 L 99 -12 L 100 -10 L 100 -9 L 100 -7 L 100 -5 L 100 -4 L 100 -2 L 100 -0 L 100 1 L 100 3 L 99 5 L 99 7 L 98 8 L 97 10 L 97 11 L 96 13 L 95 15 L 93 16 L 92 18 L 91 19 L 89 21 L 88 22 L 86 24 L 84 25 L 83 26 L 81 28 L 79 29 L 77 30 L 75 31 L 73 33 L 71 34 L 68 35 L 66 36 L 64 37 L 61 38 L 59 39 L 57 40 L 54 41 L 51 42 L 49 43 L 46 43 L 44 44 L 41 45 L 38 45 L 35 46 L 33 47 L 30 47 L 27 48 L 24 48 L 21 48 L 18 49 L 15 49 L 13 49 L 10 49 L 7 50 L 4 50 L 1 50 L -2 50 L -5 50 L -8 50 L -11 50 L -14 50 L -17 49 L -20 49 L -23 49 L -26 48 L -28 48 L -31 48 L -34 47 L -37 47 L -40 46 L -42 45 L -45 45 L -48 44 L -50 43 L -53 42 L -55 41 L -58 40 L -60 39 L -63 38 L -65 37 L -67 36 L -69 35 L -71 34 L -73 32 L -75 31 L -77 30 L -78 28 L -80 27 L -81 25 L -83 24 L -84 22 L -85 21 L -86 19 L -87 18 L -88 16 L -89 14 L -89 13 L -90 11 L -90 9 L -91 8 L -91 6 L -92 4 L -92 3 L -92 1 L -92 -1 L -92 -3 L -92 -4 L -92 -6 L -92 -8 L -92 -9 L -92 -11 L -92 -13 L -92 -14 L -91 -16 L -91 -18 L -90 -20 L -90 -21 L -89 -23 L -89 -25 L -88 -26 L -88 -28 L -87 -30 L -86 -31 L -86 -33 L -85 -35 L -84 -36 L -84 -38 L -83 -40 L -83 -41 L -82 -43 L -82 -45 L -82 -46 L -82 -48 L -82 -50 L -83 -51 L -83 -53 L -84 -55 L -85 -56 L -85 -58 L -86 -60 L -87 -61 L -89 -63 L -90 -64 L -91 -66 L -92 -67 L -94 -69 L -95 -70 L -97 -72 L -98 -73 L -100 -75 L -102 -76 L -103 -78 L -105 -79 L -106 -80 L -108 -82 L -109 -83 L -110 -85 L -111 -87 L -112 -88 L -113 -90 L -113 -92 L -113 -93 L -113 -95 L -113 -97 L -113 -98 L -112 -100 L -111 -102 L -111 -103 L -110 -105 L -109 -106 L -107 -108 L -106 -110 L -105 -111 L -104 -113 L -102 -114 L -101 -116 L -99 -117 L -98 -119" stroke-width="0.388" opacity="0.588"/>
+    <path d="M 120 -107 L 122 -105 L 123 -104 L 124 -102 L 125 -101 L 126 -99 L 127 -97 L 128 -96 L 128 -94 L 129 -92 L 129 -91 L 129 -89 L 129 -87 L 130 -86 L 129 -84 L 129 -82 L 129 -80 L 128 -79 L 128 -77 L 127 -76 L 126 -74 L 125 -72 L 124 -71 L 122 -69 L 121 -68 L 120 -66 L 118 -65 L 116 -63 L 115 -62 L 113 -61 L 111 -59 L 110 -58 L 108 -56 L 106 -55 L 104 -54 L 103 -52 L 101 -51 L 100 -49 L 98 -48 L 97 -46 L 96 -45 L 95 -43 L 94 -42 L 94 -40 L 93 -38 L 93 -36 L 93 -35 L 93 -33 L 93 -31 L 94 -30 L 94 -28 L 95 -26 L 95 -25 L 95 -23 L 96 -21 L 96 -20 L 97 -18 L 97 -16 L 97 -15 L 98 -13 L 98 -11 L 98 -9 L 98 -8 L 99 -6 L 99 -4 L 98 -3 L 98 -1 L 98 1 L 97 2 L 97 4 L 96 6 L 95 7 L 95 9 L 94 11 L 92 12 L 91 14 L 90 15 L 89 17 L 87 18 L 86 20 L 84 21 L 82 22 L 80 24 L 79 25 L 77 26 L 75 28 L 73 29 L 70 30 L 68 31 L 66 32 L 64 33 L 61 34 L 59 35 L 57 36 L 54 37 L 52 38 L 49 39 L 46 40 L 44 41 L 41 41 L 38 42 L 36 43 L 33 43 L 30 44 L 27 44 L 24 45 L 22 45 L 19 45 L 16 46 L 13 46 L 10 46 L 7 46 L 4 47 L 1 47 L -2 47 L -5 47 L -8 47 L -11 47 L -13 46 L -16 46 L -19 46 L -22 46 L -25 45 L -28 45 L -31 44 L -34 44 L -36 43 L -39 43 L -42 42 L -45 41 L -47 41 L -50 40 L -52 39 L -55 38 L -57 37 L -60 36 L -62 35 L -64 34 L -66 33 L -68 31 L -70 30 L -72 29 L -74 28 L -75 26 L -77 25 L -79 23 L -80 22 L -81 20 L -82 19 L -83 17 L -84 15 L -85 14 L -86 12 L -87 11 L -87 9 L -88 7 L -88 6 L -89 4 L -89 2 L -89 0 L -90 -1 L -90 -3 L -90 -5 L -90 -6 L -90 -8 L -90 -10 L -90 -11 L -90 -13 L -89 -15 L -89 -17 L -89 -18 L -88 -20 L -88 -22 L -88 -23 L -87 -25 L -86 -27 L -86 -28 L -85 -30 L -84 -32 L -84 -33 L -83 -35 L -82 -37 L -82 -38 L -81 -40 L -81 -42 L -80 -43 L -80 -45 L -80 -47 L -80 -48 L -80 -50 L -80 -52 L -80 -53 L -81 -55 L -81 -57 L -82 -58 L -83 -60 L -84 -62 L -85 -63 L -86 -65 L -87 -66 L -88 -68 L -90 -69 L -91 -71 L -93 -72 L -94 -74 L -95 -75 L -97 -77 L -99 -78 L -100 -80 L -102 -81 L -103 -83 L -105 -84 L -106 -86 L -107 -87 L -108 -89 L -109 -90 L -110 -92 L -110 -94 L -110 -95 L -110 -97 L -110 -99 L -110 -100 L -109 -102 L -109 -104 L -108 -105 L -107 -107 L -106 -109 L -105 -110 L -104 -112 L -103 -113 L -102 -115 L -100 -116 L -99 -118 L -97 -119 L -96 -121" stroke-width="0.388" opacity="0.599"/>
+    <path d="M 119 -109 L 120 -107 L 121 -106 L 122 -104 L 123 -102 L 124 -101 L 125 -99 L 126 -98 L 127 -96 L 127 -94 L 127 -93 L 128 -91 L 128 -89 L 128 -87 L 128 -86 L 127 -84 L 127 -82 L 126 -81 L 126 -79 L 125 -77 L 124 -76 L 123 -74 L 121 -73 L 120 -71 L 119 -70 L 117 -68 L 115 -67 L 114 -65 L 112 -64 L 110 -63 L 109 -61 L 107 -60 L 105 -59 L 103 -57 L 102 -56 L 100 -54 L 98 -53 L 97 -51 L 96 -50 L 94 -48 L 93 -47 L 93 -45 L 92 -44 L 91 -42 L 91 -40 L 91 -38 L 91 -37 L 91 -35 L 92 -33 L 92 -32 L 92 -30 L 93 -28 L 93 -27 L 94 -25 L 94 -23 L 95 -22 L 95 -20 L 95 -18 L 96 -17 L 96 -15 L 96 -13 L 97 -11 L 97 -10 L 97 -8 L 97 -6 L 96 -5 L 96 -3 L 96 -1 L 95 0 L 95 2 L 94 4 L 93 5 L 92 7 L 91 9 L 90 10 L 89 12 L 87 13 L 86 15 L 84 16 L 83 18 L 81 19 L 79 20 L 78 22 L 76 23 L 74 24 L 72 26 L 70 27 L 68 28 L 65 29 L 63 30 L 61 31 L 58 32 L 56 33 L 53 34 L 51 35 L 48 36 L 46 37 L 43 37 L 41 38 L 38 39 L 35 39 L 32 40 L 30 41 L 27 41 L 24 42 L 21 42 L 18 42 L 15 43 L 12 43 L 9 43 L 6 43 L 4 43 L 1 43 L -2 43 L -5 43 L -8 43 L -11 43 L -14 43 L -17 43 L -20 43 L -23 42 L -26 42 L -29 42 L -31 41 L -34 41 L -37 40 L -40 39 L -42 39 L -45 38 L -48 37 L -50 36 L -53 35 L -55 34 L -57 33 L -60 32 L -62 31 L -64 30 L -66 29 L -68 27 L -70 26 L -72 25 L -73 23 L -75 22 L -76 20 L -78 19 L -79 17 L -80 16 L -81 14 L -82 13 L -83 11 L -84 9 L -85 8 L -85 6 L -86 4 L -86 3 L -87 1 L -87 -1 L -87 -2 L -87 -4 L -88 -6 L -88 -7 L -88 -9 L -88 -11 L -88 -13 L -87 -14 L -87 -16 L -87 -18 L -87 -19 L -86 -21 L -86 -23 L -85 -24 L -85 -26 L -84 -28 L -84 -29 L -83 -31 L -82 -33 L -82 -34 L -81 -36 L -80 -38 L -80 -39 L -79 -41 L -78 -43 L -78 -44 L -77 -46 L -77 -48 L -77 -49 L -77 -51 L -77 -53 L -77 -55 L -78 -56 L -78 -58 L -79 -60 L -80 -61 L -81 -63 L -82 -64 L -83 -66 L -84 -68 L -85 -69 L -86 -71 L -88 -72 L -89 -74 L -91 -75 L -92 -77 L -93 -78 L -95 -80 L -96 -81 L -98 -83 L -99 -84 L -101 -85 L -102 -87 L -103 -89 L -105 -90 L -106 -92 L -106 -93 L -107 -95 L -107 -97 L -108 -98 L -108 -100 L -108 -102 L -107 -103 L -107 -105 L -106 -107 L -105 -108 L -104 -110 L -103 -112 L -102 -113 L -101 -115 L -100 -116 L -99 -118 L -97 -119 L -96 -121 L -94 -122 L -93 -124" stroke-width="0.388" opacity="0.609"/>
+    <path d="M 117 -111 L 119 -109 L 120 -108 L 121 -106 L 122 -105 L 123 -103 L 124 -101 L 124 -100 L 125 -98 L 125 -96 L 126 -95 L 126 -93 L 126 -91 L 126 -90 L 126 -88 L 125 -86 L 125 -84 L 124 -83 L 123 -81 L 123 -80 L 122 -78 L 120 -76 L 119 -75 L 118 -73 L 116 -72 L 115 -70 L 113 -69 L 111 -68 L 110 -66 L 108 -65 L 106 -64 L 104 -62 L 103 -61 L 101 -59 L 99 -58 L 98 -57 L 96 -55 L 94 -54 L 93 -52 L 92 -51 L 91 -49 L 90 -47 L 90 -46 L 89 -44 L 89 -42 L 89 -41 L 89 -39 L 89 -37 L 90 -36 L 90 -34 L 91 -32 L 91 -31 L 91 -29 L 92 -27 L 92 -26 L 93 -24 L 93 -22 L 94 -20 L 94 -19 L 94 -17 L 95 -15 L 95 -14 L 95 -12 L 95 -10 L 95 -9 L 94 -7 L 94 -5 L 94 -4 L 93 -2 L 93 -0 L 92 1 L 91 3 L 90 5 L 89 6 L 88 8 L 87 9 L 85 11 L 84 12 L 82 14 L 81 15 L 79 17 L 77 18 L 75 19 L 73 21 L 71 22 L 69 23 L 67 24 L 65 25 L 63 27 L 61 28 L 58 29 L 56 30 L 53 31 L 51 31 L 48 32 L 46 33 L 43 34 L 41 35 L 38 35 L 35 36 L 32 37 L 30 37 L 27 38 L 24 38 L 21 39 L 18 39 L 15 39 L 12 40 L 10 40 L 7 40 L 4 40 L 1 40 L -2 40 L -5 40 L -8 40 L -11 40 L -14 40 L -17 40 L -20 39 L -23 39 L -26 39 L -28 38 L -31 38 L -34 37 L -37 37 L -39 36 L -42 35 L -45 34 L -47 34 L -50 33 L -52 32 L -55 31 L -57 30 L -59 29 L -61 28 L -63 26 L -65 25 L -67 24 L -69 22 L -71 21 L -72 20 L -74 18 L -75 17 L -77 15 L -78 14 L -79 12 L -80 10 L -81 9 L -81 7 L -82 5 L -83 4 L -83 2 L -84 0 L -84 -1 L -85 -3 L -85 -5 L -85 -6 L -85 -8 L -85 -10 L -85 -11 L -85 -13 L -85 -15 L -85 -17 L -85 -18 L -85 -20 L -84 -22 L -84 -23 L -83 -25 L -83 -27 L -82 -28 L -82 -30 L -81 -32 L -81 -33 L -80 -35 L -79 -37 L -78 -38 L -78 -40 L -77 -42 L -76 -43 L -76 -45 L -75 -47 L -75 -48 L -74 -50 L -74 -52 L -74 -53 L -74 -55 L -75 -57 L -75 -58 L -76 -60 L -77 -62 L -77 -63 L -78 -65 L -79 -67 L -80 -68 L -82 -70 L -83 -71 L -84 -73 L -85 -74 L -87 -76 L -88 -77 L -89 -79 L -91 -80 L -92 -82 L -94 -83 L -95 -85 L -97 -86 L -98 -88 L -99 -89 L -101 -91 L -102 -92 L -103 -94 L -104 -96 L -104 -97 L -105 -99 L -105 -101 L -105 -102 L -105 -104 L -105 -106 L -104 -107 L -104 -109 L -103 -111 L -102 -112 L -101 -114 L -100 -116 L -99 -117 L -98 -119 L -96 -120 L -95 -122 L -94 -123 L -92 -125 L -90 -126" stroke-width="0.388" opacity="0.620"/>
+    <path d="M 115 -114 L 116 -112 L 118 -110 L 119 -109 L 120 -107 L 121 -106 L 122 -104 L 122 -102 L 123 -101 L 124 -99 L 124 -97 L 124 -96 L 124 -94 L 124 -92 L 124 -91 L 124 -89 L 123 -87 L 122 -86 L 122 -84 L 121 -82 L 120 -81 L 119 -79 L 117 -78 L 116 -76 L 115 -75 L 113 -73 L 111 -72 L 110 -70 L 108 -69 L 106 -68 L 104 -66 L 103 -65 L 101 -64 L 99 -62 L 97 -61 L 96 -59 L 94 -58 L 92 -57 L 91 -55 L 90 -54 L 89 -52 L 88 -50 L 87 -49 L 87 -47 L 87 -45 L 87 -44 L 87 -42 L 87 -40 L 88 -38 L 88 -37 L 88 -35 L 89 -33 L 89 -32 L 90 -30 L 90 -28 L 91 -27 L 91 -25 L 92 -23 L 92 -22 L 92 -20 L 93 -18 L 93 -17 L 93 -15 L 93 -13 L 93 -11 L 93 -10 L 92 -8 L 92 -6 L 91 -5 L 91 -3 L 90 -1 L 89 0 L 88 2 L 87 3 L 86 5 L 85 7 L 83 8 L 82 10 L 80 11 L 79 12 L 77 14 L 75 15 L 73 16 L 71 18 L 70 19 L 67 20 L 65 21 L 63 23 L 61 24 L 59 25 L 56 26 L 54 27 L 51 28 L 49 29 L 46 30 L 44 30 L 41 31 L 39 32 L 36 33 L 33 33 L 30 34 L 28 34 L 25 35 L 22 35 L 19 36 L 16 36 L 13 36 L 10 37 L 7 37 L 5 37 L 2 37 L -1 37 L -4 37 L -7 37 L -10 37 L -13 37 L -16 36 L -19 36 L -22 36 L -25 35 L -28 35 L -30 35 L -33 34 L -36 33 L -39 33 L -41 32 L -44 31 L -46 30 L -49 29 L -51 29 L -54 28 L -56 26 L -58 25 L -60 24 L -62 23 L -64 22 L -66 20 L -68 19 L -70 17 L -71 16 L -73 15 L -74 13 L -75 11 L -76 10 L -77 8 L -78 7 L -79 5 L -80 3 L -80 2 L -81 0 L -81 -2 L -82 -3 L -82 -5 L -83 -7 L -83 -8 L -83 -10 L -83 -12 L -83 -13 L -83 -15 L -83 -17 L -83 -19 L -83 -20 L -82 -22 L -82 -24 L -82 -25 L -81 -27 L -81 -29 L -80 -30 L -79 -32 L -79 -34 L -78 -35 L -77 -37 L -77 -39 L -76 -40 L -75 -42 L -74 -44 L -74 -45 L -73 -47 L -72 -49 L -72 -50 L -72 -52 L -72 -54 L -72 -55 L -72 -57 L -72 -59 L -73 -60 L -73 -62 L -74 -64 L -75 -65 L -76 -67 L -77 -69 L -78 -70 L -79 -72 L -80 -73 L -82 -75 L -83 -76 L -84 -78 L -85 -79 L -87 -81 L -88 -82 L -90 -84 L -91 -85 L -92 -87 L -94 -88 L -95 -90 L -97 -91 L -98 -93 L -99 -94 L -100 -96 L -101 -98 L -101 -99 L -102 -101 L -102 -103 L -102 -104 L -102 -106 L -102 -108 L -102 -110 L -101 -111 L -101 -113 L -100 -114 L -99 -116 L -98 -118 L -97 -119 L -96 -121 L -94 -122 L -93 -124 L -91 -125 L -90 -127 L -88 -128" stroke-width="0.388" opacity="0.630"/>
+    <path d="M 114 -115 L 115 -114 L 116 -112 L 117 -111 L 118 -109 L 119 -108 L 120 -106 L 121 -104 L 121 -103 L 122 -101 L 122 -99 L 122 -98 L 122 -96 L 122 -94 L 122 -93 L 122 -91 L 121 -89 L 120 -88 L 120 -86 L 119 -84 L 118 -83 L 116 -81 L 115 -80 L 114 -78 L 112 -77 L 110 -75 L 109 -74 L 107 -72 L 105 -71 L 103 -70 L 102 -68 L 100 -67 L 98 -66 L 96 -64 L 94 -63 L 93 -62 L 91 -60 L 90 -59 L 88 -57 L 87 -56 L 86 -54 L 85 -52 L 85 -51 L 85 -49 L 84 -47 L 85 -46 L 85 -44 L 85 -42 L 86 -41 L 86 -39 L 87 -37 L 87 -36 L 88 -34 L 88 -32 L 89 -31 L 89 -29 L 90 -27 L 90 -26 L 90 -24 L 91 -22 L 91 -20 L 91 -19 L 91 -17 L 91 -15 L 91 -14 L 91 -12 L 90 -10 L 90 -9 L 89 -7 L 89 -5 L 88 -4 L 87 -2 L 86 -0 L 85 1 L 84 3 L 82 4 L 81 6 L 80 7 L 78 9 L 76 10 L 75 11 L 73 13 L 71 14 L 69 15 L 67 17 L 65 18 L 63 19 L 61 20 L 58 21 L 56 22 L 54 23 L 51 24 L 49 25 L 46 26 L 44 27 L 41 28 L 38 28 L 36 29 L 33 30 L 30 30 L 28 31 L 25 32 L 22 32 L 19 32 L 16 33 L 13 33 L 10 33 L 7 33 L 4 34 L 2 34 L -1 34 L -4 34 L -7 34 L -10 34 L -13 33 L -16 33 L -19 33 L -22 33 L -25 32 L -28 32 L -30 31 L -33 31 L -36 30 L -39 29 L -41 29 L -44 28 L -46 27 L -49 26 L -51 25 L -54 24 L -56 23 L -58 22 L -60 20 L -62 19 L -64 18 L -66 16 L -67 15 L -69 14 L -70 12 L -72 11 L -73 9 L -74 7 L -75 6 L -76 4 L -77 3 L -77 1 L -78 -1 L -79 -2 L -79 -4 L -80 -6 L -80 -7 L -80 -9 L -80 -11 L -81 -12 L -81 -14 L -81 -16 L -81 -18 L -81 -19 L -80 -21 L -80 -23 L -80 -24 L -80 -26 L -79 -28 L -79 -29 L -78 -31 L -77 -33 L -77 -34 L -76 -36 L -75 -38 L -75 -39 L -74 -41 L -73 -43 L -72 -44 L -71 -46 L -71 -48 L -70 -49 L -70 -51 L -69 -53 L -69 -54 L -69 -56 L -69 -58 L -69 -59 L -69 -61 L -70 -63 L -71 -64 L -72 -66 L -72 -68 L -73 -69 L -75 -71 L -76 -72 L -77 -74 L -78 -75 L -79 -77 L -81 -79 L -82 -80 L -83 -82 L -85 -83 L -86 -85 L -87 -86 L -89 -88 L -90 -89 L -91 -91 L -93 -92 L -94 -94 L -95 -95 L -96 -97 L -97 -98 L -98 -100 L -99 -102 L -99 -103 L -100 -105 L -100 -107 L -100 -108 L -100 -110 L -99 -112 L -99 -114 L -98 -115 L -97 -117 L -97 -118 L -96 -120 L -94 -122 L -93 -123 L -92 -125 L -91 -126 L -89 -128 L -88 -129 L -86 -131" stroke-width="0.388" opacity="0.641"/>
+    <path d="M 112 -118 L 113 -116 L 114 -115 L 116 -113 L 117 -112 L 118 -110 L 118 -109 L 119 -107 L 120 -105 L 120 -104 L 120 -102 L 121 -100 L 121 -98 L 120 -97 L 120 -95 L 120 -93 L 119 -92 L 119 -90 L 118 -88 L 117 -87 L 116 -85 L 114 -84 L 113 -82 L 112 -81 L 110 -79 L 108 -78 L 107 -76 L 105 -75 L 103 -74 L 101 -72 L 100 -71 L 98 -70 L 96 -68 L 94 -67 L 92 -66 L 90 -64 L 89 -63 L 87 -62 L 86 -60 L 85 -58 L 84 -57 L 83 -55 L 82 -54 L 82 -52 L 82 -50 L 82 -48 L 82 -47 L 83 -45 L 83 -43 L 84 -42 L 84 -40 L 85 -38 L 86 -37 L 86 -35 L 87 -33 L 87 -32 L 88 -30 L 88 -28 L 88 -27 L 89 -25 L 89 -23 L 89 -22 L 89 -20 L 89 -18 L 89 -17 L 89 -15 L 88 -13 L 88 -11 L 87 -10 L 87 -8 L 86 -6 L 85 -5 L 84 -3 L 83 -2 L 82 -0 L 81 1 L 79 3 L 78 4 L 76 6 L 75 7 L 73 9 L 71 10 L 69 11 L 67 13 L 65 14 L 63 15 L 61 16 L 59 17 L 57 18 L 54 19 L 52 20 L 49 21 L 47 22 L 44 23 L 42 24 L 39 25 L 37 26 L 34 26 L 31 27 L 28 27 L 26 28 L 23 28 L 20 29 L 17 29 L 14 30 L 11 30 L 8 30 L 5 30 L 2 30 L -0 30 L -3 31 L -6 30 L -9 30 L -12 30 L -15 30 L -18 30 L -21 29 L -24 29 L -27 28 L -29 28 L -32 27 L -35 27 L -38 26 L -40 25 L -43 24 L -45 24 L -48 23 L -50 22 L -52 21 L -55 19 L -57 18 L -59 17 L -61 16 L -62 14 L -64 13 L -66 12 L -67 10 L -69 9 L -70 7 L -71 5 L -72 4 L -73 2 L -74 1 L -75 -1 L -76 -3 L -76 -4 L -77 -6 L -77 -8 L -78 -9 L -78 -11 L -78 -13 L -78 -14 L -78 -16 L -78 -18 L -78 -19 L -78 -21 L -78 -23 L -78 -25 L -78 -26 L -77 -28 L -77 -30 L -76 -31 L -76 -33 L -75 -35 L -74 -36 L -74 -38 L -73 -40 L -72 -41 L -71 -43 L -70 -44 L -70 -46 L -69 -48 L -68 -49 L -67 -51 L -67 -53 L -66 -54 L -66 -56 L -66 -58 L -66 -59 L -66 -61 L -66 -63 L -67 -64 L -68 -66 L -69 -68 L -70 -69 L -71 -71 L -72 -73 L -73 -74 L -74 -76 L -75 -77 L -77 -79 L -78 -80 L -79 -82 L -80 -83 L -82 -85 L -83 -86 L -85 -88 L -86 -89 L -87 -91 L -89 -92 L -90 -94 L -91 -95 L -92 -97 L -93 -99 L -94 -100 L -95 -102 L -96 -103 L -97 -105 L -97 -107 L -97 -108 L -98 -110 L -97 -112 L -97 -114 L -97 -115 L -96 -117 L -95 -119 L -95 -120 L -94 -122 L -93 -123 L -91 -125 L -90 -126 L -89 -128 L -87 -129 L -86 -131 L -84 -132" stroke-width="0.388" opacity="0.651"/>
+    <path d="M 110 -120 L 111 -119 L 113 -117 L 114 -116 L 115 -114 L 116 -112 L 117 -111 L 117 -109 L 118 -107 L 118 -106 L 119 -104 L 119 -102 L 119 -101 L 119 -99 L 118 -97 L 118 -96 L 117 -94 L 117 -92 L 116 -91 L 115 -89 L 114 -87 L 112 -86 L 111 -84 L 109 -83 L 108 -82 L 106 -80 L 104 -79 L 103 -77 L 101 -76 L 99 -75 L 97 -73 L 95 -72 L 93 -71 L 91 -70 L 90 -68 L 88 -67 L 86 -65 L 84 -64 L 83 -63 L 82 -61 L 81 -59 L 80 -58 L 80 -56 L 79 -54 L 79 -53 L 80 -51 L 80 -49 L 80 -48 L 81 -46 L 82 -44 L 82 -43 L 83 -41 L 83 -39 L 84 -38 L 85 -36 L 85 -34 L 86 -33 L 86 -31 L 86 -29 L 87 -28 L 87 -26 L 87 -24 L 87 -23 L 87 -21 L 87 -19 L 87 -17 L 87 -16 L 86 -14 L 86 -12 L 85 -11 L 84 -9 L 83 -7 L 82 -6 L 81 -4 L 80 -3 L 79 -1 L 77 0 L 76 2 L 74 3 L 72 5 L 71 6 L 69 7 L 67 9 L 65 10 L 63 11 L 61 12 L 59 13 L 57 15 L 54 16 L 52 17 L 50 18 L 47 19 L 45 20 L 42 20 L 40 21 L 37 22 L 34 23 L 32 23 L 29 24 L 26 25 L 23 25 L 20 26 L 18 26 L 15 26 L 12 27 L 9 27 L 6 27 L 3 27 L 0 27 L -3 27 L -6 27 L -9 27 L -12 27 L -15 27 L -18 26 L -20 26 L -23 26 L -26 25 L -29 25 L -32 24 L -34 23 L -37 23 L -40 22 L -42 21 L -45 20 L -47 19 L -49 18 L -52 17 L -54 16 L -56 15 L -58 13 L -60 12 L -61 11 L -63 9 L -65 8 L -66 6 L -67 5 L -69 3 L -70 2 L -71 0 L -72 -2 L -73 -3 L -73 -5 L -74 -6 L -74 -8 L -75 -10 L -75 -11 L -76 -13 L -76 -15 L -76 -17 L -76 -18 L -76 -20 L -76 -22 L -76 -23 L -76 -25 L -76 -27 L -75 -28 L -75 -30 L -74 -32 L -74 -33 L -73 -35 L -73 -37 L -72 -38 L -71 -40 L -70 -42 L -70 -43 L -69 -45 L -68 -47 L -67 -48 L -66 -50 L -65 -51 L -64 -53 L -64 -55 L -63 -56 L -63 -58 L -63 -60 L -63 -61 L -63 -63 L -63 -65 L -64 -67 L -65 -68 L -66 -70 L -67 -71 L -68 -73 L -69 -75 L -70 -76 L -71 -78 L -73 -79 L -74 -81 L -75 -82 L -77 -84 L -78 -85 L -79 -87 L -81 -88 L -82 -90 L -83 -91 L -85 -93 L -86 -94 L -87 -96 L -88 -97 L -90 -99 L -91 -101 L -92 -102 L -93 -104 L -94 -105 L -94 -107 L -95 -109 L -95 -110 L -95 -112 L -95 -114 L -95 -115 L -94 -117 L -94 -119 L -93 -121 L -93 -122 L -92 -124 L -91 -125 L -89 -127 L -88 -128 L -87 -130 L -86 -131 L -84 -133 L -82 -134" stroke-width="0.665" opacity="0.661"/>
+    <path d="M 109 -122 L 110 -120 L 112 -119 L 113 -117 L 114 -116 L 115 -114 L 115 -112 L 116 -111 L 116 -109 L 117 -107 L 117 -106 L 117 -104 L 117 -102 L 117 -100 L 116 -99 L 116 -97 L 115 -95 L 114 -94 L 113 -92 L 112 -91 L 111 -89 L 109 -88 L 108 -86 L 106 -85 L 105 -83 L 103 -82 L 101 -81 L 99 -79 L 98 -78 L 96 -77 L 94 -75 L 92 -74 L 90 -73 L 88 -72 L 86 -70 L 84 -69 L 82 -67 L 81 -66 L 79 -65 L 78 -63 L 77 -61 L 77 -60 L 76 -58 L 76 -56 L 77 -55 L 77 -53 L 78 -51 L 78 -50 L 79 -48 L 80 -46 L 80 -45 L 81 -43 L 82 -41 L 82 -40 L 83 -38 L 83 -36 L 84 -35 L 84 -33 L 85 -31 L 85 -30 L 85 -28 L 85 -26 L 85 -25 L 85 -23 L 85 -21 L 85 -19 L 84 -18 L 84 -16 L 83 -14 L 83 -13 L 82 -11 L 81 -10 L 80 -8 L 79 -6 L 77 -5 L 76 -3 L 75 -2 L 73 -0 L 72 1 L 70 2 L 68 4 L 66 5 L 64 6 L 62 8 L 60 9 L 58 10 L 56 11 L 54 12 L 51 13 L 49 14 L 47 15 L 44 16 L 42 17 L 39 18 L 36 19 L 34 19 L 31 20 L 28 21 L 25 21 L 23 22 L 20 22 L 17 23 L 14 23 L 11 23 L 8 24 L 5 24 L 2 24 L -1 24 L -4 24 L -6 24 L -9 24 L -12 23 L -15 23 L -18 23 L -21 23 L -24 22 L -27 22 L -29 21 L -32 20 L -35 20 L -37 19 L -40 18 L -43 17 L -45 16 L -47 15 L -50 14 L -52 13 L -54 12 L -56 11 L -58 9 L -59 8 L -61 6 L -63 5 L -64 3 L -65 2 L -67 0 L -68 -1 L -69 -3 L -70 -4 L -70 -6 L -71 -8 L -72 -9 L -72 -11 L -73 -13 L -73 -14 L -73 -16 L -74 -18 L -74 -19 L -74 -21 L -74 -23 L -74 -25 L -74 -26 L -73 -28 L -73 -30 L -73 -31 L -72 -33 L -72 -35 L -71 -36 L -71 -38 L -70 -40 L -69 -41 L -68 -43 L -67 -45 L -67 -46 L -66 -48 L -65 -49 L -64 -51 L -63 -53 L -62 -54 L -61 -56 L -60 -57 L -60 -59 L -59 -61 L -59 -63 L -59 -64 L -60 -66 L -60 -68 L -61 -69 L -62 -71 L -63 -72 L -64 -74 L -65 -76 L -67 -77 L -68 -79 L -69 -80 L -71 -82 L -72 -83 L -73 -85 L -75 -86 L -76 -88 L -77 -89 L -79 -91 L -80 -92 L -81 -94 L -83 -95 L -84 -97 L -85 -98 L -86 -100 L -87 -101 L -89 -103 L -90 -105 L -90 -106 L -91 -108 L -92 -110 L -92 -111 L -93 -113 L -93 -115 L -93 -116 L -93 -118 L -92 -120 L -92 -121 L -91 -123 L -90 -125 L -89 -126 L -88 -128 L -87 -129 L -86 -131 L -84 -133 L -83 -134 L -82 -135 L -80 -137" stroke-width="0.388" opacity="0.671"/>
+    <path d="M 107 -124 L 108 -123 L 109 -121 L 111 -120 L 112 -118 L 113 -117 L 113 -115 L 114 -113 L 115 -112 L 115 -110 L 115 -108 L 115 -107 L 115 -105 L 115 -103 L 115 -101 L 114 -100 L 113 -98 L 112 -97 L 111 -95 L 110 -93 L 109 -92 L 108 -90 L 106 -89 L 105 -87 L 103 -86 L 101 -85 L 99 -83 L 97 -82 L 95 -81 L 94 -79 L 92 -78 L 90 -77 L 88 -76 L 86 -74 L 84 -73 L 82 -72 L 80 -71 L 78 -69 L 77 -68 L 75 -66 L 74 -65 L 73 -63 L 73 -61 L 73 -60 L 73 -58 L 74 -56 L 75 -55 L 75 -53 L 76 -51 L 77 -50 L 78 -48 L 78 -46 L 79 -45 L 80 -43 L 80 -41 L 81 -40 L 82 -38 L 82 -36 L 83 -35 L 83 -33 L 83 -31 L 83 -30 L 83 -28 L 83 -26 L 83 -24 L 83 -23 L 83 -21 L 82 -19 L 82 -18 L 81 -16 L 80 -14 L 79 -13 L 78 -11 L 77 -10 L 76 -8 L 75 -7 L 73 -5 L 72 -4 L 70 -2 L 68 -1 L 67 1 L 65 2 L 63 3 L 61 4 L 59 6 L 57 7 L 55 8 L 52 9 L 50 10 L 48 11 L 45 12 L 43 13 L 40 14 L 38 15 L 35 16 L 32 16 L 30 17 L 27 18 L 24 18 L 21 19 L 18 19 L 16 19 L 13 20 L 10 20 L 7 20 L 4 20 L 1 20 L -2 21 L -5 20 L -8 20 L -11 20 L -14 20 L -17 20 L -19 19 L -22 19 L -25 18 L -28 18 L -31 17 L -33 17 L -36 16 L -39 15 L -41 14 L -43 13 L -46 12 L -48 11 L -50 10 L -52 9 L -54 7 L -56 6 L -58 5 L -59 3 L -61 2 L -62 0 L -64 -1 L -65 -3 L -66 -4 L -67 -6 L -68 -8 L -69 -9 L -69 -11 L -70 -13 L -70 -14 L -71 -16 L -71 -18 L -71 -19 L -71 -21 L -72 -23 L -72 -25 L -72 -26 L -71 -28 L -71 -30 L -71 -31 L -71 -33 L -70 -35 L -70 -36 L -69 -38 L -68 -40 L -68 -41 L -67 -43 L -66 -45 L -65 -46 L -64 -48 L -63 -49 L -62 -51 L -61 -53 L -60 -54 L -59 -56 L -58 -57 L -57 -59 L -56 -61 L -56 -62 L -55 -64 L -55 -66 L -56 -67 L -56 -69 L -57 -71 L -58 -72 L -59 -74 L -61 -75 L -62 -77 L -63 -78 L -65 -80 L -66 -81 L -67 -83 L -69 -84 L -70 -86 L -71 -87 L -73 -89 L -74 -91 L -76 -92 L -77 -94 L -78 -95 L -80 -97 L -81 -98 L -82 -100 L -83 -101 L -84 -103 L -86 -104 L -87 -106 L -88 -108 L -88 -109 L -89 -111 L -90 -112 L -90 -114 L -90 -116 L -90 -118 L -90 -119 L -90 -121 L -90 -123 L -89 -124 L -88 -126 L -88 -128 L -87 -129 L -86 -131 L -84 -132 L -83 -134 L -82 -135 L -80 -137 L -79 -138" stroke-width="0.388" opacity="0.681"/>
+    <path d="M 105 -127 L 107 -125 L 108 -124 L 109 -122 L 110 -120 L 111 -119 L 112 -117 L 112 -116 L 113 -114 L 113 -112 L 113 -110 L 113 -109 L 113 -107 L 113 -105 L 113 -104 L 112 -102 L 111 -100 L 110 -99 L 109 -97 L 108 -96 L 107 -94 L 105 -93 L 104 -91 L 102 -90 L 100 -88 L 99 -87 L 97 -86 L 95 -84 L 93 -83 L 91 -82 L 89 -81 L 87 -79 L 85 -78 L 83 -77 L 81 -76 L 79 -75 L 77 -73 L 75 -72 L 73 -71 L 71 -69 L 70 -68 L 70 -66 L 69 -64 L 69 -63 L 70 -61 L 70 -59 L 71 -58 L 72 -56 L 73 -54 L 74 -53 L 75 -51 L 76 -49 L 76 -48 L 77 -46 L 78 -44 L 79 -43 L 79 -41 L 80 -39 L 80 -38 L 81 -36 L 81 -34 L 81 -33 L 81 -31 L 81 -29 L 81 -28 L 81 -26 L 81 -24 L 81 -23 L 80 -21 L 79 -19 L 79 -18 L 78 -16 L 77 -14 L 76 -13 L 74 -11 L 73 -10 L 72 -8 L 70 -7 L 69 -5 L 67 -4 L 65 -2 L 63 -1 L 62 0 L 60 1 L 57 3 L 55 4 L 53 5 L 51 6 L 49 7 L 46 8 L 44 9 L 41 10 L 39 11 L 36 12 L 34 12 L 31 13 L 28 14 L 25 14 L 23 15 L 20 15 L 17 16 L 14 16 L 11 17 L 8 17 L 5 17 L 2 17 L -1 17 L -4 17 L -6 17 L -9 17 L -12 17 L -15 16 L -18 16 L -21 16 L -24 15 L -27 15 L -29 14 L -32 13 L -35 13 L -37 12 L -40 11 L -42 10 L -44 9 L -47 8 L -49 6 L -51 5 L -53 4 L -55 3 L -56 1 L -58 -0 L -59 -2 L -61 -3 L -62 -5 L -63 -6 L -64 -8 L -65 -10 L -66 -11 L -67 -13 L -67 -14 L -68 -16 L -68 -18 L -69 -20 L -69 -21 L -69 -23 L -69 -25 L -69 -26 L -69 -28 L -69 -30 L -69 -31 L -69 -33 L -68 -35 L -68 -36 L -67 -38 L -67 -40 L -66 -41 L -65 -43 L -65 -45 L -64 -46 L -63 -48 L -62 -50 L -60 -51 L -59 -53 L -58 -54 L -57 -56 L -56 -57 L -55 -59 L -53 -61 L -53 -62 L -52 -64 L -51 -65 L -51 -67 L -51 -69 L -52 -71 L -53 -72 L -54 -74 L -55 -75 L -57 -77 L -58 -78 L -59 -80 L -61 -81 L -62 -83 L -64 -84 L -65 -86 L -67 -87 L -68 -89 L -69 -90 L -71 -92 L -72 -93 L -74 -95 L -75 -96 L -76 -98 L -78 -99 L -79 -101 L -80 -102 L -81 -104 L -83 -105 L -84 -107 L -85 -109 L -86 -110 L -86 -112 L -87 -114 L -88 -115 L -88 -117 L -88 -119 L -88 -120 L -88 -122 L -88 -124 L -87 -125 L -87 -127 L -86 -129 L -85 -130 L -84 -132 L -83 -133 L -82 -135 L -81 -137 L -79 -138 L -78 -140 L -76 -141" stroke-width="0.388" opacity="0.691"/>
+    <path d="M 104 -129 L 105 -127 L 106 -126 L 107 -124 L 108 -122 L 109 -121 L 110 -119 L 111 -117 L 111 -116 L 111 -114 L 112 -112 L 112 -111 L 111 -109 L 111 -107 L 111 -106 L 110 -104 L 109 -102 L 108 -101 L 107 -99 L 106 -98 L 104 -96 L 103 -95 L 101 -93 L 99 -92 L 98 -90 L 96 -89 L 94 -88 L 92 -87 L 90 -85 L 88 -84 L 86 -83 L 83 -82 L 81 -81 L 79 -80 L 77 -78 L 75 -77 L 73 -76 L 71 -75 L 69 -73 L 67 -72 L 66 -71 L 65 -69 L 65 -67 L 65 -66 L 66 -64 L 66 -62 L 67 -61 L 69 -59 L 70 -57 L 71 -56 L 72 -54 L 73 -53 L 74 -51 L 75 -49 L 75 -48 L 76 -46 L 77 -45 L 78 -43 L 78 -41 L 79 -39 L 79 -38 L 79 -36 L 79 -34 L 80 -33 L 79 -31 L 79 -29 L 79 -28 L 79 -26 L 78 -24 L 78 -23 L 77 -21 L 76 -19 L 75 -18 L 74 -16 L 73 -15 L 72 -13 L 70 -11 L 69 -10 L 67 -9 L 66 -7 L 64 -6 L 62 -4 L 60 -3 L 58 -2 L 56 -1 L 54 1 L 52 2 L 50 3 L 47 4 L 45 5 L 43 6 L 40 7 L 38 8 L 35 8 L 32 9 L 30 10 L 27 11 L 24 11 L 21 12 L 19 12 L 16 13 L 13 13 L 10 13 L 7 13 L 4 14 L 1 14 L -2 14 L -5 14 L -8 14 L -11 13 L -14 13 L -17 13 L -19 12 L -22 12 L -25 11 L -28 11 L -30 10 L -33 9 L -36 8 L -38 8 L -41 7 L -43 6 L -45 4 L -47 3 L -49 2 L -51 1 L -53 -1 L -55 -2 L -56 -3 L -58 -5 L -59 -6 L -60 -8 L -61 -10 L -62 -11 L -63 -13 L -64 -14 L -65 -16 L -65 -18 L -66 -19 L -66 -21 L -67 -23 L -67 -25 L -67 -26 L -67 -28 L -67 -30 L -67 -31 L -67 -33 L -67 -35 L -66 -36 L -66 -38 L -65 -40 L -65 -41 L -64 -43 L -63 -45 L -62 -46 L -61 -48 L -60 -50 L -59 -51 L -58 -53 L -57 -54 L -55 -56 L -54 -57 L -53 -59 L -51 -60 L -50 -62 L -49 -63 L -48 -65 L -47 -67 L -46 -68 L -46 -70 L -47 -72 L -47 -73 L -49 -75 L -50 -76 L -52 -78 L -53 -79 L -55 -81 L -56 -82 L -58 -84 L -59 -85 L -61 -86 L -63 -88 L -64 -89 L -66 -91 L -67 -92 L -68 -94 L -70 -95 L -71 -97 L -73 -98 L -74 -100 L -75 -101 L -77 -103 L -78 -104 L -79 -106 L -80 -108 L -81 -109 L -82 -111 L -83 -112 L -84 -114 L -85 -116 L -85 -117 L -86 -119 L -86 -121 L -86 -122 L -86 -124 L -86 -126 L -85 -127 L -85 -129 L -84 -131 L -83 -132 L -82 -134 L -81 -136 L -80 -137 L -78 -139 L -77 -140 L -76 -142 L -74 -143" stroke-width="0.388" opacity="0.701"/>
+    <path d="M 101 -131 L 103 -130 L 104 -128 L 105 -127 L 106 -125 L 107 -124 L 108 -122 L 109 -120 L 109 -119 L 110 -117 L 110 -115 L 110 -114 L 110 -112 L 109 -110 L 109 -109 L 108 -107 L 107 -105 L 106 -104 L 105 -102 L 104 -101 L 103 -99 L 101 -98 L 99 -96 L 98 -95 L 96 -93 L 94 -92 L 92 -91 L 90 -90 L 88 -88 L 86 -87 L 84 -86 L 81 -85 L 79 -84 L 77 -83 L 75 -82 L 72 -81 L 70 -80 L 68 -79 L 66 -77 L 63 -76 L 61 -75 L 60 -74 L 59 -72 L 59 -70 L 59 -69 L 60 -67 L 61 -66 L 63 -64 L 64 -62 L 65 -61 L 67 -59 L 68 -58 L 69 -56 L 70 -55 L 71 -53 L 72 -52 L 73 -50 L 74 -48 L 75 -47 L 75 -45 L 76 -43 L 77 -42 L 77 -40 L 77 -38 L 77 -37 L 78 -35 L 77 -33 L 77 -32 L 77 -30 L 77 -28 L 76 -26 L 76 -25 L 75 -23 L 74 -22 L 73 -20 L 72 -18 L 71 -17 L 69 -15 L 68 -14 L 66 -12 L 65 -11 L 63 -9 L 61 -8 L 60 -7 L 58 -5 L 56 -4 L 54 -3 L 51 -2 L 49 -1 L 47 0 L 45 1 L 42 2 L 40 3 L 37 4 L 35 5 L 32 6 L 29 6 L 27 7 L 24 8 L 21 8 L 18 9 L 15 9 L 13 10 L 10 10 L 7 10 L 4 10 L 1 10 L -2 10 L -5 10 L -8 10 L -11 10 L -14 10 L -17 9 L -20 9 L -22 8 L -25 8 L -28 7 L -31 6 L -33 6 L -36 5 L -38 4 L -40 3 L -43 2 L -45 0 L -47 -1 L -49 -2 L -51 -3 L -52 -5 L -54 -6 L -55 -8 L -57 -9 L -58 -11 L -59 -12 L -60 -14 L -61 -15 L -62 -17 L -63 -19 L -63 -20 L -64 -22 L -64 -24 L -64 -26 L -65 -27 L -65 -29 L -65 -31 L -65 -32 L -65 -34 L -64 -36 L -64 -37 L -64 -39 L -63 -41 L -63 -42 L -62 -44 L -61 -46 L -60 -47 L -59 -49 L -58 -51 L -57 -52 L -56 -54 L -55 -55 L -53 -57 L -52 -58 L -50 -60 L -49 -61 L -47 -63 L -46 -64 L -44 -65 L -43 -67 L -41 -68 L -40 -70 L -40 -72 L -40 -73 L -41 -75 L -42 -76 L -44 -78 L -46 -79 L -48 -81 L -49 -82 L -51 -83 L -53 -85 L -55 -86 L -56 -87 L -58 -89 L -60 -90 L -61 -92 L -63 -93 L -65 -94 L -66 -96 L -67 -97 L -69 -99 L -70 -100 L -72 -102 L -73 -103 L -74 -105 L -76 -106 L -77 -108 L -78 -110 L -79 -111 L -80 -113 L -81 -114 L -82 -116 L -82 -118 L -83 -119 L -83 -121 L -84 -123 L -84 -124 L -84 -126 L -83 -128 L -83 -130 L -82 -131 L -82 -133 L -81 -134 L -80 -136 L -79 -138 L -78 -139 L -76 -141 L -75 -142 L -73 -144 L -72 -145" stroke-width="0.388" opacity="0.711"/>
+    <path d="M 100 -133 L 101 -132 L 102 -130 L 104 -129 L 105 -127 L 106 -126 L 106 -124 L 107 -122 L 107 -121 L 108 -119 L 108 -117 L 108 -116 L 108 -114 L 107 -112 L 107 -110 L 106 -109 L 105 -107 L 104 -106 L 103 -104 L 102 -103 L 100 -101 L 98 -100 L 97 -98 L 95 -97 L 93 -96 L 91 -94 L 89 -93 L 87 -92 L 85 -91 L 82 -90 L 80 -89 L 78 -88 L 76 -87 L 73 -86 L 71 -85 L 68 -84 L 66 -83 L 63 -82 L 61 -81 L 58 -80 L 56 -79 L 53 -78 L 51 -78 L 48 -76 L 47 -75 L 48 -73 L 50 -72 L 51 -71 L 53 -69 L 55 -68 L 57 -67 L 59 -65 L 61 -64 L 62 -63 L 64 -61 L 65 -60 L 67 -58 L 68 -57 L 69 -55 L 70 -54 L 71 -52 L 72 -50 L 73 -49 L 73 -47 L 74 -45 L 75 -44 L 75 -42 L 75 -40 L 75 -39 L 75 -37 L 75 -35 L 75 -34 L 75 -32 L 74 -30 L 74 -28 L 73 -27 L 72 -25 L 72 -24 L 71 -22 L 69 -20 L 68 -19 L 67 -17 L 65 -16 L 64 -14 L 62 -13 L 60 -12 L 59 -10 L 57 -9 L 55 -8 L 53 -6 L 51 -5 L 48 -4 L 46 -3 L 44 -2 L 41 -1 L 39 -0 L 36 1 L 34 2 L 31 2 L 29 3 L 26 4 L 23 4 L 20 5 L 18 5 L 15 6 L 12 6 L 9 6 L 6 7 L 3 7 L 0 7 L -3 7 L -6 7 L -9 7 L -12 6 L -15 6 L -17 6 L -20 5 L -23 5 L -26 4 L -28 3 L -31 2 L -34 2 L -36 1 L -38 -0 L -41 -1 L -43 -3 L -45 -4 L -47 -5 L -49 -6 L -50 -8 L -52 -9 L -53 -11 L -55 -12 L -56 -14 L -57 -15 L -58 -17 L -59 -19 L -60 -20 L -60 -22 L -61 -24 L -62 -25 L -62 -27 L -62 -29 L -62 -30 L -62 -32 L -62 -34 L -62 -35 L -62 -37 L -62 -39 L -62 -40 L -61 -42 L -60 -44 L -60 -45 L -59 -47 L -58 -49 L -57 -50 L -56 -52 L -55 -53 L -54 -55 L -52 -56 L -51 -58 L -49 -59 L -48 -61 L -46 -62 L -44 -64 L -42 -65 L -40 -66 L -38 -67 L -36 -69 L -34 -70 L -33 -71 L -31 -73 L -30 -74 L -30 -76 L -32 -77 L -34 -78 L -36 -80 L -38 -81 L -40 -82 L -42 -83 L -45 -84 L -47 -85 L -49 -87 L -51 -88 L -53 -89 L -54 -90 L -56 -92 L -58 -93 L -60 -95 L -61 -96 L -63 -97 L -64 -99 L -66 -100 L -67 -102 L -69 -103 L -70 -105 L -71 -106 L -73 -108 L -74 -109 L -75 -111 L -76 -113 L -77 -114 L -78 -116 L -79 -117 L -80 -119 L -80 -121 L -81 -122 L -81 -124 L -81 -126 L -81 -127 L -81 -129 L -81 -131 L -81 -132 L -80 -134 L -79 -136 L -78 -137 L -77 -139 L -76 -141 L -75 -142 L -74 -144 L -72 -145 L -71 -147 L -69 -148" stroke-width="0.388" opacity="0.720"/>
+    <path d="M 98 -136 L 99 -135 L 100 -133 L 101 -131 L 103 -130 L 104 -128 L 104 -127 L 105 -125 L 105 -123 L 106 -122 L 106 -120 L 106 -118 L 106 -117 L 105 -115 L 105 -113 L 104 -111 L 103 -110 L 102 -108 L 101 -107 L 100 -105 L 98 -104 L 96 -102 L 95 -101 L 93 -100 L 91 -98 L 89 -97 L 87 -96 L 85 -95 L 82 -94 L 80 -93 L 78 -92 L 75 -91 L 73 -90 L 70 -89 L 68 -88 L 65 -87 L 62 -86 L 60 -86 L 57 -85 L 54 -85 L 51 -84 L 48 -84 L 45 -84 L 43 -83 L 40 -83 L 37 -83 L 34 -83 L 31 -83 L 28 -84 L 25 -84 L 22 -84 L 19 -84 L 16 -84 L 13 -84 L 10 -84 L 7 -84 L 4 -83 L 1 -83 L -2 -83 L -5 -83 L -8 -83 L -10 -82 L -13 -82 L -16 -82 L -19 -82 L -22 -83 L -25 -83 L -28 -83 L -31 -84 L -33 -85 L -36 -86 L -38 -86 L -41 -87 L -43 -88 L -45 -90 L -48 -91 L -50 -92 L -52 -93 L -54 -95 L -55 -96 L -57 -97 L -59 -99 L -61 -100 L -62 -101 L -64 -103 L -65 -104 L -67 -106 L -68 -107 L -69 -109 L -71 -110 L -72 -112 L -73 -114 L -74 -115 L -75 -117 L -76 -118 L -77 -120 L -78 -122 L -78 -123 L -79 -125 L -79 -127 L -79 -128 L -79 -130 L -79 -132 L -79 -133 L -78 -135 L -78 -137 L -77 -138 L -76 -140 L -75 -142 L -74 -143 L -72 -145 L -71 -146 L -69 -148 L -68 -149" stroke-width="0.388" opacity="0.730"/>
+    <path d="M 44 -71 L 47 -70 L 50 -70 L 52 -68 L 53 -68 L 55 -67 L 57 -66 L 59 -64 L 61 -63 L 63 -61 L 64 -60 L 65 -58 L 67 -57 L 68 -55 L 69 -54 L 70 -52 L 71 -50 L 71 -49 L 72 -47 L 73 -45 L 73 -44 L 73 -42 L 73 -40 L 73 -39 L 73 -37 L 73 -35 L 73 -34 L 72 -32 L 72 -30 L 71 -29 L 70 -27 L 69 -25 L 68 -24 L 67 -22 L 65 -21 L 64 -19 L 62 -18 L 61 -16 L 59 -15 L 57 -13 L 55 -12 L 53 -11 L 51 -10 L 49 -8 L 47 -7 L 45 -6 L 42 -5 L 40 -4 L 37 -3 L 35 -2 L 32 -2 L 30 -1 L 27 -0 L 24 1 L 21 1 L 19 2 L 16 2 L 13 2 L 10 3 L 7 3 L 4 3 L 1 3 L -2 3 L -5 3 L -8 3 L -11 3 L -14 3 L -16 2 L -19 2 L -22 1 L -25 1 L -27 -0 L -30 -1 L -33 -2 L -35 -3 L -37 -4 L -40 -5 L -42 -6 L -44 -7 L -46 -9 L -48 -10 L -49 -11 L -51 -13 L -52 -14 L -53 -16 L -55 -18 L -56 -19 L -57 -21 L -57 -22 L -58 -24 L -59 -26 L -59 -27 L -60 -29 L -60 -31 L -60 -33 L -60 -34 L -60 -36 L -60 -38 L -60 -39 L -60 -41 L -59 -43 L -59 -44 L -58 -46 L -57 -48 L -56 -49 L -55 -51 L -54 -53 L -53 -54 L -52 -56 L -51 -57 L -49 -59 L -47 -60 L -46 -61 L -44 -63 L -42 -64 L -40 -65 L -38 -67 L -35 -68 L -33 -69 L -31 -70 L -28 -71 L -26 -71" stroke-width="0.388" opacity="0.730"/>
+    <path d="M 96 -138 L 97 -137 L 99 -135 L 100 -134 L 101 -132 L 102 -130 L 103 -129 L 103 -127 L 104 -125 L 104 -124 L 104 -122 L 104 -120 L 104 -118 L 103 -117 L 103 -115 L 102 -113 L 101 -112 L 100 -110 L 98 -109 L 97 -107 L 95 -106 L 94 -104 L 92 -103 L 90 -102 L 88 -101 L 86 -99 L 83 -98 L 81 -97 L 79 -96 L 76 -95 L 74 -94 L 71 -93 L 69 -93 L 66 -92 L 63 -91 L 61 -91 L 58 -90 L 55 -90 L 52 -89 L 49 -89 L 46 -89 L 43 -89 L 40 -88 L 37 -88 L 34 -89 L 31 -89 L 28 -89 L 26 -89 L 23 -89 L 20 -89 L 17 -89 L 14 -89 L 11 -89 L 8 -89 L 5 -88 L 2 -88 L -1 -88 L -4 -88 L -7 -88 L -10 -88 L -13 -88 L -16 -88 L -19 -88 L -22 -88 L -25 -88 L -28 -89 L -30 -89 L -33 -90 L -36 -90 L -38 -91 L -41 -92 L -43 -93 L -46 -94 L -48 -95 L -50 -97 L -52 -98 L -54 -99 L -56 -100 L -57 -102 L -59 -103 L -61 -105 L -62 -106 L -64 -108 L -65 -109 L -67 -111 L -68 -112 L -69 -114 L -70 -115 L -72 -117 L -73 -118 L -74 -120 L -75 -122 L -75 -123 L -76 -125 L -76 -127 L -77 -128 L -77 -130 L -77 -132 L -77 -133 L -77 -135 L -76 -137 L -76 -138 L -75 -140 L -74 -142 L -73 -143 L -72 -145 L -71 -146 L -69 -148 L -68 -149 L -66 -151 L -64 -152" stroke-width="0.388" opacity="0.740"/>
+    <path d="M 47 -70 L 50 -69 L 51 -68 L 53 -67 L 55 -66 L 57 -65 L 59 -63 L 61 -62 L 62 -61 L 64 -59 L 65 -58 L 66 -56 L 67 -54 L 68 -53 L 69 -51 L 70 -50 L 70 -48 L 71 -46 L 71 -44 L 71 -43 L 71 -41 L 71 -39 L 71 -38 L 71 -36 L 70 -34 L 69 -33 L 69 -31 L 68 -29 L 67 -28 L 66 -26 L 64 -25 L 63 -23 L 62 -22 L 60 -20 L 58 -19 L 57 -17 L 55 -16 L 53 -15 L 51 -14 L 49 -12 L 47 -11 L 44 -10 L 42 -9 L 40 -8 L 37 -7 L 35 -6 L 32 -5 L 30 -4 L 27 -4 L 24 -3 L 22 -2 L 19 -2 L 16 -1 L 13 -1 L 10 -1 L 7 -1 L 4 -0 L 1 -0 L -2 -0 L -5 -0 L -8 -0 L -10 -1 L -13 -1 L -16 -1 L -19 -2 L -22 -3 L -25 -3 L -27 -4 L -30 -5 L -32 -6 L -35 -7 L -37 -8 L -39 -9 L -41 -10 L -43 -11 L -45 -13 L -47 -14 L -48 -16 L -50 -17 L -51 -19 L -52 -20 L -53 -22 L -54 -23 L -55 -25 L -56 -27 L -56 -28 L -57 -30 L -57 -32 L -58 -33 L -58 -35 L -58 -37 L -58 -38 L -58 -40 L -57 -42 L -57 -44 L -57 -45 L -56 -47 L -55 -49 L -55 -50 L -54 -52 L -53 -53 L -51 -55 L -50 -57 L -49 -58 L -47 -59 L -45 -61 L -44 -62 L -42 -64 L -40 -65 L -38 -66 L -35 -67 L -33 -68 L -30 -69" stroke-width="0.388" opacity="0.740"/>
+    <path d="M 94 -141 L 95 -139 L 97 -138 L 98 -136 L 99 -134 L 100 -133 L 101 -131 L 101 -129 L 102 -128 L 102 -126 L 102 -124 L 102 -123 L 102 -121 L 101 -119 L 101 -118 L 100 -116 L 99 -114 L 98 -113 L 96 -111 L 95 -110 L 93 -108 L 91 -107 L 89 -106 L 87 -105 L 85 -103 L 83 -102 L 81 -101 L 78 -100 L 76 -99 L 74 -98 L 71 -97 L 68 -97 L 66 -96 L 63 -95 L 60 -95 L 57 -94 L 54 -94 L 52 -94 L 49 -93 L 46 -93 L 43 -93 L 40 -93 L 37 -93 L 34 -93 L 31 -93 L 28 -93 L 25 -93 L 22 -93 L 19 -93 L 16 -93 L 13 -93 L 10 -93 L 7 -93 L 4 -93 L 1 -93 L -2 -93 L -4 -93 L -7 -92 L -10 -92 L -13 -92 L -16 -92 L -19 -93 L -22 -93 L -25 -93 L -28 -93 L -31 -94 L -34 -94 L -36 -95 L -39 -96 L -41 -97 L -44 -98 L -46 -99 L -48 -100 L -50 -101 L -52 -102 L -54 -104 L -56 -105 L -58 -107 L -59 -108 L -61 -109 L -62 -111 L -64 -112 L -65 -114 L -67 -115 L -68 -117 L -69 -118 L -70 -120 L -71 -122 L -72 -123 L -73 -125 L -73 -127 L -74 -128 L -74 -130 L -75 -132 L -75 -133 L -75 -135 L -75 -137 L -74 -138 L -74 -140 L -73 -142 L -72 -143 L -71 -145 L -70 -147 L -69 -148 L -67 -150 L -66 -151 L -64 -153 L -63 -154" stroke-width="0.665" opacity="0.749"/>
+    <path d="M 48 -69 L 50 -68 L 53 -67 L 54 -67 L 56 -66 L 58 -64 L 59 -63 L 61 -61 L 62 -60 L 64 -58 L 65 -57 L 66 -55 L 67 -54 L 67 -52 L 68 -50 L 69 -49 L 69 -47 L 69 -45 L 69 -43 L 69 -42 L 69 -40 L 68 -38 L 68 -37 L 67 -35 L 66 -33 L 66 -32 L 64 -30 L 63 -29 L 62 -27 L 61 -26 L 59 -24 L 58 -23 L 56 -21 L 54 -20 L 52 -19 L 50 -17 L 48 -16 L 46 -15 L 44 -14 L 42 -13 L 39 -12 L 37 -11 L 34 -10 L 32 -9 L 29 -8 L 27 -7 L 24 -7 L 21 -6 L 18 -5 L 15 -5 L 13 -5 L 10 -4 L 7 -4 L 4 -4 L 1 -4 L -2 -4 L -5 -4 L -8 -4 L -11 -4 L -14 -5 L -17 -5 L -19 -6 L -22 -6 L -25 -7 L -27 -8 L -30 -9 L -32 -10 L -35 -11 L -37 -12 L -39 -13 L -41 -14 L -43 -16 L -45 -17 L -46 -19 L -48 -20 L -49 -22 L -50 -23 L -51 -25 L -52 -26 L -53 -28 L -54 -30 L -54 -31 L -55 -33 L -55 -35 L -55 -36 L -55 -38 L -55 -40 L -55 -42 L -55 -43 L -55 -45 L -54 -47 L -54 -48 L -53 -50 L -52 -52 L -51 -53 L -50 -55 L -49 -56 L -48 -58 L -46 -59 L -45 -61 L -43 -62 L -41 -64 L -39 -65 L -37 -66 L -35 -67 L -32 -68" stroke-width="0.665" opacity="0.749"/>
+    <path d="M 91 -143 L 93 -142 L 94 -140 L 95 -139 L 97 -137 L 98 -136 L 98 -134 L 99 -132 L 100 -131 L 100 -129 L 100 -127 L 100 -126 L 100 -124 L 99 -122 L 99 -120 L 98 -119 L 97 -117 L 96 -116 L 94 -114 L 93 -113 L 91 -111 L 89 -110 L 87 -109 L 85 -107 L 83 -106 L 81 -105 L 78 -104 L 76 -103 L 73 -102 L 71 -101 L 68 -101 L 66 -100 L 63 -99 L 60 -99 L 57 -98 L 54 -98 L 51 -98 L 48 -97 L 45 -97 L 43 -97 L 40 -97 L 37 -97 L 34 -97 L 31 -97 L 28 -97 L 25 -97 L 22 -97 L 19 -97 L 16 -97 L 13 -97 L 10 -97 L 7 -97 L 4 -97 L 1 -97 L -2 -97 L -5 -97 L -8 -97 L -11 -97 L -14 -97 L -17 -97 L -20 -97 L -22 -97 L -25 -97 L -28 -98 L -31 -98 L -34 -99 L -37 -99 L -39 -100 L -42 -101 L -44 -102 L -46 -103 L -48 -104 L -50 -106 L -52 -107 L -54 -108 L -56 -110 L -58 -111 L -59 -113 L -61 -114 L -62 -115 L -64 -117 L -65 -119 L -66 -120 L -67 -122 L -68 -123 L -69 -125 L -70 -126 L -71 -128 L -72 -130 L -72 -131 L -72 -133 L -73 -135 L -73 -137 L -73 -138 L -72 -140 L -72 -142 L -71 -143 L -70 -145 L -69 -147 L -68 -148 L -67 -150 L -66 -151 L -64 -153 L -63 -154 L -61 -156" stroke-width="0.388" opacity="0.759"/>
+    <path d="M 48 -69 L 50 -68 L 51 -68 L 54 -67 L 56 -65 L 57 -64 L 59 -63 L 61 -61 L 62 -60 L 63 -58 L 64 -56 L 65 -55 L 66 -53 L 66 -51 L 66 -50 L 67 -48 L 67 -46 L 67 -45 L 67 -43 L 66 -41 L 66 -40 L 65 -38 L 64 -36 L 64 -35 L 63 -33 L 61 -32 L 60 -30 L 59 -28 L 57 -27 L 56 -26 L 54 -24 L 52 -23 L 50 -21 L 48 -20 L 46 -19 L 44 -18 L 42 -17 L 40 -16 L 37 -15 L 35 -14 L 32 -13 L 30 -12 L 27 -11 L 24 -10 L 22 -10 L 19 -9 L 16 -9 L 13 -8 L 10 -8 L 7 -8 L 4 -8 L 2 -7 L -1 -7 L -4 -8 L -7 -8 L -10 -8 L -13 -8 L -16 -9 L -19 -9 L -22 -10 L -24 -11 L -27 -12 L -29 -12 L -32 -13 L -34 -15 L -36 -16 L -38 -17 L -40 -18 L -42 -20 L -43 -21 L -45 -23 L -46 -24 L -47 -26 L -49 -27 L -50 -29 L -50 -30 L -51 -32 L -52 -34 L -52 -35 L -53 -37 L -53 -39 L -53 -41 L -53 -42 L -53 -44 L -53 -46 L -52 -47 L -52 -49 L -51 -51 L -50 -52 L -50 -54 L -49 -56 L -47 -57 L -46 -59 L -45 -60 L -43 -62 L -41 -63 L -40 -64 L -37 -66 L -35 -67 L -33 -68 L -31 -69" stroke-width="0.388" opacity="0.759"/>
+    <path d="M 89 -145 L 91 -144 L 92 -142 L 94 -141 L 95 -139 L 96 -138 L 97 -136 L 97 -134 L 98 -133 L 98 -131 L 98 -129 L 98 -128 L 98 -126 L 97 -124 L 96 -123 L 95 -121 L 94 -119 L 93 -118 L 92 -116 L 90 -115 L 88 -114 L 86 -112 L 84 -111 L 82 -110 L 80 -109 L 77 -108 L 75 -107 L 72 -106 L 70 -105 L 67 -104 L 64 -104 L 62 -103 L 59 -103 L 56 -102 L 53 -102 L 50 -102 L 47 -101 L 44 -101 L 41 -101 L 38 -101 L 35 -101 L 32 -101 L 30 -101 L 27 -101 L 24 -101 L 21 -101 L 18 -101 L 15 -101 L 12 -101 L 9 -101 L 6 -101 L 3 -101 L -0 -101 L -3 -101 L -6 -101 L -9 -101 L -12 -101 L -15 -101 L -18 -101 L -21 -101 L -24 -101 L -26 -102 L -29 -102 L -32 -103 L -35 -103 L -37 -104 L -40 -105 L -42 -106 L -45 -107 L -47 -108 L -49 -109 L -51 -110 L -53 -112 L -55 -113 L -56 -114 L -58 -116 L -60 -117 L -61 -119 L -62 -120 L -64 -122 L -65 -123 L -66 -125 L -67 -127 L -68 -128 L -69 -130 L -69 -132 L -70 -133 L -70 -135 L -70 -137 L -70 -138 L -70 -140 L -70 -142 L -70 -143 L -69 -145 L -68 -147 L -67 -148 L -66 -150 L -65 -152 L -64 -153 L -62 -155 L -61 -156 L -59 -157" stroke-width="0.388" opacity="0.768"/>
+    <path d="M 47 -70 L 49 -69 L 50 -68 L 52 -67 L 54 -66 L 56 -65 L 58 -63 L 59 -62 L 60 -60 L 62 -59 L 62 -57 L 63 -55 L 64 -54 L 64 -52 L 64 -50 L 65 -49 L 65 -47 L 64 -45 L 64 -43 L 63 -42 L 63 -40 L 62 -38 L 61 -37 L 60 -35 L 59 -34 L 57 -32 L 56 -31 L 55 -29 L 53 -28 L 51 -26 L 49 -25 L 47 -24 L 45 -23 L 43 -21 L 41 -20 L 39 -19 L 36 -18 L 34 -17 L 31 -16 L 29 -15 L 26 -15 L 24 -14 L 21 -13 L 18 -13 L 15 -12 L 12 -12 L 9 -12 L 7 -11 L 4 -11 L 1 -11 L -2 -11 L -5 -11 L -8 -11 L -11 -12 L -14 -12 L -17 -13 L -20 -13 L -22 -14 L -25 -15 L -27 -16 L -30 -17 L -32 -18 L -34 -19 L -36 -20 L -38 -22 L -40 -23 L -41 -24 L -43 -26 L -44 -27 L -46 -29 L -47 -30 L -48 -32 L -48 -34 L -49 -35 L -50 -37 L -50 -39 L -50 -40 L -50 -42 L -51 -44 L -50 -46 L -50 -47 L -50 -49 L -49 -51 L -49 -52 L -48 -54 L -47 -56 L -46 -57 L -45 -59 L -44 -60 L -42 -62 L -41 -63 L -39 -64 L -37 -66 L -35 -67 L -32 -68 L -30 -69" stroke-width="0.388" opacity="0.768"/>
+    <path d="M 87 -147 L 89 -146 L 90 -145 L 92 -143 L 93 -141 L 94 -140 L 95 -138 L 95 -137 L 96 -135 L 96 -133 L 96 -131 L 96 -130 L 95 -128 L 95 -126 L 94 -125 L 93 -123 L 92 -122 L 90 -120 L 89 -119 L 87 -117 L 85 -116 L 83 -115 L 81 -114 L 79 -112 L 76 -111 L 74 -110 L 71 -110 L 69 -109 L 66 -108 L 63 -107 L 61 -107 L 58 -106 L 55 -106 L 52 -106 L 49 -106 L 46 -105 L 43 -105 L 40 -105 L 37 -105 L 34 -105 L 31 -105 L 28 -105 L 26 -105 L 23 -105 L 20 -105 L 17 -105 L 14 -105 L 11 -105 L 8 -105 L 5 -105 L 2 -105 L -1 -105 L -4 -105 L -7 -105 L -10 -105 L -13 -105 L -16 -105 L -19 -105 L -22 -105 L -25 -105 L -27 -106 L -30 -106 L -33 -107 L -36 -108 L -38 -108 L -41 -109 L -43 -110 L -45 -111 L -48 -113 L -50 -114 L -51 -115 L -53 -116 L -55 -118 L -57 -119 L -58 -121 L -60 -122 L -61 -124 L -62 -125 L -63 -127 L -64 -128 L -65 -130 L -66 -132 L -67 -133 L -67 -135 L -68 -137 L -68 -138 L -68 -140 L -68 -142 L -68 -143 L -68 -145 L -67 -147 L -66 -148 L -65 -150 L -64 -152 L -63 -153 L -62 -155 L -60 -156 L -59 -158 L -57 -159 L -55 -160" stroke-width="0.388" opacity="0.778"/>
+    <path d="M 45 -71 L 47 -70 L 49 -69 L 51 -68 L 53 -67 L 55 -65 L 56 -64 L 58 -62 L 59 -61 L 60 -59 L 61 -57 L 61 -56 L 62 -54 L 62 -52 L 62 -51 L 62 -49 L 62 -47 L 62 -46 L 61 -44 L 60 -42 L 59 -41 L 58 -39 L 57 -37 L 56 -36 L 55 -34 L 53 -33 L 52 -31 L 50 -30 L 48 -29 L 46 -27 L 44 -26 L 42 -25 L 40 -24 L 38 -23 L 35 -22 L 33 -21 L 30 -20 L 28 -19 L 25 -18 L 22 -17 L 20 -17 L 17 -16 L 14 -16 L 11 -15 L 8 -15 L 5 -15 L 2 -15 L -1 -15 L -4 -15 L -7 -15 L -9 -15 L -12 -16 L -15 -16 L -18 -17 L -21 -18 L -23 -18 L -26 -19 L -28 -20 L -30 -21 L -33 -23 L -35 -24 L -36 -25 L -38 -27 L -40 -28 L -41 -29 L -43 -31 L -44 -33 L -45 -34 L -46 -36 L -46 -37 L -47 -39 L -47 -41 L -48 -43 L -48 -44 L -48 -46 L -48 -48 L -48 -49 L -47 -51 L -47 -53 L -46 -54 L -45 -56 L -45 -58 L -43 -59 L -42 -61 L -41 -62 L -39 -64 L -37 -65 L -35 -66 L -33 -68 L -31 -69 L -29 -70" stroke-width="0.388" opacity="0.778"/>
+    <path d="M 85 -150 L 87 -149 L 88 -147 L 89 -146 L 91 -144 L 92 -142 L 92 -141 L 93 -139 L 94 -137 L 94 -136 L 94 -134 L 94 -132 L 93 -131 L 93 -129 L 92 -127 L 91 -126 L 89 -124 L 88 -123 L 86 -121 L 84 -120 L 83 -119 L 80 -117 L 78 -116 L 76 -115 L 73 -114 L 71 -113 L 68 -113 L 66 -112 L 63 -111 L 60 -111 L 57 -110 L 54 -110 L 51 -110 L 48 -109 L 46 -109 L 43 -109 L 40 -109 L 37 -109 L 34 -109 L 31 -109 L 28 -109 L 25 -109 L 22 -109 L 19 -109 L 16 -109 L 13 -109 L 10 -108 L 7 -108 L 4 -108 L 1 -108 L -2 -108 L -5 -108 L -8 -108 L -11 -108 L -14 -108 L -17 -109 L -19 -109 L -22 -109 L -25 -109 L -28 -110 L -31 -110 L -34 -111 L -36 -112 L -39 -113 L -41 -114 L -44 -115 L -46 -116 L -48 -117 L -50 -118 L -52 -120 L -53 -121 L -55 -122 L -57 -124 L -58 -125 L -59 -127 L -61 -128 L -62 -130 L -63 -132 L -64 -133 L -64 -135 L -65 -137 L -65 -138 L -66 -140 L -66 -142 L -66 -143 L -66 -145 L -65 -147 L -65 -148 L -64 -150 L -63 -152 L -62 -153 L -61 -155 L -60 -156 L -59 -158 L -57 -159 L -55 -161 L -53 -162" stroke-width="0.388" opacity="0.787"/>
+    <path d="M 43 -72 L 46 -71 L 47 -70 L 49 -69 L 51 -68 L 53 -66 L 54 -65 L 56 -64 L 57 -62 L 58 -60 L 59 -59 L 59 -57 L 60 -55 L 60 -54 L 60 -52 L 60 -50 L 59 -48 L 59 -47 L 58 -45 L 57 -43 L 56 -42 L 55 -40 L 54 -39 L 53 -37 L 51 -36 L 50 -34 L 48 -33 L 46 -32 L 44 -30 L 42 -29 L 40 -28 L 38 -27 L 35 -26 L 33 -25 L 31 -24 L 28 -23 L 25 -22 L 23 -21 L 20 -21 L 17 -20 L 14 -20 L 11 -19 L 9 -19 L 6 -19 L 3 -19 L -0 -19 L -3 -19 L -6 -19 L -9 -19 L -12 -20 L -15 -20 L -17 -21 L -20 -22 L -23 -22 L -25 -23 L -28 -24 L -30 -25 L -32 -27 L -34 -28 L -36 -29 L -37 -31 L -39 -32 L -40 -34 L -41 -35 L -42 -37 L -43 -39 L -44 -40 L -44 -42 L -45 -44 L -45 -45 L -45 -47 L -45 -49 L -45 -50 L -45 -52 L -45 -54 L -44 -55 L -43 -57 L -42 -59 L -41 -60 L -40 -62 L -39 -63 L -37 -65 L -35 -66 L -33 -67 L -31 -69 L -29 -70 L -27 -71" stroke-width="0.388" opacity="0.787"/>
+    <path d="M 82 -153 L 84 -151 L 85 -150 L 87 -148 L 88 -147 L 89 -145 L 90 -144 L 91 -142 L 91 -140 L 92 -139 L 92 -137 L 91 -135 L 91 -133 L 90 -132 L 90 -130 L 89 -129 L 87 -127 L 86 -126 L 84 -124 L 82 -123 L 80 -122 L 78 -120 L 76 -119 L 73 -118 L 71 -117 L 68 -117 L 66 -116 L 63 -115 L 60 -115 L 57 -114 L 54 -114 L 52 -113 L 49 -113 L 46 -113 L 43 -113 L 40 -113 L 37 -113 L 34 -113 L 31 -112 L 28 -112 L 25 -112 L 22 -112 L 19 -112 L 16 -112 L 13 -112 L 10 -112 L 7 -112 L 4 -112 L 1 -112 L -1 -112 L -4 -112 L -7 -112 L -10 -112 L -13 -112 L -16 -112 L -19 -113 L -22 -113 L -25 -113 L -28 -114 L -31 -114 L -33 -115 L -36 -116 L -38 -117 L -41 -118 L -43 -119 L -45 -120 L -47 -121 L -49 -122 L -51 -124 L -53 -125 L -54 -126 L -56 -128 L -57 -129 L -58 -131 L -60 -133 L -61 -134 L -61 -136 L -62 -137 L -63 -139 L -63 -141 L -64 -142 L -64 -144 L -64 -146 L -63 -148 L -63 -149 L -63 -151 L -62 -153 L -61 -154 L -60 -156 L -59 -157 L -57 -159 L -56 -160 L -54 -162 L -52 -163 L -51 -164" stroke-width="0.388" opacity="0.796"/>
+    <path d="M 41 -73 L 43 -72 L 45 -71 L 47 -70 L 49 -69 L 51 -68 L 52 -66 L 54 -65 L 55 -63 L 56 -61 L 56 -60 L 57 -58 L 57 -56 L 57 -55 L 57 -53 L 57 -51 L 56 -50 L 56 -48 L 55 -46 L 54 -45 L 53 -43 L 52 -41 L 50 -40 L 49 -39 L 47 -37 L 45 -36 L 44 -34 L 42 -33 L 39 -32 L 37 -31 L 35 -30 L 33 -29 L 30 -28 L 28 -27 L 25 -26 L 22 -25 L 20 -24 L 17 -24 L 14 -23 L 11 -23 L 8 -23 L 5 -22 L 2 -22 L -1 -22 L -4 -23 L -6 -23 L -9 -23 L -12 -24 L -15 -24 L -18 -25 L -20 -26 L -23 -27 L -25 -28 L -27 -29 L -30 -30 L -32 -31 L -33 -33 L -35 -34 L -36 -36 L -38 -37 L -39 -39 L -40 -40 L -41 -42 L -41 -44 L -42 -45 L -42 -47 L -43 -49 L -43 -50 L -43 -52 L -42 -54 L -42 -55 L -42 -57 L -41 -59 L -40 -60 L -39 -62 L -37 -64 L -36 -65 L -34 -66 L -32 -68 L -30 -69 L -28 -70 L -26 -71 L -23 -72" stroke-width="0.388" opacity="0.796"/>
+    <path d="M 80 -155 L 81 -154 L 83 -152 L 84 -151 L 86 -149 L 87 -148 L 88 -146 L 88 -144 L 89 -143 L 89 -141 L 89 -139 L 89 -138 L 89 -136 L 88 -134 L 87 -133 L 86 -131 L 85 -130 L 83 -128 L 81 -127 L 79 -125 L 77 -124 L 75 -123 L 73 -122 L 70 -121 L 68 -120 L 65 -120 L 62 -119 L 59 -118 L 57 -118 L 54 -117 L 51 -117 L 48 -117 L 45 -117 L 42 -117 L 39 -116 L 36 -116 L 33 -116 L 30 -116 L 27 -116 L 24 -116 L 21 -116 L 18 -116 L 15 -116 L 13 -116 L 10 -116 L 7 -116 L 4 -116 L 1 -116 L -2 -116 L -5 -116 L -8 -116 L -11 -116 L -14 -116 L -17 -116 L -20 -116 L -23 -117 L -26 -117 L -29 -118 L -31 -118 L -34 -119 L -37 -120 L -39 -121 L -41 -122 L -44 -123 L -46 -124 L -48 -125 L -49 -127 L -51 -128 L -53 -130 L -54 -131 L -56 -133 L -57 -134 L -58 -136 L -59 -137 L -60 -139 L -60 -141 L -61 -142 L -61 -144 L -61 -146 L -61 -147 L -61 -149 L -61 -151 L -60 -153 L -60 -154 L -59 -156 L -58 -157 L -57 -159 L -55 -161 L -54 -162 L -52 -163 L -51 -165 L -49 -166" stroke-width="0.388" opacity="0.806"/>
+    <path d="M 39 -74 L 41 -73 L 43 -72 L 45 -71 L 47 -70 L 48 -69 L 50 -67 L 51 -66 L 52 -64 L 53 -63 L 54 -61 L 54 -59 L 55 -57 L 55 -56 L 54 -54 L 54 -52 L 53 -51 L 53 -49 L 52 -47 L 50 -46 L 49 -44 L 48 -43 L 46 -41 L 45 -40 L 43 -38 L 41 -37 L 39 -36 L 37 -35 L 35 -34 L 32 -33 L 30 -32 L 27 -31 L 25 -30 L 22 -29 L 19 -28 L 17 -28 L 14 -27 L 11 -27 L 8 -27 L 5 -26 L 2 -26 L -1 -26 L -4 -26 L -7 -27 L -10 -27 L -12 -28 L -15 -28 L -18 -29 L -20 -30 L -23 -31 L -25 -32 L -27 -33 L -29 -35 L -31 -36 L -33 -37 L -34 -39 L -35 -40 L -37 -42 L -38 -44 L -38 -45 L -39 -47 L -40 -49 L -40 -50 L -40 -52 L -40 -54 L -40 -55 L -39 -57 L -39 -59 L -38 -60 L -37 -62 L -36 -64 L -35 -65 L -33 -67 L -31 -68 L -30 -69 L -27 -71 L -25 -72 L -23 -73" stroke-width="0.388" opacity="0.806"/>
+    <path d="M 77 -158 L 79 -156 L 80 -155 L 82 -153 L 83 -152 L 84 -150 L 85 -149 L 86 -147 L 87 -145 L 87 -144 L 87 -142 L 87 -140 L 86 -138 L 86 -137 L 85 -135 L 83 -134 L 82 -132 L 80 -131 L 78 -129 L 76 -128 L 74 -127 L 72 -126 L 69 -125 L 67 -124 L 64 -123 L 62 -123 L 59 -122 L 56 -122 L 53 -121 L 50 -121 L 47 -121 L 44 -120 L 41 -120 L 38 -120 L 35 -120 L 32 -120 L 30 -120 L 27 -120 L 24 -120 L 21 -120 L 18 -120 L 15 -119 L 12 -119 L 9 -119 L 6 -119 L 3 -119 L -0 -119 L -3 -119 L -6 -119 L -9 -119 L -12 -120 L -15 -120 L -18 -120 L -21 -120 L -24 -121 L -26 -121 L -29 -122 L -32 -122 L -35 -123 L -37 -124 L -39 -125 L -42 -126 L -44 -127 L -46 -129 L -48 -130 L -49 -131 L -51 -133 L -52 -134 L -54 -136 L -55 -137 L -56 -139 L -57 -141 L -58 -142 L -58 -144 L -59 -146 L -59 -147 L -59 -149 L -59 -151 L -59 -152 L -58 -154 L -58 -156 L -57 -157 L -56 -159 L -55 -161 L -53 -162 L -52 -164 L -50 -165 L -49 -166 L -47 -168" stroke-width="0.388" opacity="0.815"/>
+    <path d="M 36 -75 L 38 -74 L 40 -73 L 42 -73 L 44 -72 L 46 -70 L 47 -69 L 49 -67 L 50 -66 L 51 -64 L 51 -62 L 52 -61 L 52 -59 L 52 -57 L 51 -56 L 51 -54 L 50 -52 L 49 -51 L 48 -49 L 47 -47 L 46 -46 L 44 -44 L 43 -43 L 41 -42 L 39 -40 L 37 -39 L 35 -38 L 32 -37 L 30 -36 L 28 -35 L 25 -34 L 22 -33 L 20 -32 L 17 -32 L 14 -31 L 11 -31 L 8 -31 L 5 -30 L 3 -30 L -0 -30 L -3 -30 L -6 -31 L -9 -31 L -12 -32 L -15 -32 L -17 -33 L -20 -34 L -22 -35 L -24 -36 L -26 -38 L -28 -39 L -30 -40 L -31 -42 L -33 -43 L -34 -45 L -35 -47 L -36 -48 L -36 -50 L -37 -52 L -37 -53 L -37 -55 L -37 -57 L -37 -58 L -36 -60 L -36 -62 L -35 -63 L -34 -65 L -32 -67 L -31 -68 L -29 -69 L -27 -71 L -25 -72 L -23 -73 L -20 -74" stroke-width="0.388" opacity="0.815"/>
+    <path d="M 74 -160 L 75 -159 L 77 -158 L 79 -156 L 80 -155 L 81 -153 L 82 -152 L 83 -150 L 84 -148 L 84 -147 L 85 -145 L 84 -143 L 84 -142 L 83 -140 L 82 -138 L 81 -137 L 80 -135 L 78 -134 L 76 -132 L 74 -131 L 72 -130 L 69 -129 L 67 -128 L 64 -127 L 62 -127 L 59 -126 L 56 -126 L 53 -125 L 50 -125 L 47 -124 L 45 -124 L 42 -124 L 39 -124 L 36 -124 L 33 -124 L 30 -123 L 27 -123 L 24 -123 L 21 -123 L 18 -123 L 15 -123 L 12 -123 L 9 -123 L 6 -123 L 3 -123 L 0 -123 L -3 -123 L -6 -123 L -9 -123 L -12 -123 L -15 -123 L -18 -124 L -20 -124 L -23 -124 L -26 -125 L -29 -126 L -32 -126 L -34 -127 L -37 -128 L -39 -129 L -41 -130 L -43 -131 L -45 -133 L -47 -134 L -49 -135 L -50 -137 L -51 -138 L -53 -140 L -54 -142 L -55 -143 L -55 -145 L -56 -147 L -56 -148 L -57 -150 L -57 -152 L -57 -153 L -56 -155 L -56 -157 L -55 -158 L -54 -160 L -53 -162 L -52 -163 L -50 -165 L -49 -166 L -47 -168 L -45 -169 L -43 -170" stroke-width="0.388" opacity="0.824"/>
+    <path d="M 31 -77 L 34 -76 L 36 -75 L 37 -75 L 40 -74 L 42 -72 L 44 -71 L 45 -70 L 46 -68 L 47 -66 L 48 -65 L 49 -63 L 49 -61 L 49 -60 L 48 -58 L 48 -56 L 47 -55 L 46 -53 L 45 -51 L 44 -50 L 43 -48 L 41 -47 L 39 -45 L 37 -44 L 35 -43 L 33 -42 L 31 -41 L 29 -39 L 26 -38 L 24 -38 L 21 -37 L 18 -36 L 16 -36 L 13 -35 L 10 -35 L 7 -34 L 4 -34 L 1 -34 L -2 -34 L -5 -35 L -8 -35 L -11 -36 L -13 -36 L -16 -37 L -18 -38 L -21 -39 L -23 -40 L -25 -42 L -27 -43 L -28 -45 L -30 -46 L -31 -48 L -32 -49 L -33 -51 L -33 -53 L -34 -54 L -34 -56 L -34 -58 L -34 -59 L -34 -61 L -33 -63 L -32 -64 L -31 -66 L -30 -68 L -28 -69 L -27 -70 L -25 -72 L -23 -73 L -20 -74 L -18 -75 L -15 -76" stroke-width="0.388" opacity="0.824"/>
+    <path d="M 70 -163 L 72 -162 L 74 -160 L 76 -159 L 77 -157 L 79 -156 L 80 -154 L 81 -153 L 81 -151 L 82 -149 L 82 -148 L 82 -146 L 81 -144 L 81 -143 L 80 -141 L 78 -139 L 77 -138 L 75 -137 L 73 -135 L 71 -134 L 69 -133 L 66 -132 L 64 -131 L 61 -131 L 58 -130 L 55 -129 L 53 -129 L 50 -128 L 47 -128 L 44 -128 L 41 -128 L 38 -127 L 35 -127 L 32 -127 L 29 -127 L 26 -127 L 23 -127 L 20 -127 L 17 -127 L 14 -127 L 11 -127 L 9 -127 L 6 -127 L 3 -127 L -0 -127 L -3 -127 L -6 -127 L -9 -127 L -12 -127 L -15 -127 L -18 -127 L -21 -128 L -24 -128 L -27 -129 L -29 -130 L -32 -130 L -34 -131 L -37 -132 L -39 -133 L -41 -135 L -43 -136 L -45 -137 L -47 -139 L -48 -140 L -49 -142 L -51 -143 L -52 -145 L -53 -146 L -53 -148 L -54 -150 L -54 -151 L -54 -153 L -54 -155 L -54 -157 L -53 -158 L -53 -160 L -52 -162 L -51 -163 L -50 -165 L -48 -166 L -47 -168 L -45 -169 L -43 -170 L -41 -172" stroke-width="0.665" opacity="0.833"/>
+    <path d="M 26 -78 L 29 -78 L 32 -77 L 34 -76 L 35 -76 L 38 -74 L 40 -73 L 41 -72 L 43 -70 L 44 -69 L 45 -67 L 45 -65 L 46 -64 L 46 -62 L 45 -60 L 45 -59 L 44 -57 L 43 -55 L 42 -54 L 41 -52 L 39 -51 L 38 -49 L 36 -48 L 34 -47 L 32 -45 L 29 -44 L 27 -43 L 25 -42 L 22 -41 L 20 -41 L 17 -40 L 14 -39 L 11 -39 L 8 -39 L 5 -38 L 2 -38 L -1 -39 L -4 -39 L -6 -39 L -9 -40 L -12 -40 L -15 -41 L -17 -42 L -19 -43 L -21 -45 L -23 -46 L -25 -47 L -26 -49 L -28 -50 L -29 -52 L -30 -54 L -30 -55 L -31 -57 L -31 -59 L -31 -60 L -31 -62 L -30 -64 L -30 -65 L -29 -67 L -27 -69 L -26 -70 L -24 -71 L -22 -73 L -20 -74 L -18 -75 L -15 -76 L -13 -77 L -10 -78" stroke-width="0.665" opacity="0.833"/>
+    <path d="M 67 -165 L 69 -164 L 71 -163 L 73 -161 L 74 -160 L 76 -158 L 77 -157 L 78 -155 L 79 -154 L 79 -152 L 79 -150 L 79 -148 L 79 -147 L 78 -145 L 77 -143 L 75 -142 L 74 -141 L 72 -139 L 70 -138 L 68 -137 L 65 -136 L 63 -135 L 60 -134 L 57 -134 L 54 -133 L 52 -133 L 49 -132 L 46 -132 L 43 -132 L 40 -131 L 37 -131 L 34 -131 L 31 -131 L 28 -131 L 25 -131 L 22 -130 L 19 -130 L 16 -130 L 13 -130 L 10 -130 L 7 -130 L 5 -130 L 2 -130 L -1 -130 L -4 -130 L -7 -130 L -10 -131 L -13 -131 L -16 -131 L -19 -131 L -22 -132 L -25 -132 L -27 -133 L -30 -134 L -33 -135 L -35 -136 L -37 -137 L -39 -138 L -41 -139 L -43 -141 L -45 -142 L -46 -143 L -48 -145 L -49 -147 L -50 -148 L -50 -150 L -51 -152 L -51 -153 L -52 -155 L -52 -157 L -51 -158 L -51 -160 L -50 -162 L -50 -163 L -49 -165 L -47 -167 L -46 -168 L -44 -170 L -43 -171 L -41 -172 L -39 -173 L -37 -175" stroke-width="0.388" opacity="0.842"/>
+    <path d="M 20 -80 L 23 -79 L 26 -79 L 29 -78 L 31 -77 L 34 -76 L 35 -76 L 37 -74 L 39 -73 L 40 -71 L 41 -70 L 42 -68 L 42 -66 L 42 -65 L 42 -63 L 42 -61 L 41 -60 L 40 -58 L 39 -57 L 38 -55 L 36 -54 L 34 -52 L 33 -51 L 30 -50 L 28 -48 L 26 -47 L 24 -46 L 21 -45 L 18 -45 L 16 -44 L 13 -44 L 10 -43 L 7 -43 L 4 -43 L 1 -43 L -2 -43 L -5 -43 L -7 -44 L -10 -45 L -13 -45 L -15 -46 L -17 -48 L -19 -49 L -21 -50 L -23 -52 L -24 -53 L -25 -55 L -26 -56 L -27 -58 L -27 -60 L -28 -61 L -27 -63 L -27 -65 L -27 -66 L -26 -68 L -25 -70 L -23 -71 L -22 -73 L -20 -74 L -18 -75 L -15 -76 L -13 -77 L -10 -78 L -7 -79 L -5 -79" stroke-width="0.388" opacity="0.842"/>
+    <path d="M 63 -168 L 64 -167 L 66 -166 L 68 -165 L 70 -163 L 72 -162 L 73 -161 L 74 -159 L 75 -157 L 76 -156 L 76 -154 L 76 -152 L 76 -151 L 76 -149 L 75 -147 L 73 -146 L 72 -144 L 70 -143 L 68 -142 L 66 -141 L 63 -140 L 61 -139 L 58 -138 L 55 -137 L 53 -137 L 50 -136 L 47 -136 L 44 -135 L 41 -135 L 38 -135 L 35 -135 L 32 -135 L 29 -134 L 26 -134 L 23 -134 L 20 -134 L 17 -134 L 15 -134 L 12 -134 L 9 -134 L 6 -134 L 3 -134 L -0 -134 L -3 -134 L -6 -134 L -9 -134 L -12 -134 L -15 -135 L -18 -135 L -21 -136 L -24 -136 L -26 -137 L -29 -137 L -31 -138 L -34 -139 L -36 -141 L -38 -142 L -40 -143 L -42 -144 L -43 -146 L -45 -147 L -46 -149 L -47 -151 L -48 -152 L -48 -154 L -49 -156 L -49 -157 L -49 -159 L -49 -161 L -48 -162 L -48 -164 L -47 -166 L -46 -167 L -44 -169 L -43 -170 L -41 -172 L -40 -173 L -38 -174 L -35 -176 L -33 -177" stroke-width="0.388" opacity="0.851"/>
+    <path d="M 29 -78 L 31 -77 L 33 -75 L 35 -74 L 37 -73 L 38 -71 L 38 -69 L 39 -68 L 39 -66 L 38 -64 L 38 -62 L 37 -61 L 36 -59 L 34 -58 L 33 -56 L 31 -55 L 29 -54 L 27 -52 L 24 -51 L 22 -50 L 19 -50 L 17 -49 L 14 -48 L 11 -48 L 8 -47 L 5 -47 L 2 -47 L -1 -47 L -4 -48 L -7 -48 L -9 -49 L -12 -50 L -14 -51 L -16 -52 L -18 -54 L -20 -55 L -21 -57 L -22 -58 L -23 -60 L -24 -61 L -24 -63 L -24 -65 L -24 -67 L -23 -68 L -22 -70 L -21 -72 L -19 -73 L -17 -74 L -15 -76 L -13 -77 L -11 -78 L -8 -79 L -5 -79 L -3 -80 L 0 -80 L 3 -80 L 6 -81 L 9 -81 L 12 -81 L 15 -81 L 18 -80 L 21 -80 L 24 -79 L 26 -79 L 29 -78" stroke-width="0.388" opacity="0.851"/>
+    <path d="M 59 -171 L 61 -170 L 63 -168 L 65 -167 L 67 -166 L 69 -164 L 70 -163 L 71 -161 L 72 -160 L 73 -158 L 73 -156 L 73 -155 L 73 -153 L 72 -151 L 71 -150 L 70 -148 L 68 -147 L 66 -146 L 64 -144 L 62 -143 L 59 -142 L 57 -142 L 54 -141 L 51 -140 L 48 -140 L 45 -140 L 43 -139 L 40 -139 L 37 -139 L 34 -138 L 31 -138 L 28 -138 L 25 -138 L 22 -138 L 19 -138 L 16 -138 L 13 -138 L 10 -138 L 7 -138 L 4 -137 L 1 -138 L -2 -138 L -5 -138 L -7 -138 L -10 -138 L -13 -138 L -16 -139 L -19 -139 L -22 -140 L -25 -140 L -27 -141 L -30 -142 L -32 -143 L -34 -144 L -36 -145 L -38 -147 L -40 -148 L -42 -149 L -43 -151 L -44 -153 L -45 -154 L -46 -156 L -46 -158 L -46 -159 L -46 -161 L -46 -163 L -46 -164 L -45 -166 L -44 -168 L -43 -169 L -42 -171 L -40 -172 L -38 -174 L -37 -175 L -35 -176 L -32 -177 L -30 -178" stroke-width="0.388" opacity="0.860"/>
+    <path d="M 26 -79 L 28 -77 L 30 -76 L 32 -75 L 33 -73 L 34 -72 L 35 -70 L 35 -68 L 34 -67 L 34 -65 L 33 -63 L 31 -62 L 30 -60 L 28 -59 L 26 -58 L 24 -56 L 22 -55 L 19 -54 L 17 -54 L 14 -53 L 11 -52 L 8 -52 L 5 -52 L 2 -52 L -1 -52 L -4 -53 L -6 -53 L -9 -54 L -11 -55 L -13 -56 L -15 -58 L -17 -59 L -18 -61 L -19 -63 L -19 -64 L -20 -66 L -20 -68 L -19 -69 L -18 -71 L -17 -73 L -16 -74 L -14 -75 L -12 -77 L -10 -78 L -7 -79 L -4 -79 L -2 -80 L 1 -80 L 4 -81 L 7 -81 L 10 -81 L 13 -81 L 16 -81 L 19 -80 L 22 -80 L 24 -79" stroke-width="0.388" opacity="0.860"/>
+    <path d="M 55 -173 L 56 -173 L 58 -172 L 60 -170 L 62 -169 L 64 -168 L 66 -166 L 67 -165 L 68 -163 L 69 -162 L 70 -160 L 70 -158 L 70 -157 L 69 -155 L 69 -153 L 67 -152 L 66 -150 L 64 -149 L 62 -148 L 59 -147 L 57 -146 L 54 -145 L 51 -145 L 49 -144 L 46 -143 L 43 -143 L 40 -143 L 37 -142 L 34 -142 L 31 -142 L 28 -142 L 25 -142 L 22 -142 L 19 -141 L 16 -141 L 13 -141 L 11 -141 L 8 -141 L 5 -141 L 2 -141 L -1 -141 L -4 -141 L -7 -142 L -10 -142 L -13 -142 L -16 -143 L -19 -143 L -22 -144 L -24 -144 L -27 -145 L -29 -146 L -32 -147 L -34 -148 L -36 -150 L -37 -151 L -39 -152 L -40 -154 L -41 -156 L -42 -157 L -43 -159 L -43 -161 L -43 -162 L -43 -164 L -43 -166 L -42 -167 L -42 -169 L -41 -171 L -39 -172 L -38 -174 L -36 -175 L -34 -176 L -32 -178 L -30 -179 L -28 -180 L -25 -181" stroke-width="0.388" opacity="0.869"/>
+    <path d="M 23 -79 L 25 -78 L 27 -76 L 28 -75 L 29 -73 L 30 -72 L 30 -70 L 29 -68 L 28 -66 L 27 -65 L 26 -63 L 24 -62 L 22 -61 L 19 -60 L 17 -59 L 14 -58 L 11 -57 L 8 -57 L 5 -57 L 2 -57 L -0 -57 L -3 -58 L -6 -59 L -8 -60 L -10 -61 L -12 -63 L -13 -64 L -14 -66 L -15 -67 L -15 -69 L -15 -71 L -14 -72 L -13 -74 L -11 -76 L -9 -77 L -7 -78 L -4 -79 L -2 -80 L 1 -80 L 4 -81 L 7 -81 L 10 -81 L 13 -81 L 16 -80 L 19 -80 L 21 -79" stroke-width="0.388" opacity="0.869"/>
+    <path d="M 49 -176 L 52 -175 L 53 -175 L 55 -173 L 57 -172 L 59 -171 L 61 -170 L 63 -168 L 64 -167 L 65 -165 L 66 -163 L 66 -162 L 67 -160 L 66 -158 L 65 -157 L 64 -155 L 62 -154 L 61 -152 L 58 -151 L 56 -150 L 53 -149 L 51 -149 L 48 -148 L 45 -148 L 42 -147 L 39 -147 L 37 -146 L 34 -146 L 31 -146 L 28 -146 L 25 -145 L 22 -145 L 19 -145 L 16 -145 L 13 -145 L 10 -145 L 7 -145 L 4 -145 L 1 -145 L -2 -145 L -5 -145 L -8 -145 L -11 -146 L -13 -146 L -16 -147 L -19 -147 L -22 -148 L -24 -149 L -27 -150 L -29 -151 L -31 -152 L -33 -153 L -35 -154 L -37 -156 L -38 -157 L -39 -159 L -40 -161 L -40 -162 L -40 -164 L -40 -166 L -40 -167 L -39 -169 L -39 -171 L -38 -172 L -36 -174 L -35 -175 L -33 -177 L -31 -178 L -29 -179 L -27 -180 L -24 -181 L -22 -182" stroke-width="0.388" opacity="0.878"/>
+    <path d="M 18 -79 L 20 -78 L 22 -76 L 23 -75 L 24 -73 L 24 -71 L 23 -70 L 22 -68 L 20 -67 L 18 -65 L 15 -64 L 13 -64 L 10 -63 L 7 -63 L 4 -63 L 1 -63 L -2 -64 L -4 -65 L -6 -66 L -8 -68 L -9 -69 L -9 -71 L -9 -73 L -8 -74 L -6 -76 L -4 -77 L -2 -78 L 1 -79 L 3 -80 L 6 -80 L 9 -80 L 12 -80 L 15 -80 L 18 -79" stroke-width="0.388" opacity="0.878"/>
+    <path d="M 42 -179 L 44 -179 L 47 -178 L 49 -177 L 51 -176 L 52 -175 L 54 -174 L 56 -172 L 58 -171 L 60 -170 L 61 -168 L 62 -166 L 63 -165 L 63 -163 L 62 -161 L 61 -160 L 60 -158 L 59 -157 L 57 -156 L 54 -154 L 52 -154 L 49 -153 L 46 -152 L 44 -151 L 41 -151 L 38 -151 L 35 -150 L 32 -150 L 29 -150 L 26 -149 L 23 -149 L 20 -149 L 17 -149 L 14 -149 L 11 -149 L 9 -149 L 6 -149 L 3 -149 L -0 -149 L -3 -149 L -6 -149 L -9 -150 L -12 -150 L -15 -150 L -18 -151 L -20 -152 L -23 -153 L -25 -153 L -28 -155 L -30 -156 L -32 -157 L -33 -159 L -35 -160 L -36 -162 L -36 -163 L -37 -165 L -37 -167 L -37 -168 L -37 -170 L -36 -172 L -35 -173 L -34 -175 L -32 -176 L -31 -178 L -29 -179 L -27 -180 L -24 -181 L -22 -182 L -19 -183 L -17 -184" stroke-width="0.388" opacity="0.887"/>
+    <path d="M 11 -77 L 12 -77 L 13 -76 L 13 -76 L 14 -75 L 14 -75 L 14 -74 L 13 -73 L 13 -73 L 13 -72 L 12 -72 L 11 -72 L 11 -71 L 10 -71 L 9 -71 L 8 -71 L 7 -71 L 6 -71 L 5 -71 L 4 -71 L 3 -71 L 3 -72 L 2 -72 L 2 -73 L 1 -73 L 1 -74 L 1 -74 L 1 -75 L 2 -75 L 2 -76 L 3 -76 L 4 -77 L 5 -77 L 6 -77 L 6 -77 L 7 -77 L 8 -77 L 9 -77 L 10 -77 L 11 -77" stroke-width="0.388" opacity="0.887"/>
+    <path d="M 33 -183 L 36 -182 L 38 -181 L 41 -180 L 43 -179 L 46 -178 L 48 -177 L 49 -177 L 51 -175 L 53 -174 L 55 -173 L 56 -171 L 57 -170 L 58 -168 L 58 -166 L 58 -164 L 57 -163 L 56 -161 L 54 -160 L 52 -159 L 50 -158 L 47 -157 L 45 -156 L 42 -155 L 39 -155 L 36 -154 L 33 -154 L 30 -154 L 27 -154 L 24 -153 L 21 -153 L 19 -153 L 16 -153 L 13 -153 L 10 -153 L 7 -153 L 4 -153 L 1 -153 L -2 -153 L -5 -153 L -8 -154 L -11 -154 L -14 -154 L -17 -155 L -19 -156 L -22 -157 L -24 -158 L -26 -159 L -28 -160 L -30 -162 L -31 -163 L -32 -165 L -33 -166 L -33 -168 L -34 -170 L -33 -171 L -33 -173 L -32 -175 L -31 -176 L -29 -178 L -28 -179 L -26 -181 L -23 -182 L -21 -183 L -19 -184 L -16 -184 L -13 -185 L -10 -186 L -8 -186" stroke-width="0.388" opacity="0.896"/>
+    <path d="M 43 -179 L 45 -178 L 47 -177 L 49 -175 L 51 -174 L 52 -172 L 53 -171 L 54 -169 L 53 -167 L 52 -166 L 51 -164 L 49 -163 L 47 -162 L 44 -161 L 42 -160 L 39 -159 L 36 -159 L 33 -158 L 31 -158 L 28 -158 L 25 -157 L 22 -157 L 19 -157 L 16 -157 L 13 -157 L 10 -157 L 7 -157 L 4 -157 L 1 -157 L -2 -157 L -5 -157 L -8 -158 L -11 -158 L -13 -159 L -16 -159 L -19 -160 L -21 -161 L -23 -162 L -25 -164 L -27 -165 L -28 -167 L -29 -168 L -29 -170 L -30 -172 L -29 -173 L -29 -175 L -28 -177 L -27 -178 L -25 -180 L -23 -181 L -21 -182 L -19 -183 L -17 -184 L -14 -185 L -11 -186 L -8 -186 L -5 -187 L -3 -187 L 0 -187 L 3 -187 L 6 -187 L 9 -187 L 12 -187 L 15 -186 L 18 -186 L 21 -186 L 24 -185 L 26 -184 L 29 -184 L 32 -183 L 35 -182 L 37 -182 L 40 -181 L 42 -180" stroke-width="0.388" opacity="0.905"/>
+    <path d="M 38 -181 L 40 -180 L 43 -179 L 44 -177 L 46 -176 L 47 -174 L 48 -173 L 48 -171 L 47 -169 L 46 -168 L 44 -166 L 41 -165 L 39 -164 L 36 -164 L 33 -163 L 30 -163 L 28 -162 L 25 -162 L 22 -162 L 19 -161 L 16 -161 L 13 -161 L 10 -161 L 7 -161 L 4 -161 L 1 -161 L -2 -161 L -5 -162 L -8 -162 L -11 -163 L -13 -163 L -16 -164 L -18 -165 L -20 -167 L -22 -168 L -24 -169 L -25 -171 L -25 -173 L -25 -174 L -25 -176 L -24 -178 L -23 -179 L -21 -181 L -19 -182 L -17 -183 L -15 -184 L -12 -185 L -10 -186 L -7 -187 L -4 -187 L -1 -187 L 2 -187 L 5 -187 L 8 -187 L 11 -187 L 14 -187 L 17 -186 L 20 -186 L 22 -186 L 25 -185 L 28 -184 L 31 -184 L 33 -183 L 36 -182 L 38 -181" stroke-width="0.665" opacity="0.914"/>
+    <path d="M 35 -181 L 37 -180 L 39 -179 L 40 -177 L 41 -176 L 41 -174 L 40 -172 L 39 -171 L 36 -170 L 34 -169 L 31 -168 L 28 -167 L 26 -167 L 23 -166 L 20 -166 L 17 -166 L 14 -166 L 11 -166 L 8 -166 L 5 -166 L 2 -166 L -1 -166 L -4 -166 L -7 -167 L -10 -168 L -12 -168 L -14 -170 L -17 -171 L -18 -172 L -19 -174 L -20 -175 L -20 -177 L -19 -179 L -18 -180 L -17 -182 L -15 -183 L -12 -184 L -10 -185 L -7 -186 L -4 -187 L -2 -187 L 1 -187 L 4 -187 L 7 -187 L 10 -187 L 13 -187 L 16 -187 L 19 -186 L 22 -186 L 25 -185 L 27 -184 L 30 -183 L 32 -182 L 35 -181" stroke-width="0.388" opacity="0.923"/>
+    <path d="M 26 -183 L 28 -182 L 30 -181 L 32 -179 L 32 -178 L 32 -176 L 30 -174 L 28 -173 L 25 -173 L 23 -172 L 20 -171 L 17 -171 L 14 -171 L 11 -171 L 8 -171 L 5 -171 L 2 -171 L -1 -171 L -4 -172 L -7 -173 L -9 -174 L -11 -175 L -12 -177 L -13 -178 L -13 -180 L -12 -182 L -10 -183 L -8 -184 L -5 -185 L -3 -186 L 0 -186 L 3 -187 L 6 -187 L 9 -187 L 12 -186 L 15 -186 L 18 -186 L 21 -185 L 23 -184 L 26 -183" stroke-width="0.388" opacity="0.931"/>
+    <path d="M 16 -183 L 17 -183 L 17 -182 L 18 -181 L 18 -181 L 18 -180 L 18 -179 L 17 -179 L 16 -178 L 14 -178 L 13 -178 L 12 -178 L 11 -177 L 9 -177 L 8 -177 L 7 -178 L 5 -178 L 4 -178 L 3 -178 L 2 -178 L 1 -179 L -0 -179 L -1 -180 L -1 -181 L -1 -181 L -1 -182 L -0 -183 L 1 -183 L 2 -184 L 3 -184 L 4 -184 L 6 -184 L 7 -184 L 8 -184 L 9 -184 L 11 -184 L 12 -184 L 13 -184 L 14 -183 L 16 -183" stroke-width="0.388" opacity="0.940"/>
+  </g>
+</svg>
+  <div class="toolpath-cap">Waterline &middot; konstant Z &middot; 58 pass</div>
+</div>
 
-        <g fill="none" stroke="#d4af37" stroke-width="0.5" opacity="0.55">
-          <path d="M -10 8  C 30 2,  60 18, 90 6  C 120 -4, 150 14, 210 6"/>
-          <path d="M -10 14 C 30 8,  60 24, 90 12 C 120 2,  150 20, 210 12"/>
-          <path d="M -10 20 C 30 14, 60 30, 90 18 C 120 8,  150 26, 210 18"/>
-          <path d="M -10 26 C 30 20, 60 36, 90 24 C 120 14, 150 32, 210 24"/>
-          <path d="M -10 32 C 30 26, 60 42, 90 30 C 120 20, 150 38, 210 30"/>
-          <path d="M -10 38 C 30 46, 60 26, 90 42 C 120 52, 150 30, 210 40"/>
-          <path d="M -10 44 C 30 52, 60 32, 90 48 C 120 58, 150 36, 210 46"/>
-          <path d="M -10 50 C 30 58, 60 38, 90 54 C 120 64, 150 42, 210 52"/>
-          <path d="M -10 56 C 30 64, 60 44, 90 60 C 120 70, 150 48, 210 58"/>
-          <path d="M -10 62 C 30 70, 60 50, 90 66 C 120 76, 150 54, 210 64"/>
-          <path d="M -10 68 C 30 60, 60 78, 90 66 C 120 56, 150 74, 210 66"/>
-          <path d="M -10 74 C 30 66, 60 84, 90 72 C 120 62, 150 80, 210 72"/>
-          <path d="M -10 80 C 30 72, 60 90, 90 78 C 120 68, 150 86, 210 78"/>
-          <path d="M -10 86 C 30 78, 60 96, 90 84 C 120 74, 150 92, 210 84"/>
-          <path d="M -10 92 C 30 100, 60 82, 90 96 C 120 106, 150 86, 210 94"/>
-          <path d="M -10 98 C 30 106, 60 88, 90 102 C 120 112, 150 92, 210 100"/>
-          <path d="M -10 104 C 30 112, 60 94, 90 108 C 120 118, 150 98, 210 106"/>
-          <path d="M -10 110 C 30 118, 60 100, 90 114 C 120 124, 150 104, 210 112"/>
-          <path d="M -10 116 C 30 108, 60 126, 90 114 C 120 104, 150 122, 210 114"/>
-          <path d="M -10 122 C 30 114, 60 132, 90 120 C 120 110, 150 128, 210 120"/>
-          <path d="M -10 128 C 30 120, 60 138, 90 126 C 120 116, 150 134, 210 126"/>
-          <path d="M -10 134 C 30 142, 60 124, 90 138 C 120 148, 150 128, 210 136"/>
-          <path d="M -10 140 C 30 148, 60 130, 90 144 C 120 154, 150 134, 210 142"/>
-          <path d="M -10 146 C 30 138, 60 152, 90 146 C 120 134, 150 150, 210 144"/>
-        </g>
-
-        <!-- Skjutmått (linjekonst, detaljerat, roterat) -->
-        <g transform="rotate(-9 100 75)">
-          <g fill="none" stroke="#d4af37" stroke-linecap="round" stroke-linejoin="round">
-
-            <!-- Huvudskena -->
-            <rect x="6" y="52" width="190" height="46" rx="5" stroke-width="1.1"/>
-            <line x1="6" y1="75" x2="196" y2="75" stroke-width="0.6" opacity="0.6"/>
-
-            <!-- Övre skala: stora siffror -->
-            <g stroke="none" fill="#d4af37" font-size="7.5" font-family="Segoe UI, Arial, sans-serif">
-              <text x="14"  y="61">0</text>
-              <text x="28"  y="61">5</text>
-              <text x="43"  y="61">10</text>
-              <text x="59"  y="61">15</text>
-              <text x="75"  y="61">20</text>
-              <text x="91"  y="61">25</text>
-            </g>
-            <g stroke-width="0.5">
-              <line x1="16"  y1="63" x2="16"  y2="72"/>
-              <line x1="30"  y1="63" x2="30"  y2="72"/>
-              <line x1="45"  y1="63" x2="45"  y2="72"/>
-              <line x1="61"  y1="63" x2="61"  y2="72"/>
-              <line x1="77"  y1="63" x2="77"  y2="72"/>
-              <line x1="93"  y1="63" x2="93"  y2="72"/>
-              <line x1="19" y1="65" x2="19" y2="72"/>
-              <line x1="22" y1="65" x2="22" y2="72"/>
-              <line x1="25" y1="65" x2="25" y2="72"/>
-              <line x1="33" y1="65" x2="33" y2="72"/>
-              <line x1="36" y1="65" x2="36" y2="72"/>
-              <line x1="39" y1="65" x2="39" y2="72"/>
-              <line x1="42" y1="65" x2="42" y2="72"/>
-              <line x1="49" y1="65" x2="49" y2="72"/>
-              <line x1="52" y1="65" x2="52" y2="72"/>
-              <line x1="55" y1="65" x2="55" y2="72"/>
-              <line x1="58" y1="65" x2="58" y2="72"/>
-              <line x1="65" y1="65" x2="65" y2="72"/>
-              <line x1="68" y1="65" x2="68" y2="72"/>
-              <line x1="71" y1="65" x2="71" y2="72"/>
-              <line x1="74" y1="65" x2="74" y2="72"/>
-              <line x1="81" y1="65" x2="81" y2="72"/>
-              <line x1="84" y1="65" x2="84" y2="72"/>
-              <line x1="87" y1="65" x2="87" y2="72"/>
-              <line x1="90" y1="65" x2="90" y2="72"/>
-            </g>
-            <text x="104" y="58" font-size="7" fill="#d4af37" stroke="none" font-family="Segoe UI, Arial, sans-serif">0.001in</text>
-
-            <!-- Nedre skala: liten sifferrad (nonieskala) -->
-            <g stroke="none" fill="#d4af37" font-size="6" font-family="Segoe UI, Arial, sans-serif" opacity="0.9">
-              <text x="130" y="63">2</text>
-              <text x="140" y="61">4</text>
-              <text x="150" y="63">6</text>
-              <text x="160" y="61">7</text>
-              <text x="170" y="63">8</text>
-              <text x="180" y="61">9</text>
-              <text x="130" y="93">0</text>
-              <text x="141" y="93">1</text>
-              <text x="152" y="93">2</text>
-              <text x="163" y="93">3</text>
-              <text x="174" y="93">4</text>
-              <text x="12"  y="93">0</text>
-              <text x="24"  y="93">2</text>
-              <text x="36"  y="93">4</text>
-              <text x="48"  y="93">6</text>
-              <text x="60"  y="93">8</text>
-              <text x="72"  y="93">1</text>
-              <text x="84"  y="93">3</text>
-              <text x="96"  y="93">5</text>
-              <text x="108" y="93">7</text>
-              <text x="120" y="93">9</text>
-            </g>
-            <g stroke-width="0.4" opacity="0.8">
-              <line x1="14"  y1="80" x2="14"  y2="87"/>
-              <line x1="22"  y1="80" x2="22"  y2="84"/>
-              <line x1="30"  y1="80" x2="30"  y2="87"/>
-              <line x1="38"  y1="80" x2="38"  y2="84"/>
-              <line x1="46"  y1="80" x2="46"  y2="87"/>
-              <line x1="54"  y1="80" x2="54"  y2="84"/>
-              <line x1="62"  y1="80" x2="62"  y2="87"/>
-              <line x1="70"  y1="80" x2="70"  y2="84"/>
-              <line x1="78"  y1="80" x2="78"  y2="87"/>
-              <line x1="86"  y1="80" x2="86"  y2="84"/>
-              <line x1="94"  y1="80" x2="94"  y2="87"/>
-              <line x1="102" y1="80" x2="102" y2="84"/>
-              <line x1="110" y1="80" x2="110" y2="87"/>
-              <line x1="118" y1="80" x2="118" y2="84"/>
-            </g>
-
-            <!-- Fast käke: knivliknande spets (övre) -->
-            <path d="M 6 52 L 6 4 Q 6 -2 -2 4 L -18 40 Q -20 44 -16 46 L 6 58"/>
-            <!-- Fast käke: nedre platt -->
-            <path d="M 6 98 L 6 128 L 20 128 L 20 98"/>
-
-            <!-- Rörlig käke / skjutblock -->
-            <rect x="118" y="40" width="24" height="58" rx="4" stroke-width="1.1"/>
-            <path d="M 118 12 Q 118 6 124 6 L 132 6 Q 136 6 136 12 L 136 40"/>
-            <path d="M 118 128 Q 118 134 124 134 L 132 134 Q 136 134 136 128 L 136 98"/>
-
-            <!-- Låsskruv -->
-            <circle cx="150" cy="30" r="4" stroke-width="0.9"/>
-            <line x1="146" y1="30" x2="154" y2="30" stroke-width="0.6"/>
-            <line x1="150" y1="26" x2="150" y2="34" stroke-width="0.6"/>
-
-            <!-- Tumhjul med räfflor -->
-            <circle cx="163" cy="75" r="10" stroke-width="1"/>
-            <g stroke-width="0.6">
-              <line x1="163" y1="65" x2="163" y2="61"/>
-              <line x1="163" y1="85" x2="163" y2="89"/>
-              <line x1="153" y1="75" x2="149" y2="75"/>
-              <line x1="173" y1="75" x2="177" y2="75"/>
-              <line x1="156.1" y1="68.1" x2="153.2" y2="65.2"/>
-              <line x1="169.9" y1="68.1" x2="172.8" y2="65.2"/>
-              <line x1="156.1" y1="81.9" x2="153.2" y2="84.8"/>
-              <line x1="169.9" y1="81.9" x2="172.8" y2="84.8"/>
-            </g>
-
-            <!-- Liten rund knapp/boss -->
-            <circle cx="184" cy="88" r="5" stroke-width="0.9"/>
-
-            <!-- Nitar -->
-            <circle cx="16" cy="55" r="1.3" fill="#d4af37" stroke="none"/>
-            <circle cx="16" cy="95" r="1.3" fill="#d4af37" stroke="none"/>
-            <circle cx="188" cy="55" r="1.3" fill="#d4af37" stroke="none"/>
-            <circle cx="188" cy="95" r="1.3" fill="#d4af37" stroke="none"/>
-
-            <!-- Djupmätarsticka -->
-            <line x1="128" y1="98" x2="128" y2="142" stroke-width="1"/>
-            <circle cx="128" cy="144" r="2" fill="#d4af37" stroke="none"/>
-          </g>
-        </g>
-      </svg>
-      <h3>Anpassning</h3>
-      <p>Unika lösningar utifrån dina önskemål.</p>
+<!-- ARBETET -->
+<section id="arbetet">
+  <div class="wrap-wide reveal">
+    <div class="eyebrow">Arbetet</div>
+    <div class="plate-row">
+      <div class="plate"><span>BILD 01 &mdash; makro på fräst yta, sidoljus,<br>verktygsspåren synliga</span></div>
+      <div class="plate"><span>BILD 02 &mdash; uppspänning i fixtur,<br>mitt i bearbetning</span></div>
+      <div class="plate"><span>BILD 03 &mdash; hand mot trä,<br>skiss bredvid provbiten</span></div>
     </div>
   </div>
-</main>
+</section>
 
+<!-- GÖR / GÖR INTE -->
+<section>
+  <div class="wrap reveal">
+    <div class="eyebrow">Avgränsning</div>
+    <h2>Vad vi tar oss an &mdash; och vad vi inte gör</h2>
+    <div class="split">
+      <div>
+        <ul class="list">
+          <li>Prototyper och nollserier</li>
+          <li>Dubbelkrökta och friformade ytor</li>
+          <li>Skulpturala element och utställningsarbeten</li>
+          <li>Geometri som kräver egen fixtur</li>
+          <li>Provbitar innan beslut om material</li>
+        </ul>
+      </div>
+      <div>
+        <ul class="list no">
+          <li>Kök och garderobsinredning</li>
+          <li>Standardserier i volym</li>
+          <li>Platt skivmaterial på löpmeter</li>
+          <li>Uppdrag där ritningen redan är låst</li>
+          <li>Jobb som ska vara klara i övermorgon</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CITAT -->
+<section>
+  <div class="wrap reveal">
+    <p class="pull">Toleransen är sällan det svåra. Det svåra är att veta vad ytan ska göra med ljuset.</p>
+  </div>
+</section>
+
+<!-- ETT UPPDRAG -->
 <section id="uppdrag">
-  <h2>Uppdrag</h2>
-  <p>Vi åtar oss projekt av alla storlekar, från enstaka prototyper till
-     större serier. Skicka dina ritningar eller idéer, så återkommer
-     vi med offert och tidsplan.</p>
+  <div class="wrap reveal">
+    <div class="eyebrow">Ett uppdrag</div>
+    <h2>Sittskal i ask &mdash; från skiss till provbit</h2>
+    <p class="muted">En formgivare kom med en handskiss och en gipsmodell. Ingen fil, inga mått. Ytan var dubbelkrökt och godset skulle ner till åtta millimeter på det tunnaste stället.</p>
+
+    <ol class="steps">
+      <li>
+        <h3>Uppmätning och digitalisering</h3>
+        <p>Gipsmodellen skannades och kurvorna byggdes om från grunden, så att ytan blev fräsbar utan att formgivarens linje förändrades.</p>
+      </li>
+      <li>
+        <h3>Första provbiten</h3>
+        <p>Sprickbildning längs fiberriktningen vid övergången. Fel var inte geometrin utan uppspänningen &mdash; ämnet arbetade när trycket släppte.</p>
+      </li>
+      <li>
+        <h3>Egen fixtur</h3>
+        <p>Vi göt en negativ form som bar upp hela undersidan under bearbetningen. Två dagars arbete som inte syns på den färdiga detaljen.</p>
+      </li>
+      <li>
+        <h3>Andra och tredje provbiten</h3>
+        <p>Justerad verktygsbana, långsammare matning i övergången, tolerans inom 0,2 mm mot modellen. Ytan gick att slutbehandla direkt ur maskinen.</p>
+      </li>
+      <li>
+        <h3>Leverans</h3>
+        <p>Sex skal. Tiden gick åt till att lista ut hur, inte till att köra maskinen.</p>
+      </li>
+    </ol>
+
+    <div class="plate-row" style="margin-top:64px">
+      <div class="plate tall"><span>BILD 04 &mdash; de tre provbitarna<br>bredvid varandra</span></div>
+      <div class="plate tall"><span>BILD 05 &mdash; det färdiga skalet,<br>samma sidoljus som övriga</span></div>
+    </div>
+  </div>
 </section>
 
+<!-- MASKIN & MATERIAL -->
+<section id="maskin">
+  <div class="wrap-wide reveal">
+    <div class="eyebrow">Maskin &amp; material</div>
+    <div class="cards">
+      <div class="card">
+        <div class="num">01</div>
+        <h3>Fräsning</h3>
+        <p>Flersidig bearbetning i massivt trä och limfog. Friformade ytor, underskärningar, tunna gods.</p>
+      </div>
+      <div class="card">
+        <div class="num">02</div>
+        <h3>Fixtur</h3>
+        <p>Egen uppspänning konstrueras för varje form. Det är oftast här jobbet avgörs.</p>
+      </div>
+      <div class="card">
+        <div class="num">03</div>
+        <h3>Underlag</h3>
+        <p>Vi arbetar lika gärna från skiss, gipsmodell eller skanning som från färdig 3D-fil.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OM OSS -->
 <section id="om-oss">
-  <h2>Om oss</h2>
-  <p>Boda Carve grundades av erfarna hantverkare inom snickeri och finish.
-     Genom moderna maskiner och stort engagemang säkerställer vi hög
-     kvalitet i varje led.</p>
+  <div class="wrap reveal">
+    <div class="eyebrow">Om oss</div>
+    <h2>En verkstad, ett par händer, gott om tid</h2>
+    <p class="lead">Boda Carve är liten med avsikt. Vi tar ett fåtal uppdrag åt gången eftersom den sortens arbete vi gör inte går att köra parallellt &mdash; en form som ska hittas kräver att någon står kvar vid maskinen och tittar.</p>
+    <p class="muted">Vi kommer ur snickeri och ytbehandling, och har lärt oss CNC för att kunna göra det som inte gick för hand. Kombinationen är poängen: maskinen bestämmer inte formen, den utför den.</p>
+  </div>
 </section>
 
+<!-- KONTAKT -->
 <section id="kontakt">
-  <h2>Kontakt</h2>
-  <p>Hör av dig med frågor eller offertförfrågningar:<br>
-     <a class="contact-link" href="mailto:info@bodatralab.se">info@bodatralab.se</a></p>
+  <div class="wrap reveal">
+    <div class="eyebrow">Kontakt</div>
+    <h2>Skicka skissen. Även om den är på en servett.</h2>
+    <p class="muted">Berätta vad du vill göra och vad du är osäker på. Vi återkommer med en bedömning av vad som är svårt, ungefär hur lång tid det tar, och om vi är rätt verkstad för det.</p>
+    <p style="margin-top:38px"><a class="contact-link" href="mailto:info@bodacarve.se">info@bodacarve.se</a></p>
+    <div class="meta">
+      Boda Carve<br>
+      Verkstad i Boda<br>
+      Besök efter överenskommelse
+    </div>
+  </div>
 </section>
 
 <footer>
-  &copy; 2026 Boda Carve. Alla rättigheter förbehållna.
+  &copy; 2026 Boda Carve
 </footer>
 
 <script>
@@ -619,6 +648,23 @@
     document.getElementById('overlay').classList.toggle('open');
     document.getElementById('menuBtn').classList.toggle('open');
   }
+
+  (function () {
+    var els = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) {
+      els.forEach(function (el) { el.classList.add('in'); });
+      return;
+    }
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+    els.forEach(function (el) { obs.observe(el); });
+  })();
 </script>
 
 </body>
