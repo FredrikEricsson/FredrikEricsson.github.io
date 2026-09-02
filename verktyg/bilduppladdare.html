@@ -428,6 +428,8 @@ function loadScript(src) {
   });
 }
 
+let lastFFmpegLog = '';
+
 async function getFFmpeg() {
   if (ffmpegInstance) return ffmpegInstance;
   if (!ffmpegLoadingPromise) {
@@ -438,7 +440,11 @@ async function getFFmpeg() {
       const { createFFmpeg } = window.FFmpeg;
       const ff = createFFmpeg({
         corePath: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js',
-        log: false,
+        log: true,
+      });
+      ff.setLogger(({ type, message }) => {
+        lastFFmpegLog = message;
+        console.log('[ffmpeg]', type, message);
       });
       await ff.load();
       ffmpegInstance = ff;
@@ -488,17 +494,31 @@ async function transcodeToMp4(file, status) {
   const inName = 'in_' + Math.random().toString(36).slice(2) + '.' + ext;
   const outName = 'out_' + Math.random().toString(36).slice(2) + '.mp4';
   ff.FS('writeFile', inName, await fetchFile(file));
+
+  const CONVERT_TIMEOUT_MS = 120000;
+  const runPromise = ff.run(
+    '-i', inName,
+    '-vf', 'scale=min(1600\\,iw):-2',
+    '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '26',
+    '-pix_fmt', 'yuv420p', '-an', '-movflags', '+faststart',
+    outName
+  );
+  runPromise.catch(() => {}); // avoid an unhandled-rejection warning if the timeout wins the race
+  const timeoutPromise = new Promise((_, reject) => {
+    setTimeout(() => reject(new Error('TIMEOUT')), CONVERT_TIMEOUT_MS);
+  });
+
   try {
-    await ff.run(
-      '-i', inName,
-      '-vf', 'scale=min(1600\\,iw):-2',
-      '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '26',
-      '-pix_fmt', 'yuv420p', '-an', '-movflags', '+faststart',
-      outName
-    );
+    await Promise.race([runPromise, timeoutPromise]);
   } catch (e) {
     try { ff.FS('unlink', inName); } catch (e2) {}
-    throw new Error('Kunde inte konvertera videon. Prova att exportera som .mp4 och försök igen.');
+    try { ff.exit(); } catch (e2) {}
+    ffmpegInstance = null;
+    ffmpegLoadingPromise = null;
+    if (e.message === 'TIMEOUT') {
+      throw new Error('Konverteringen tog för lång tid (över 2 minuter) och avbröts. Troligast: klippet är i formatet HEVC/H.265 (vanligt på iPhone) som är mycket långsamt att avkoda i webbläsaren, eller för högupplöst/långt. Prova att exportera klippet som H.264 istället (iPhone: Inställningar → Kamera → Format → "Mest kompatibel", spela sedan in eller duplicera klippet på nytt) eller korta ner det. Senaste meddelande från konverteraren: ' + (lastFFmpegLog || '(inget)'));
+    }
+    throw new Error('Kunde inte konvertera videon. Prova att exportera som .mp4 och försök igen. Senaste meddelande: ' + (lastFFmpegLog || e.message));
   }
   const data = ff.FS('readFile', outName);
   try { ff.FS('unlink', inName); } catch (e) {}
