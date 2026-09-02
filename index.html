@@ -224,6 +224,15 @@
     overflow: hidden;
   }
   .plate.tall { aspect-ratio: 3 / 4; }
+  .plate video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    pointer-events: none;
+  }
   .plate span {
     position: relative;
     z-index: 1;
@@ -420,7 +429,7 @@
     <div class="eyebrow">Boda Carve &mdash; verkstad för prototyper i trä</div>
     <h1>Boda Carve är en liten CNC-verkstad som tar sig an dubbelkrökta ytor, tunna gods och geometri som inte går att beskriva i ord.</h1>
     <p class="manifest">Vi räknar inte kvadratmeter. Vi räknar antalet försök som krävs för att lyckas.</p>
-    <p class="lead">Vi arbetar med konstnärer, formgivare och arkitekter &mdash; oftast från en skiss, inte från en färdig fil.</p>
+    <p class="lead">Vi arbetar gärna med konstnärer, formgivare och arkitekter &mdash; oftast från en skiss, inte från en färdig fil.</p>
   </div>
 </section>
 
@@ -599,7 +608,7 @@
     <div class="eyebrow">Arbetet</div>
     <div class="plate-row">
       <div class="plate" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-01.jpg');"><span>BILD 01 &mdash; makro på fräst yta, sidoljus,<br>verktygsspåren synliga</span></div>
-      <div class="plate" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-02.jpg');"><span>BILD 02 &mdash; uppspänning i fixtur,<br>mitt i bearbetning</span></div>
+      <div class="plate" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-02.jpg');"><video autoplay muted loop playsinline poster="bilder/bild-02.jpg" onerror="this.style.display='none'"><source src="bilder/bild-02.mp4" type="video/mp4"></video><span>BILD 02 &mdash; uppspänning i fixtur,<br>mitt i bearbetning</span></div>
       <div class="plate" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-03.jpg');"><span>BILD 03 &mdash; hand mot trä,<br>skiss bredvid provbiten</span></div>
     </div>
   </div>
@@ -706,8 +715,8 @@
   <div class="wrap reveal">
     <div class="eyebrow">Om oss</div>
     <h2>En verkstad, ett par händer och maskininlärning</h2>
-    <p class="lead">Boda Carve är liten med avsikt. Vi tar ett fåtal uppdrag åt gången eftersom den sortens arbete sällan går att köra parallellt &mdash; en form som ska hittas kräver ofta att jag står kvar vid maskinen och tittar till vid flera tillfällen.</p>
-    <p class="muted">Boda Carve kommer ur tillverkning av skuplturer på internationell nivå, men då i plast. Boda Carve jobbar bara med trä och metall och har en ambitiöst miljöinriktning. Vi har lärt oss CNC för att kunna göra det som inte gick för hand. Kombinationen är poängen: maskinen bestämmer inte formen, den utför den.</p>
+    <p class="lead">Boda Carve är litet med avsikt. Vi tar ett fåtal uppdrag åt gången eftersom den sortens arbete sällan går att köra parallellt &mdash; en form som ska hittas kräver ofta att jag står kvar vid maskinen och granskar vid flera tillfällen.</p>
+    <p class="muted">Vi kommer från tillverkning av plastskuplturer på internationell nivå men Boda Carve jobbar bara med trä och metall. Vi har en ambitiöst miljöinriktning och har lärt oss CNC för att kunna göra det som inte gick för hand. Kombinationen är poängen: maskinen bestämmer inte formen, den utför den.</p>
   </div>
 </section>
 

@@ -130,13 +130,18 @@
     background: var(--bg-soft); border: 1px solid var(--rule); padding: 14px 18px;
     font-size: 0.82rem; color: var(--gold-light); overflow-x: auto; margin: 10px 0;
   }
+  .video-badge {
+    font-family: var(--sans); font-size: 0.6rem; letter-spacing: 0.5px; text-transform: uppercase;
+    color: var(--gold); border: 1px solid rgba(201, 162, 39, 0.5); border-radius: 3px;
+    padding: 2px 6px; vertical-align: middle; margin-left: 8px;
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="eyebrow">Boda Carve &middot; internt verktyg</div>
   <h1>Bilduppladdare</h1>
-  <p class="lead">Välj bildmappen i sajtens repo (<code>bilder</code>), dra in fem foton nedan. Varje bild skalas ner och sparas direkt med rätt filnamn i mappen &mdash; sajten hittar dem automatiskt via <code>index.html</code>, ingen kodändring behövs. Fungerar i Chrome och Edge. Öppna filen genom att dubbelklicka på den, den behöver ingen server.</p>
+  <p class="lead">Välj bildmappen i sajtens repo (<code>bilder</code>), dra in fem foton nedan. Varje bild skalas ner och sparas direkt med rätt filnamn i mappen &mdash; sajten hittar dem automatiskt via <code>index.html</code>, ingen kodändring behövs. En av rutorna tar även emot ett kort videoklipp &mdash; det komprimeras automatiskt till mp4 direkt i webbläsaren. Fungerar i Chrome och Edge. Öppna filen genom att dubbelklicka på den, den behöver ingen server.</p>
 
   <div class="unsupported" id="unsupported">
     Den här webbläsaren stödjer inte direkt filskrivning till en mapp. Öppna sidan i <b>Chrome</b> eller <b>Edge</b> istället &mdash; då kan bilderna sparas direkt i <code>bilder</code>-mappen utan extra steg.
@@ -171,7 +176,7 @@ const JPEG_QUALITY = 0.85;
 
 const SLOTS = [
   { file: 'bild-01.jpg', aspect: '4/5', label: 'Fräst yta i närbild', hint: 'Makro, sidoljus — verktygsspåren ska synas.' },
-  { file: 'bild-02.jpg', aspect: '4/5', label: 'Uppspänning i fixtur', hint: 'Mitt i bearbetning.' },
+  { file: 'bild-02.jpg', videoFile: 'bild-02.mp4', video: true, aspect: '4/5', label: 'Uppspänning i fixtur', hint: 'Mitt i bearbetning. Denna ruta tar även emot ett kort videoklipp — det komprimeras automatiskt till mp4 här i webbläsaren.' },
   { file: 'bild-03.jpg', aspect: '4/5', label: 'Hand mot trä', hint: 'Skiss bredvid provbiten.' },
   { file: 'bild-04.jpg', aspect: '3/4', label: 'Provbitarna, sida vid sida', hint: 'Från caset — försöken som inte blev perfekta första gången.' },
   { file: 'bild-05.jpg', aspect: '3/4', label: 'Det färdiga arbetet', hint: 'Samma sidoljus som övriga bilder i raden.' },
@@ -222,13 +227,18 @@ function buildSlot(slot) {
   const el = document.createElement('div');
   el.className = 'slot';
   el.dataset.aspect = slot.aspect;
+  const filenameText = slot.video ? `bilder/${slot.file} · bilder/${slot.videoFile}` : `bilder/${slot.file}`;
+  const dropHint = slot.video
+    ? 'Dra en bild eller ett videoklipp hit,<br>eller klicka för att välja'
+    : 'Dra en bild hit,<br>eller klicka för att välja';
+  const acceptAttr = slot.video ? 'image/*,video/*' : 'image/*';
   el.innerHTML = `
-    <h3>${slot.label}</h3>
-    <div class="filename">bilder/${slot.file}</div>
+    <h3>${slot.label}${slot.video ? ' <span class="video-badge">tar video</span>' : ''}</h3>
+    <div class="filename">${filenameText}</div>
     <div class="hint">${slot.hint}</div>
     <div class="dropzone" tabindex="0">
-      <span class="placeholder-txt">Dra en bild hit,<br>eller klicka för att välja</span>
-      <input type="file" accept="image/*">
+      <span class="placeholder-txt">${dropHint}</span>
+      <input type="file" accept="${acceptAttr}">
     </div>
     <div class="slot-status"></div>
   `;
@@ -254,6 +264,14 @@ function buildSlot(slot) {
 }
 
 async function handleFile(slot, file, zone, status) {
+  const isVideo = file.type.startsWith('video/');
+  if (isVideo && !slot.video) {
+    setStatus(status, 'err', 'Den här rutan tar bara bilder, inte video.');
+    return;
+  }
+  if (isVideo) {
+    return handleVideoFile(slot, file, zone, status);
+  }
   setStatus(status, 'busy', 'Skalar om…');
   let result;
   try {
@@ -290,6 +308,139 @@ async function handleFile(slot, file, zone, status) {
   updateProgress();
 }
 
+
+// --- Video: lazy-laddat ffmpeg.wasm (körs helt lokalt i webbläsaren, ingen uppladdning) ---
+const VIDEO_MAX_DIM = 1600;
+let ffmpegInstance = null;
+let ffmpegLoadingPromise = null;
+
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    const el = document.createElement('script');
+    el.src = src;
+    el.onload = resolve;
+    el.onerror = () => reject(new Error('Kunde inte ladda videoverktyget (kräver internet första gången).'));
+    document.head.appendChild(el);
+  });
+}
+
+async function getFFmpeg() {
+  if (ffmpegInstance) return ffmpegInstance;
+  if (!ffmpegLoadingPromise) {
+    ffmpegLoadingPromise = (async () => {
+      if (!window.FFmpeg) {
+        await loadScript('https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js');
+      }
+      const { createFFmpeg } = window.FFmpeg;
+      const ff = createFFmpeg({
+        corePath: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js',
+        log: false,
+      });
+      await ff.load();
+      ffmpegInstance = ff;
+      return ff;
+    })();
+  }
+  return ffmpegLoadingPromise;
+}
+
+async function captureVideoFrame(file) {
+  const url = URL.createObjectURL(file);
+  const video = document.createElement('video');
+  video.muted = true;
+  video.playsInline = true;
+  video.src = url;
+  try {
+    await new Promise((resolve, reject) => {
+      video.addEventListener('loadeddata', resolve, { once: true });
+      video.addEventListener('error', () => reject(new Error('Kunde inte läsa videoklippet. Prova ett annat format (mp4 eller mov).')), { once: true });
+    });
+    video.currentTime = Math.min(0.3, (video.duration || 1) / 2);
+    await new Promise(resolve => video.addEventListener('seeked', resolve, { once: true }));
+    const canvas = document.createElement('canvas');
+    const scale = Math.min(1, MAX_DIM / Math.max(video.videoWidth, video.videoHeight));
+    const w = Math.round(video.videoWidth * scale), h = Math.round(video.videoHeight * scale);
+    canvas.width = w; canvas.height = h;
+    canvas.getContext('2d').drawImage(video, 0, 0, w, h);
+    const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', JPEG_QUALITY));
+    return { blob, w, h };
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+
+async function transcodeToMp4(file, status) {
+  setStatus(status, 'busy', 'Laddar videoverktyg… (bara första gången, ca 20–30 sek)');
+  const ff = await getFFmpeg();
+  const { fetchFile } = window.FFmpeg;
+  ff.setProgress(({ ratio }) => {
+    if (ratio >= 0 && ratio <= 1) setStatus(status, 'busy', `Konverterar video… ${Math.round(ratio * 100)}%`);
+  });
+  setStatus(status, 'busy', 'Konverterar video…');
+  const ext = (file.name.split('.').pop() || 'mp4').toLowerCase();
+  const inName = 'in_' + Math.random().toString(36).slice(2) + '.' + ext;
+  const outName = 'out_' + Math.random().toString(36).slice(2) + '.mp4';
+  ff.FS('writeFile', inName, await fetchFile(file));
+  try {
+    await ff.run(
+      '-i', inName,
+      '-vf', 'scale=min(1600\\,iw):-2',
+      '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '26',
+      '-pix_fmt', 'yuv420p', '-an', '-movflags', '+faststart',
+      outName
+    );
+  } catch (e) {
+    try { ff.FS('unlink', inName); } catch (e2) {}
+    throw new Error('Kunde inte konvertera videon. Prova att exportera som .mp4 och försök igen.');
+  }
+  const data = ff.FS('readFile', outName);
+  try { ff.FS('unlink', inName); } catch (e) {}
+  try { ff.FS('unlink', outName); } catch (e) {}
+  return new Blob([data.buffer], { type: 'video/mp4' });
+}
+
+async function handleVideoFile(slot, file, zone, status) {
+  let poster;
+  try {
+    setStatus(status, 'busy', 'Tar en bildruta ur klippet…');
+    poster = await captureVideoFrame(file);
+  } catch (e) {
+    setStatus(status, 'err', e.message);
+    return;
+  }
+  const posterUrl = URL.createObjectURL(poster.blob);
+  zone.style.backgroundImage = `url('${posterUrl}')`;
+  zone.classList.add('has-image');
+
+  let videoBlob;
+  try {
+    videoBlob = await transcodeToMp4(file, status);
+  } catch (e) {
+    setStatus(status, 'err', e.message);
+    return;
+  }
+
+  if (!dirHandle) {
+    const a1 = document.createElement('a'); a1.href = URL.createObjectURL(poster.blob); a1.download = slot.file; a1.click();
+    const a2 = document.createElement('a'); a2.href = URL.createObjectURL(videoBlob); a2.download = slot.videoFile; a2.click();
+    setStatus(status, 'ok', `Nedladdad som ${slot.file} + ${slot.videoFile} (${Math.round(videoBlob.size/1024)} kB) — flytta filerna till bilder-mappen manuellt.`);
+    updateProgress();
+    return;
+  }
+
+  setStatus(status, 'busy', 'Sparar i mappen…');
+  try {
+    const fh1 = await dirHandle.getFileHandle(slot.file, { create: true });
+    const w1 = await fh1.createWritable(); await w1.write(poster.blob); await w1.close();
+    const fh2 = await dirHandle.getFileHandle(slot.videoFile, { create: true });
+    const w2 = await fh2.createWritable(); await w2.write(videoBlob); await w2.close();
+    setStatus(status, 'ok', `Video sparad · ${Math.round(videoBlob.size/1024)} kB (+ stillbild som reserv)`);
+  } catch (e) {
+    setStatus(status, 'err', 'Kunde inte skriva filerna: ' + e.message);
+  }
+  updateProgress();
+}
+
 const slotEls = SLOTS.map(buildSlot);
 
 async function tryLoadExisting() {
@@ -302,9 +453,15 @@ async function tryLoadExisting() {
       const url = URL.createObjectURL(file);
       zone.style.backgroundImage = `url('${url}')`;
       zone.classList.add('has-image');
-      setStatus(status, 'ok', `Redan sparad · ${Math.round(file.size/1024)} kB — dra en ny bild hit för att ersätta`);
+      let hasVideo = false;
+      if (slot.video) {
+        try { await dirHandle.getFileHandle(slot.videoFile, { create: false }); hasVideo = true; } catch (e) {}
+      }
+      setStatus(status, 'ok', hasVideo
+        ? `Video redan sparad — dra en ny videofil eller bild hit för att ersätta`
+        : `Redan sparad · ${Math.round(file.size/1024)} kB — dra en ny bild hit för att ersätta`);
     } catch (e) {
-      setStatus(status, '', 'Väntar på bild');
+      setStatus(status, '', slot.video ? 'Väntar på bild eller video' : 'Väntar på bild');
     }
   }
   updateProgress();
