@@ -5,5 +5,12 @@ var PORTFOLIO_ITEMS = [
     "ingress": "Utöver produktionen av träprototyper erbjuder vi 3D-modelering, om tid finns.",
     "body": "Hammarhajen skapades i Blender och frästes sedan till en frigolitkärna med en sex-axlig ABB robot. Den plastades, lackades och duschassemblaget monteradses innan den fraktades till barnen i Hammarkullen. ",
     "image": "p1.jpg"
+  },
+  {
+    "id": "p2",
+    "title": "Osprey",
+    "ingress": "Blender arbete.",
+    "body": "Avancerad fjäder.",
+    "image": "p2.jpg"
   }
 ];
