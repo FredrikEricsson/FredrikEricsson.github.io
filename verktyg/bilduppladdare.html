@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="coi-serviceworker.js"></script>
 <title>Boda Carve — bilduppladdare</title>
 <style>
   :root {
@@ -66,10 +65,6 @@
   .unsupported {
     display: none; border: 1px solid rgba(201, 112, 90, 0.4); background: rgba(201, 112, 90, 0.07);
     padding: 18px 22px; margin-bottom: 34px; font-size: 0.92rem; color: #e2b3a5;
-  }
-  .video-note {
-    border: 1px solid rgba(201, 162, 39, 0.35); background: rgba(201, 162, 39, 0.06);
-    padding: 16px 22px; margin-bottom: 34px; font-size: 0.88rem; color: var(--ink-muted);
   }
 
   .grid {
@@ -164,14 +159,10 @@
 <div class="wrap">
   <div class="eyebrow">Boda Carve &middot; internt verktyg</div>
   <h1>Bilduppladdare</h1>
-  <p class="lead">Välj bildmappen i sajtens repo (<code>bilder</code>), dra in fem foton nedan. Varje bild skalas ner och sparas direkt med rätt filnamn i mappen &mdash; sajten hittar dem automatiskt via <code>index.html</code>, ingen kodändring behövs. Du kan även skriva om texten under varje bild direkt här &mdash; den sparas i <code>bilder/captions.js</code> och sajten hämtar den automatiskt. En av rutorna tar även emot ett kort videoklipp som komprimeras till mp4 direkt i webbläsaren &mdash; det kräver att sidan öppnas via en lokal server istället för att dubbelklickas, se längst ner. Bild och text fungerar som vanligt oavsett hur du öppnar filen. Fungerar i Chrome och Edge.</p>
+  <p class="lead">Välj bildmappen i sajtens repo (<code>bilder</code>), dra in fem foton nedan. Varje bild skalas ner och sparas direkt med rätt filnamn i mappen &mdash; sajten hittar dem automatiskt via <code>index.html</code>, ingen kodändring behövs. Du kan även skriva om texten under varje bild direkt här &mdash; den sparas i <code>bilder/captions.js</code> och sajten hämtar den automatiskt. En av rutorna tar även emot ett kort videoklipp som konverteras till mp4 direkt i webbläsaren. Öppna filen genom att dubbelklicka på den, den behöver ingen server. Fungerar i Chrome och Edge.</p>
 
   <div class="unsupported" id="unsupported">
     Den här webbläsaren stödjer inte direkt filskrivning till en mapp. Öppna sidan i <b>Chrome</b> eller <b>Edge</b> istället &mdash; då kan bilderna sparas direkt i <code>bilder</code>-mappen utan extra steg.
-  </div>
-
-  <div class="video-note" id="videoNote" style="display:none">
-    Videokonvertering är inte aktiv just nu &mdash; sidan är öppnad direkt som fil. Bild och text sparas som vanligt. Vill du lägga in video, starta verktyget via en lokal server istället (se &rdquo;När du är klar&rdquo; längst ner).
   </div>
 
   <div class="folderbar">
@@ -181,20 +172,6 @@
   </div>
 
   <div class="grid" id="grid"></div>
-
-  <div class="next-steps">
-    <h2>Vill du lägga in video? Öppna verktyget så här istället</h2>
-    <p style="color:var(--ink-muted); font-size:0.92rem; margin-bottom:10px;">Videokonvertering kräver att sidan öppnas via en lokal server, inte genom att dubbelklicka filen &mdash; en gräns webbläsaren själv sätter. Bild och text funkar som vanligt även om du hoppar över det här.</p>
-    <ol>
-      <li>Öppna Terminal och gå till mappen där sajten ligger, t.ex:</li>
-    </ol>
-    <pre>cd ~/Documents/FredrikEricsson.github.io
-python3 -m http.server 8000</pre>
-    <ol start="2">
-      <li>Öppna <code>http://localhost:8000/verktyg/bilduppladdare.html</code> i Chrome. Sidan kan ladda om sig själv en gång automatiskt &mdash; helt normalt.</li>
-      <li>Låt Terminal-fönstret vara öppet medan du använder verktyget. Stäng det (Ctrl+C) när du är klar.</li>
-    </ol>
-  </div>
 
   <div class="next-steps">
     <h2>När du är klar</h2>
@@ -248,9 +225,6 @@ const pickBtn = document.getElementById('pickBtn');
 if (!supported) {
   document.getElementById('unsupported').style.display = 'block';
   pickBtn.disabled = true;
-}
-if (!window.crossOriginIsolated) {
-  document.getElementById('videoNote').style.display = 'block';
 }
 
 function setStatus(el, kind, text) {
@@ -413,10 +387,12 @@ async function handleFile(slot, file, zone, status) {
 }
 
 
-// --- Video: lazy-laddat ffmpeg.wasm (körs helt lokalt i webbläsaren, ingen uppladdning) ---
+// --- Video: avkodas nativt av webbläsaren (samma <video>-element som redan används för
+// bildrutan nedan — alltså hårdvaruaccelererat, redan bevisat klara HEVC-klipp), kodas om
+// till H.264 med WebCodecs och paketeras till mp4 med mp4-muxer. Ingen wasm-avkodning,
+// ingen SharedArrayBuffer, ingen lokal server behövs. ---
 const VIDEO_MAX_DIM = 1600;
-let ffmpegInstance = null;
-let ffmpegLoadingPromise = null;
+const CODEC_CANDIDATES = ['avc1.640028', 'avc1.4d0028', 'avc1.42002a', 'avc1.42001f'];
 
 function loadScript(src) {
   return new Promise((resolve, reject) => {
@@ -428,30 +404,27 @@ function loadScript(src) {
   });
 }
 
-let lastFFmpegLog = '';
-
-async function getFFmpeg() {
-  if (ffmpegInstance) return ffmpegInstance;
-  if (!ffmpegLoadingPromise) {
-    ffmpegLoadingPromise = (async () => {
-      if (!window.FFmpeg) {
-        await loadScript('https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js');
-      }
-      const { createFFmpeg } = window.FFmpeg;
-      const ff = createFFmpeg({
-        corePath: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js',
-        log: true,
-      });
-      ff.setLogger(({ type, message }) => {
-        lastFFmpegLog = message;
-        console.log('[ffmpeg]', type, message);
-      });
-      await ff.load();
-      ffmpegInstance = ff;
-      return ff;
-    })();
+let mp4MuxerLoadingPromise = null;
+async function loadMp4Muxer() {
+  if (window.Mp4Muxer) return window.Mp4Muxer;
+  if (!mp4MuxerLoadingPromise) {
+    mp4MuxerLoadingPromise = loadScript('https://cdn.jsdelivr.net/npm/mp4-muxer@5.2.2/build/mp4-muxer.js')
+      .then(() => window.Mp4Muxer);
   }
-  return ffmpegLoadingPromise;
+  return mp4MuxerLoadingPromise;
+}
+
+async function pickSupportedCodec(w, h) {
+  if (!('VideoEncoder' in window)) {
+    throw new Error('Den här webbläsaren saknar stöd för videokonvertering (WebCodecs). Använd senaste Chrome eller Edge.');
+  }
+  for (const codec of CODEC_CANDIDATES) {
+    try {
+      const support = await VideoEncoder.isConfigSupported({ codec, width: w, height: h, bitrate: 2000000, framerate: 30 });
+      if (support && support.supported) return codec;
+    } catch (e) { /* prova nästa kandidat */ }
+  }
+  throw new Error('Hittade ingen videokodek den här webbläsaren stödjer för konvertering.');
 }
 
 async function captureVideoFrame(file) {
@@ -480,50 +453,99 @@ async function captureVideoFrame(file) {
 }
 
 async function transcodeToMp4(file, status) {
-  if (!window.crossOriginIsolated) {
-    throw new Error('Videokonvertering kräver att sidan öppnas via en lokal server, inte genom att dubbelklicka filen. Se "Vill du lägga in video?" längst ner på sidan.');
-  }
-  setStatus(status, 'busy', 'Laddar videoverktyg… (bara första gången, ca 20–30 sek)');
-  const ff = await getFFmpeg();
-  const { fetchFile } = window.FFmpeg;
-  ff.setProgress(({ ratio }) => {
-    if (ratio >= 0 && ratio <= 1) setStatus(status, 'busy', `Konverterar video… ${Math.round(ratio * 100)}%`);
-  });
-  setStatus(status, 'busy', 'Konverterar video…');
-  const ext = (file.name.split('.').pop() || 'mp4').toLowerCase();
-  const inName = 'in_' + Math.random().toString(36).slice(2) + '.' + ext;
-  const outName = 'out_' + Math.random().toString(36).slice(2) + '.mp4';
-  ff.FS('writeFile', inName, await fetchFile(file));
+  const Mp4Muxer = await loadMp4Muxer();
 
-  const CONVERT_TIMEOUT_MS = 120000;
-  const runPromise = ff.run(
-    '-i', inName,
-    '-vf', 'scale=min(1600\\,iw):-2',
-    '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '26',
-    '-pix_fmt', 'yuv420p', '-an', '-movflags', '+faststart',
-    outName
-  );
-  runPromise.catch(() => {}); // avoid an unhandled-rejection warning if the timeout wins the race
-  const timeoutPromise = new Promise((_, reject) => {
-    setTimeout(() => reject(new Error('TIMEOUT')), CONVERT_TIMEOUT_MS);
-  });
+  setStatus(status, 'busy', 'Läser videoklippet…');
+  const srcUrl = URL.createObjectURL(file);
+  const video = document.createElement('video');
+  video.muted = true;
+  video.playsInline = true;
+  video.src = srcUrl;
 
+  let guardTimer = null;
   try {
-    await Promise.race([runPromise, timeoutPromise]);
-  } catch (e) {
-    try { ff.FS('unlink', inName); } catch (e2) {}
-    try { ff.exit(); } catch (e2) {}
-    ffmpegInstance = null;
-    ffmpegLoadingPromise = null;
-    if (e.message === 'TIMEOUT') {
-      throw new Error('Konverteringen tog för lång tid (över 2 minuter) och avbröts. Troligast: klippet är i formatet HEVC/H.265 (vanligt på iPhone) som är mycket långsamt att avkoda i webbläsaren, eller för högupplöst/långt. Prova att exportera klippet som H.264 istället (iPhone: Inställningar → Kamera → Format → "Mest kompatibel", spela sedan in eller duplicera klippet på nytt) eller korta ner det. Senaste meddelande från konverteraren: ' + (lastFFmpegLog || '(inget)'));
+    await new Promise((resolve, reject) => {
+      video.addEventListener('loadedmetadata', resolve, { once: true });
+      video.addEventListener('error', () => reject(new Error('Kunde inte läsa videoklippet. Prova ett annat format (mp4 eller mov).')), { once: true });
+    });
+
+    let w = video.videoWidth, h = video.videoHeight;
+    const scale = Math.min(1, VIDEO_MAX_DIM / Math.max(w, h));
+    w = Math.round(w * scale); h = Math.round(h * scale);
+    w -= w % 2; h -= h % 2; // encodern kräver jämna mått
+    if (w < 2 || h < 2) throw new Error('Videon verkar sakna bildinnehåll.');
+
+    const codec = await pickSupportedCodec(w, h);
+
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext('2d');
+
+    const muxer = new Mp4Muxer.Muxer({
+      target: new Mp4Muxer.ArrayBufferTarget(),
+      video: { codec: 'avc', width: w, height: h },
+      fastStart: 'in-memory',
+    });
+
+    let encoderError = null;
+    const encoder = new VideoEncoder({
+      output: (chunk, meta) => muxer.addVideoChunk(chunk, meta),
+      error: (e) => { encoderError = e; },
+    });
+    encoder.configure({ codec, width: w, height: h, bitrate: 2000000, framerate: 30 });
+
+    setStatus(status, 'busy', 'Konverterar video…');
+    let frameCount = 0;
+    const CONVERT_TIMEOUT_MS = 120000;
+
+    await new Promise((resolve, reject) => {
+      let settled = false;
+      const finish = () => { if (!settled) { settled = true; resolve(); } };
+      const fail = (err) => { if (!settled) { settled = true; reject(err); } };
+      guardTimer = setTimeout(() => fail(new Error('TIMEOUT')), CONVERT_TIMEOUT_MS);
+
+      function onFrame(_now, metadata) {
+        if (settled) return;
+        if (encoderError) { fail(encoderError); return; }
+        try {
+          ctx.drawImage(video, 0, 0, w, h);
+          const timestamp = Math.round((metadata.mediaTime || 0) * 1e6);
+          const frame = new VideoFrame(canvas, { timestamp });
+          encoder.encode(frame);
+          frame.close();
+        } catch (e) {
+          fail(e);
+          return;
+        }
+        frameCount++;
+        setStatus(status, 'busy', `Konverterar video… bildruta ${frameCount}`);
+        if (video.ended) { finish(); return; }
+        video.requestVideoFrameCallback(onFrame);
+      }
+
+      video.addEventListener('ended', finish, { once: true });
+      video.requestVideoFrameCallback(onFrame);
+      video.play().catch(fail);
+    });
+
+    video.pause();
+    if (encoderError) throw encoderError;
+    await encoder.flush();
+    muxer.finalize();
+    const { buffer } = muxer.target;
+    if (!buffer || buffer.byteLength < 100) {
+      throw new Error('Konverteringen gav en tom fil. Klippet kan vara i ett format webbläsaren inte kan läsa.');
     }
-    throw new Error('Kunde inte konvertera videon. Prova att exportera som .mp4 och försök igen. Senaste meddelande: ' + (lastFFmpegLog || e.message));
+    return new Blob([buffer], { type: 'video/mp4' });
+  } catch (e) {
+    if (e.message === 'TIMEOUT') {
+      throw new Error('Konverteringen tog för lång tid (över 2 minuter) och avbröts. Prova ett kortare klipp.');
+    }
+    throw new Error('Kunde inte konvertera videon: ' + (e && e.message ? e.message : e) + '. Prova att exportera som .mp4 och försök igen.');
+  } finally {
+    if (guardTimer) clearTimeout(guardTimer);
+    URL.revokeObjectURL(srcUrl);
   }
-  const data = ff.FS('readFile', outName);
-  try { ff.FS('unlink', inName); } catch (e) {}
-  try { ff.FS('unlink', outName); } catch (e) {}
-  return new Blob([data.buffer], { type: 'video/mp4' });
 }
 
 async function handleVideoFile(slot, file, zone, status) {
