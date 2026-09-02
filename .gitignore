@@ -2,3 +2,4 @@
 *.tar.gz
 *.asc
 *.prj
+_stale_locks/
