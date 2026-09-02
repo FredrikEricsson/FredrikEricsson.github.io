@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="coi-serviceworker.js"></script>
 <title>Boda Carve — bilduppladdare</title>
 <style>
   :root {
@@ -65,6 +66,10 @@
   .unsupported {
     display: none; border: 1px solid rgba(201, 112, 90, 0.4); background: rgba(201, 112, 90, 0.07);
     padding: 18px 22px; margin-bottom: 34px; font-size: 0.92rem; color: #e2b3a5;
+  }
+  .video-note {
+    border: 1px solid rgba(201, 162, 39, 0.35); background: rgba(201, 162, 39, 0.06);
+    padding: 16px 22px; margin-bottom: 34px; font-size: 0.88rem; color: var(--ink-muted);
   }
 
   .grid {
@@ -159,10 +164,14 @@
 <div class="wrap">
   <div class="eyebrow">Boda Carve &middot; internt verktyg</div>
   <h1>Bilduppladdare</h1>
-  <p class="lead">Välj bildmappen i sajtens repo (<code>bilder</code>), dra in fem foton nedan. Varje bild skalas ner och sparas direkt med rätt filnamn i mappen &mdash; sajten hittar dem automatiskt via <code>index.html</code>, ingen kodändring behövs. Du kan även skriva om texten under varje bild direkt här &mdash; den sparas i <code>bilder/captions.js</code> och sajten hämtar den automatiskt. En av rutorna tar även emot ett kort videoklipp &mdash; det komprimeras automatiskt till mp4 direkt i webbläsaren. Fungerar i Chrome och Edge. Öppna filen genom att dubbelklicka på den, den behöver ingen server.</p>
+  <p class="lead">Välj bildmappen i sajtens repo (<code>bilder</code>), dra in fem foton nedan. Varje bild skalas ner och sparas direkt med rätt filnamn i mappen &mdash; sajten hittar dem automatiskt via <code>index.html</code>, ingen kodändring behövs. Du kan även skriva om texten under varje bild direkt här &mdash; den sparas i <code>bilder/captions.js</code> och sajten hämtar den automatiskt. En av rutorna tar även emot ett kort videoklipp som komprimeras till mp4 direkt i webbläsaren &mdash; det kräver att sidan öppnas via en lokal server istället för att dubbelklickas, se längst ner. Bild och text fungerar som vanligt oavsett hur du öppnar filen. Fungerar i Chrome och Edge.</p>
 
   <div class="unsupported" id="unsupported">
     Den här webbläsaren stödjer inte direkt filskrivning till en mapp. Öppna sidan i <b>Chrome</b> eller <b>Edge</b> istället &mdash; då kan bilderna sparas direkt i <code>bilder</code>-mappen utan extra steg.
+  </div>
+
+  <div class="video-note" id="videoNote" style="display:none">
+    Videokonvertering är inte aktiv just nu &mdash; sidan är öppnad direkt som fil. Bild och text sparas som vanligt. Vill du lägga in video, starta verktyget via en lokal server istället (se &rdquo;När du är klar&rdquo; längst ner).
   </div>
 
   <div class="folderbar">
@@ -172,6 +181,20 @@
   </div>
 
   <div class="grid" id="grid"></div>
+
+  <div class="next-steps">
+    <h2>Vill du lägga in video? Öppna verktyget så här istället</h2>
+    <p style="color:var(--ink-muted); font-size:0.92rem; margin-bottom:10px;">Videokonvertering kräver att sidan öppnas via en lokal server, inte genom att dubbelklicka filen &mdash; en gräns webbläsaren själv sätter. Bild och text funkar som vanligt även om du hoppar över det här.</p>
+    <ol>
+      <li>Öppna Terminal och gå till mappen där sajten ligger, t.ex:</li>
+    </ol>
+    <pre>cd ~/Documents/FredrikEricsson.github.io
+python3 -m http.server 8000</pre>
+    <ol start="2">
+      <li>Öppna <code>http://localhost:8000/verktyg/bilduppladdare.html</code> i Chrome. Sidan kan ladda om sig själv en gång automatiskt &mdash; helt normalt.</li>
+      <li>Låt Terminal-fönstret vara öppet medan du använder verktyget. Stäng det (Ctrl+C) när du är klar.</li>
+    </ol>
+  </div>
 
   <div class="next-steps">
     <h2>När du är klar</h2>
@@ -225,6 +248,9 @@ const pickBtn = document.getElementById('pickBtn');
 if (!supported) {
   document.getElementById('unsupported').style.display = 'block';
   pickBtn.disabled = true;
+}
+if (!window.crossOriginIsolated) {
+  document.getElementById('videoNote').style.display = 'block';
 }
 
 function setStatus(el, kind, text) {
@@ -448,6 +474,9 @@ async function captureVideoFrame(file) {
 }
 
 async function transcodeToMp4(file, status) {
+  if (!window.crossOriginIsolated) {
+    throw new Error('Videokonvertering kräver att sidan öppnas via en lokal server, inte genom att dubbelklicka filen. Se "Vill du lägga in video?" längst ner på sidan.');
+  }
   setStatus(status, 'busy', 'Laddar videoverktyg… (bara första gången, ca 20–30 sek)');
   const ff = await getFFmpeg();
   const { fetchFile } = window.FFmpeg;
