@@ -607,9 +607,9 @@
   <div class="wrap-wide reveal">
     <div class="eyebrow">Arbetet</div>
     <div class="plate-row">
-      <div class="plate" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-01.jpg');"><span>BILD 01 &mdash; makro på fräst yta, sidoljus,<br>verktygsspåren synliga</span></div>
-      <div class="plate" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-02.jpg');"><video autoplay muted loop playsinline poster="bilder/bild-02.jpg" onerror="this.style.display='none'"><source src="bilder/bild-02.mp4" type="video/mp4"></video><span>BILD 02 &mdash; uppspänning i fixtur,<br>mitt i bearbetning</span></div>
-      <div class="plate" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-03.jpg');"><span>BILD 03 &mdash; hand mot trä,<br>skiss bredvid provbiten</span></div>
+      <div class="plate" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-01.jpg');"><span data-slot="bild-01">BILD 01 &mdash; makro på fräst yta, sidoljus,<br>verktygsspåren synliga</span></div>
+      <div class="plate" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-02.jpg');"><video autoplay muted loop playsinline poster="bilder/bild-02.jpg" onerror="this.style.display='none'"><source src="bilder/bild-02.mp4" type="video/mp4"></video><span data-slot="bild-02">BILD 02 &mdash; uppspänning i fixtur,<br>mitt i bearbetning</span></div>
+      <div class="plate" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-03.jpg');"><span data-slot="bild-03">BILD 03 &mdash; hand mot trä,<br>skiss bredvid provbiten</span></div>
     </div>
   </div>
 </section>
@@ -680,8 +680,8 @@
     </ol>
 
     <div class="plate-row" style="margin-top:64px">
-      <div class="plate tall" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-04.jpg');"><span>BILD 04 &mdash; de tre provbitarna<br>bredvid varandra</span></div>
-      <div class="plate tall" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-05.jpg');"><span>BILD 05 &mdash; det färdiga skalet,<br>samma sidoljus som övriga</span></div>
+      <div class="plate tall" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-04.jpg');"><span data-slot="bild-04">BILD 04 &mdash; de tre provbitarna<br>bredvid varandra</span></div>
+      <div class="plate tall" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-05.jpg');"><span data-slot="bild-05">BILD 05 &mdash; det färdiga skalet,<br>samma sidoljus som övriga</span></div>
     </div>
   </div>
 </section>
@@ -761,6 +761,21 @@
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
     els.forEach(function (el) { obs.observe(el); });
+  })();
+</script>
+
+<!-- Bildtexter: skrivs av verktyg/bilduppladdare.html, saknas filen visas texten ovan som fallback -->
+<script src="bilder/captions.js"></script>
+<script>
+  (function () {
+    if (typeof PLATE_CAPTIONS !== 'object' || !PLATE_CAPTIONS) return;
+    document.querySelectorAll('.plate span[data-slot]').forEach(function (span) {
+      var text = PLATE_CAPTIONS[span.getAttribute('data-slot')];
+      if (!text) return;
+      var esc = document.createElement('div');
+      esc.textContent = text;
+      span.innerHTML = esc.innerHTML.replace(/\n/g, '<br>');
+    });
   })();
 </script>
 

@@ -135,13 +135,31 @@
     color: var(--gold); border: 1px solid rgba(201, 162, 39, 0.5); border-radius: 3px;
     padding: 2px 6px; vertical-align: middle; margin-left: 8px;
   }
+
+  .caption-field { margin-top: 14px; }
+  .caption-field label {
+    display: block; font-size: 0.68rem; color: var(--ink-faint); letter-spacing: 0.6px;
+    text-transform: uppercase; margin-bottom: 6px;
+  }
+  .caption-field textarea {
+    width: 100%; resize: vertical; min-height: 56px;
+    background: #0f0d0a; border: 1px solid var(--rule); color: var(--ink);
+    font-family: var(--sans); font-size: 0.82rem; line-height: 1.5;
+    padding: 8px 10px; border-radius: 2px;
+  }
+  .caption-field textarea:focus { outline: none; border-color: var(--gold-light); }
+  .caption-status {
+    margin-top: 6px; font-size: 0.72rem; color: var(--ink-faint); min-height: 14px;
+  }
+  .caption-status.ok { color: var(--ok); }
+  .caption-status.err { color: var(--err); }
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="eyebrow">Boda Carve &middot; internt verktyg</div>
   <h1>Bilduppladdare</h1>
-  <p class="lead">Välj bildmappen i sajtens repo (<code>bilder</code>), dra in fem foton nedan. Varje bild skalas ner och sparas direkt med rätt filnamn i mappen &mdash; sajten hittar dem automatiskt via <code>index.html</code>, ingen kodändring behövs. En av rutorna tar även emot ett kort videoklipp &mdash; det komprimeras automatiskt till mp4 direkt i webbläsaren. Fungerar i Chrome och Edge. Öppna filen genom att dubbelklicka på den, den behöver ingen server.</p>
+  <p class="lead">Välj bildmappen i sajtens repo (<code>bilder</code>), dra in fem foton nedan. Varje bild skalas ner och sparas direkt med rätt filnamn i mappen &mdash; sajten hittar dem automatiskt via <code>index.html</code>, ingen kodändring behövs. Du kan även skriva om texten under varje bild direkt här &mdash; den sparas i <code>bilder/captions.js</code> och sajten hämtar den automatiskt. En av rutorna tar även emot ett kort videoklipp &mdash; det komprimeras automatiskt till mp4 direkt i webbläsaren. Fungerar i Chrome och Edge. Öppna filen genom att dubbelklicka på den, den behöver ingen server.</p>
 
   <div class="unsupported" id="unsupported">
     Den här webbläsaren stödjer inte direkt filskrivning till en mapp. Öppna sidan i <b>Chrome</b> eller <b>Edge</b> istället &mdash; då kan bilderna sparas direkt i <code>bilder</code>-mappen utan extra steg.
@@ -175,12 +193,26 @@ const MAX_DIM = 1900;
 const JPEG_QUALITY = 0.85;
 
 const SLOTS = [
-  { file: 'bild-01.jpg', aspect: '4/5', label: 'Fräst yta i närbild', hint: 'Makro, sidoljus — verktygsspåren ska synas.' },
-  { file: 'bild-02.jpg', videoFile: 'bild-02.mp4', video: true, aspect: '4/5', label: 'Uppspänning i fixtur', hint: 'Mitt i bearbetning. Denna ruta tar även emot ett kort videoklipp — det komprimeras automatiskt till mp4 här i webbläsaren.' },
-  { file: 'bild-03.jpg', aspect: '4/5', label: 'Hand mot trä', hint: 'Skiss bredvid provbiten.' },
-  { file: 'bild-04.jpg', aspect: '3/4', label: 'Provbitarna, sida vid sida', hint: 'Från caset — försöken som inte blev perfekta första gången.' },
-  { file: 'bild-05.jpg', aspect: '3/4', label: 'Det färdiga arbetet', hint: 'Samma sidoljus som övriga bilder i raden.' },
+  { file: 'bild-01.jpg', aspect: '4/5', label: 'Fräst yta i närbild', hint: 'Makro, sidoljus — verktygsspåren ska synas.', caption: 'BILD 01 — makro på fräst yta, sidoljus,\nverktygsspåren synliga' },
+  { file: 'bild-02.jpg', videoFile: 'bild-02.mp4', video: true, aspect: '4/5', label: 'Uppspänning i fixtur', hint: 'Mitt i bearbetning. Denna ruta tar även emot ett kort videoklipp — det komprimeras automatiskt till mp4 här i webbläsaren.', caption: 'BILD 02 — uppspänning i fixtur,\nmitt i bearbetning' },
+  { file: 'bild-03.jpg', aspect: '4/5', label: 'Hand mot trä', hint: 'Skiss bredvid provbiten.', caption: 'BILD 03 — hand mot trä,\nskiss bredvid provbiten' },
+  { file: 'bild-04.jpg', aspect: '3/4', label: 'Provbitarna, sida vid sida', hint: 'Från caset — försöken som inte blev perfekta första gången.', caption: 'BILD 04 — de tre provbitarna\nbredvid varandra' },
+  { file: 'bild-05.jpg', aspect: '3/4', label: 'Det färdiga arbetet', hint: 'Samma sidoljus som övriga bilder i raden.', caption: 'BILD 05 — det färdiga skalet,\nsamma sidoljus som övriga' },
 ];
+
+const CAPTIONS_FILE = 'captions.js';
+function captionKey(slot) { return slot.file.replace(/\.[^.]+$/, ''); }
+const captionsData = {};
+SLOTS.forEach(s => { captionsData[captionKey(s)] = s.caption; });
+
+function renderCaptionsJs(data) {
+  return 'var PLATE_CAPTIONS = ' + JSON.stringify(data, null, 2) + ';\n';
+}
+function parseCaptionsJs(text) {
+  const m = text.match(/var\s+PLATE_CAPTIONS\s*=\s*([\s\S]*?);\s*$/);
+  if (!m) throw new Error('okänt format');
+  return JSON.parse(m[1]);
+}
 
 let dirHandle = null;
 const supported = 'showDirectoryPicker' in window;
@@ -241,10 +273,18 @@ function buildSlot(slot) {
       <input type="file" accept="${acceptAttr}">
     </div>
     <div class="slot-status"></div>
+    <div class="caption-field">
+      <label>Bildtext (visas på sajten)</label>
+      <textarea class="caption-input" rows="2" placeholder="Text under bilden…"></textarea>
+      <div class="caption-status"></div>
+    </div>
   `;
   const zone = el.querySelector('.dropzone');
   const input = el.querySelector('input[type=file]');
   const status = el.querySelector('.slot-status');
+  const captionEl = el.querySelector('.caption-input');
+  const captionStatus = el.querySelector('.caption-status');
+  captionEl.value = captionsData[captionKey(slot)] ?? '';
 
   zone.addEventListener('click', () => input.click());
   zone.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') input.click(); });
@@ -259,8 +299,46 @@ function buildSlot(slot) {
     if (f) handleFile(slot, f, zone, status);
   });
 
+  captionEl.addEventListener('change', () => saveCaption(slot, captionEl, captionStatus));
+
   grid.appendChild(el);
-  return { zone, status };
+  return { slot, zone, status, captionEl, captionStatus };
+}
+
+async function saveCaption(slot, captionEl, captionStatus) {
+  captionsData[captionKey(slot)] = captionEl.value;
+  if (!dirHandle) {
+    const blob = new Blob([renderCaptionsJs(captionsData)], { type: 'text/javascript' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = CAPTIONS_FILE; a.click();
+    captionStatus.textContent = 'Nedladdad som captions.js — flytta filen till bilder-mappen manuellt.';
+    captionStatus.className = 'caption-status ok';
+    return;
+  }
+  captionStatus.textContent = 'Sparar…';
+  captionStatus.className = 'caption-status';
+  try {
+    const fh = await dirHandle.getFileHandle(CAPTIONS_FILE, { create: true });
+    const writable = await fh.createWritable();
+    await writable.write(renderCaptionsJs(captionsData));
+    await writable.close();
+    captionStatus.textContent = 'Text sparad';
+    captionStatus.className = 'caption-status ok';
+  } catch (e) {
+    captionStatus.textContent = 'Kunde inte spara: ' + e.message;
+    captionStatus.className = 'caption-status err';
+  }
+}
+
+async function loadCaptionsFromFolder() {
+  try {
+    const fh = await dirHandle.getFileHandle(CAPTIONS_FILE, { create: false });
+    const file = await fh.getFile();
+    const parsed = parseCaptionsJs(await file.text());
+    Object.assign(captionsData, parsed);
+  } catch (e) {
+    // Filen saknas eller går inte att tolka — behåll de förifyllda texterna.
+  }
 }
 
 async function handleFile(slot, file, zone, status) {
@@ -471,6 +549,8 @@ pickBtn.addEventListener('click', async () => {
   try {
     dirHandle = await window.showDirectoryPicker({ id: 'boda-carve-bilder', mode: 'readwrite' });
     folderStatus.innerHTML = 'Mapp vald: <b>' + dirHandle.name + '</b>';
+    await loadCaptionsFromFolder();
+    slotEls.forEach(({ slot, captionEl }) => { captionEl.value = captionsData[captionKey(slot)] ?? ''; });
     await tryLoadExisting();
   } catch (e) {
     if (e.name !== 'AbortError') {
