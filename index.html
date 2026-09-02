@@ -214,9 +214,10 @@
     position: relative;
     aspect-ratio: 4 / 5;
     border: 1px solid rgba(201, 162, 39, 0.22);
-    background:
-      radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%),
-      var(--bg-soft);
+    background-color: var(--bg-soft);
+    background-repeat: no-repeat, no-repeat, no-repeat;
+    background-position: 0 0, 0 0, center;
+    background-size: auto, auto, cover;
     display: flex;
     align-items: flex-end;
     padding: 22px;
@@ -224,10 +225,13 @@
   }
   .plate.tall { aspect-ratio: 3 / 4; }
   .plate span {
+    position: relative;
+    z-index: 1;
     font-size: 0.76rem;
     letter-spacing: 0.6px;
     line-height: 1.55;
-    color: var(--ink-faint);
+    color: var(--ink);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
   }
   .plate::before {
     content: "";
@@ -594,9 +598,9 @@
   <div class="wrap-wide reveal">
     <div class="eyebrow">Arbetet</div>
     <div class="plate-row">
-      <div class="plate"><span>BILD 01 &mdash; makro på fräst yta, sidoljus,<br>verktygsspåren synliga</span></div>
-      <div class="plate"><span>BILD 02 &mdash; uppspänning i fixtur,<br>mitt i bearbetning</span></div>
-      <div class="plate"><span>BILD 03 &mdash; hand mot trä,<br>skiss bredvid provbiten</span></div>
+      <div class="plate" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-01.jpg');"><span>BILD 01 &mdash; makro på fräst yta, sidoljus,<br>verktygsspåren synliga</span></div>
+      <div class="plate" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-02.jpg');"><span>BILD 02 &mdash; uppspänning i fixtur,<br>mitt i bearbetning</span></div>
+      <div class="plate" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-03.jpg');"><span>BILD 03 &mdash; hand mot trä,<br>skiss bredvid provbiten</span></div>
     </div>
   </div>
 </section>
@@ -667,8 +671,8 @@
     </ol>
 
     <div class="plate-row" style="margin-top:64px">
-      <div class="plate tall"><span>BILD 04 &mdash; de tre provbitarna<br>bredvid varandra</span></div>
-      <div class="plate tall"><span>BILD 05 &mdash; det färdiga skalet,<br>samma sidoljus som övriga</span></div>
+      <div class="plate tall" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-04.jpg');"><span>BILD 04 &mdash; de tre provbitarna<br>bredvid varandra</span></div>
+      <div class="plate tall" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-05.jpg');"><span>BILD 05 &mdash; det färdiga skalet,<br>samma sidoljus som övriga</span></div>
     </div>
   </div>
 </section>
@@ -713,7 +717,7 @@
     <div class="eyebrow">Kontakt</div>
     <h2>Skicka skissen. Även om den är på en servett.</h2>
     <p class="muted">Berätta vad du vill göra och vad du är osäker på. Vi återkommer med en bedömning av vad som är svårt, ungefär hur lång tid det tar, och om vi är rätt verkstad för det.</p>
-    <p style="margin-top:38px"><a class="contact-link" href="mailto:info@bodacarve.se">info@bodacarve.se</a></p>
+    <p style="margin-top:38px"><a class="contact-link" href="mailto:info@bodacarve.se">fredrik.laaksonen@gmail.com</a></p>
     <div class="meta">
       Boda Carve<br>
       Verkstad i Boda<br>

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boda Carve — bilduppladdare</title>
+<style>
+  :root {
+    --bg: #0c0b09;
+    --bg-soft: #16140f;
+    --ink: #e6e1d8;
+    --ink-muted: #918a7c;
+    --ink-faint: #5d574c;
+    --gold: #c9a227;
+    --gold-light: #e0bd55;
+    --ok: #7ea86b;
+    --err: #c9705a;
+    --rule: rgba(201, 162, 39, 0.18);
+    --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+    --sans: 'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.6;
+    padding: 48px 28px 100px;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; }
+  .eyebrow {
+    font-size: 0.68rem; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold); opacity: 0.8; margin-bottom: 14px;
+  }
+  h1 {
+    font-family: var(--serif); font-weight: 400;
+    font-size: clamp(1.7rem, 4vw, 2.3rem);
+    margin-bottom: 18px;
+  }
+  .lead { color: var(--ink-muted); max-width: 62ch; margin-bottom: 34px; }
+  .lead code {
+    background: var(--bg-soft); border: 1px solid var(--rule);
+    padding: 1px 6px; border-radius: 3px; font-size: 0.9em; color: var(--gold-light);
+  }
+
+  .folderbar {
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    padding: 20px 24px; border: 1px solid var(--rule); background: var(--bg-soft);
+    margin-bottom: 40px;
+  }
+  button {
+    font-family: var(--sans); font-size: 0.92rem; cursor: pointer;
+    background: transparent; color: var(--gold-light);
+    border: 1px solid rgba(201, 162, 39, 0.5);
+    padding: 11px 20px; letter-spacing: 0.3px; transition: all 0.2s ease;
+  }
+  button:hover { background: rgba(201, 162, 39, 0.1); border-color: var(--gold-light); }
+  button:disabled { opacity: 0.35; cursor: default; }
+  button:disabled:hover { background: transparent; border-color: rgba(201, 162, 39, 0.5); }
+  .folder-status { color: var(--ink-muted); font-size: 0.9rem; }
+  .folder-status b { color: var(--ink); font-weight: 600; }
+  .progress { margin-left: auto; color: var(--ink-muted); font-size: 0.85rem; letter-spacing: 0.3px; }
+  .progress b { color: var(--gold-light); }
+
+  .unsupported {
+    display: none; border: 1px solid rgba(201, 112, 90, 0.4); background: rgba(201, 112, 90, 0.07);
+    padding: 18px 22px; margin-bottom: 34px; font-size: 0.92rem; color: #e2b3a5;
+  }
+
+  .grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 28px;
+  }
+  .slot {
+    border: 1px solid var(--rule); background: var(--bg-soft); padding: 18px;
+  }
+  .slot h3 {
+    font-family: var(--serif); font-weight: 400; font-size: 1.05rem; margin-bottom: 4px;
+  }
+  .slot .filename {
+    font-size: 0.72rem; color: var(--ink-faint); letter-spacing: 0.4px; margin-bottom: 3px;
+  }
+  .slot .hint {
+    font-size: 0.8rem; color: var(--ink-muted); margin-bottom: 14px; line-height: 1.5;
+  }
+  .dropzone {
+    position: relative;
+    border: 1.5px dashed rgba(201, 162, 39, 0.4);
+    background-color: #0f0d0a;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    aspect-ratio: 4 / 5;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+    overflow: hidden;
+  }
+  .slot[data-aspect="3/4"] .dropzone { aspect-ratio: 3 / 4; }
+  .dropzone:hover { border-color: var(--gold-light); }
+  .dropzone.dragover { border-color: var(--gold-light); background-color: rgba(201, 162, 39, 0.08); }
+  .dropzone .placeholder-txt {
+    font-size: 0.82rem; color: var(--ink-faint); padding: 20px; line-height: 1.6;
+  }
+  .dropzone.has-image .placeholder-txt { display: none; }
+  .dropzone input[type=file] { display: none; }
+
+  .slot-status {
+    margin-top: 12px; font-size: 0.78rem; display: flex; align-items: center; gap: 8px;
+    color: var(--ink-faint); min-height: 18px;
+  }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ink-faint); flex-shrink: 0; }
+  .slot-status.ok { color: var(--ok); }
+  .slot-status.ok .dot { background: var(--ok); }
+  .slot-status.err { color: var(--err); }
+  .slot-status.err .dot { background: var(--err); }
+  .slot-status.busy { color: var(--gold-light); }
+  .slot-status.busy .dot { background: var(--gold-light); }
+
+  .next-steps {
+    margin-top: 56px; padding-top: 40px; border-top: 1px solid var(--rule);
+  }
+  .next-steps h2 {
+    font-family: var(--serif); font-weight: 400; font-size: 1.25rem; margin-bottom: 16px;
+  }
+  .next-steps ol { padding-left: 22px; color: var(--ink-muted); font-size: 0.92rem; }
+  .next-steps li { margin-bottom: 8px; }
+  pre {
+    background: var(--bg-soft); border: 1px solid var(--rule); padding: 14px 18px;
+    font-size: 0.82rem; color: var(--gold-light); overflow-x: auto; margin: 10px 0;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Boda Carve &middot; internt verktyg</div>
+  <h1>Bilduppladdare</h1>
+  <p class="lead">Välj bildmappen i sajtens repo (<code>bilder</code>), dra in fem foton nedan. Varje bild skalas ner och sparas direkt med rätt filnamn i mappen &mdash; sajten hittar dem automatiskt via <code>index.html</code>, ingen kodändring behövs. Fungerar i Chrome och Edge. Öppna filen genom att dubbelklicka på den, den behöver ingen server.</p>
+
+  <div class="unsupported" id="unsupported">
+    Den här webbläsaren stödjer inte direkt filskrivning till en mapp. Öppna sidan i <b>Chrome</b> eller <b>Edge</b> istället &mdash; då kan bilderna sparas direkt i <code>bilder</code>-mappen utan extra steg.
+  </div>
+
+  <div class="folderbar">
+    <button id="pickBtn">Välj bildmappen&hellip;</button>
+    <span class="folder-status" id="folderStatus">Ingen mapp vald &mdash; välj mappen <b>bilder</b> i sajtens repo (skapa den om den inte redan finns).</span>
+    <span class="progress" id="progress"></span>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="next-steps">
+    <h2>När du är klar</h2>
+    <ol>
+      <li>Öppna Terminal och gå till mappen där sajten ligger.</li>
+      <li>Kör:</li>
+    </ol>
+    <pre>git add bilder
+git commit -m "Lade till bilder"
+git push origin main</pre>
+    <ol start="3">
+      <li>GitHub Pages bygger om sajten på en minut eller två. Ladda om med Cmd+Shift+R om du inte ser bilderna direkt &mdash; webbläsaren cachar gärna.</li>
+    </ol>
+  </div>
+</div>
+
+<script>
+const MAX_DIM = 1900;
+const JPEG_QUALITY = 0.85;
+
+const SLOTS = [
+  { file: 'bild-01.jpg', aspect: '4/5', label: 'Fräst yta i närbild', hint: 'Makro, sidoljus — verktygsspåren ska synas.' },
+  { file: 'bild-02.jpg', aspect: '4/5', label: 'Uppspänning i fixtur', hint: 'Mitt i bearbetning.' },
+  { file: 'bild-03.jpg', aspect: '4/5', label: 'Hand mot trä', hint: 'Skiss bredvid provbiten.' },
+  { file: 'bild-04.jpg', aspect: '3/4', label: 'Provbitarna, sida vid sida', hint: 'Från caset — försöken som inte blev perfekta första gången.' },
+  { file: 'bild-05.jpg', aspect: '3/4', label: 'Det färdiga arbetet', hint: 'Samma sidoljus som övriga bilder i raden.' },
+];
+
+let dirHandle = null;
+const supported = 'showDirectoryPicker' in window;
+
+const grid = document.getElementById('grid');
+const folderStatus = document.getElementById('folderStatus');
+const progress = document.getElementById('progress');
+const pickBtn = document.getElementById('pickBtn');
+
+if (!supported) {
+  document.getElementById('unsupported').style.display = 'block';
+  pickBtn.disabled = true;
+}
+
+function setStatus(el, kind, text) {
+  el.className = 'slot-status' + (kind ? ' ' + kind : '');
+  el.innerHTML = '<span class="dot"></span><span>' + text + '</span>';
+}
+
+function updateProgress() {
+  const done = document.querySelectorAll('.dropzone.has-image').length;
+  progress.innerHTML = '<b>' + done + '</b> av ' + SLOTS.length + ' bilder sparade';
+}
+
+async function resizeToJpeg(file) {
+  let bitmap;
+  try {
+    bitmap = await createImageBitmap(file);
+  } catch (e) {
+    throw new Error('Kunde inte läsa bilden. Spara som JPG eller PNG och försök igen.');
+  }
+  const scale = Math.min(1, MAX_DIM / Math.max(bitmap.width, bitmap.height));
+  const w = Math.round(bitmap.width * scale);
+  const h = Math.round(bitmap.height * scale);
+  const canvas = document.createElement('canvas');
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(bitmap, 0, 0, w, h);
+  const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', JPEG_QUALITY));
+  return { blob, w, h };
+}
+
+function buildSlot(slot) {
+  const el = document.createElement('div');
+  el.className = 'slot';
+  el.dataset.aspect = slot.aspect;
+  el.innerHTML = `
+    <h3>${slot.label}</h3>
+    <div class="filename">bilder/${slot.file}</div>
+    <div class="hint">${slot.hint}</div>
+    <div class="dropzone" tabindex="0">
+      <span class="placeholder-txt">Dra en bild hit,<br>eller klicka för att välja</span>
+      <input type="file" accept="image/*">
+    </div>
+    <div class="slot-status"></div>
+  `;
+  const zone = el.querySelector('.dropzone');
+  const input = el.querySelector('input[type=file]');
+  const status = el.querySelector('.slot-status');
+
+  zone.addEventListener('click', () => input.click());
+  zone.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') input.click(); });
+  input.addEventListener('change', () => { if (input.files[0]) handleFile(slot, input.files[0], zone, status); });
+
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('dragover');
+    const f = e.dataTransfer.files[0];
+    if (f) handleFile(slot, f, zone, status);
+  });
+
+  grid.appendChild(el);
+  return { zone, status };
+}
+
+async function handleFile(slot, file, zone, status) {
+  setStatus(status, 'busy', 'Skalar om…');
+  let result;
+  try {
+    result = await resizeToJpeg(file);
+  } catch (e) {
+    setStatus(status, 'err', e.message);
+    return;
+  }
+
+  const url = URL.createObjectURL(result.blob);
+  zone.style.backgroundImage = `url('${url}')`;
+  zone.classList.add('has-image');
+
+  if (!dirHandle) {
+    // Ingen mapp vald — erbjud nedladdning istället.
+    const a = document.createElement('a');
+    a.href = url; a.download = slot.file;
+    a.click();
+    setStatus(status, 'ok', `Nedladdad som ${slot.file} (${Math.round(result.blob.size/1024)} kB) — flytta filen till bilder-mappen manuellt.`);
+    updateProgress();
+    return;
+  }
+
+  setStatus(status, 'busy', 'Sparar i mappen…');
+  try {
+    const fh = await dirHandle.getFileHandle(slot.file, { create: true });
+    const writable = await fh.createWritable();
+    await writable.write(result.blob);
+    await writable.close();
+    setStatus(status, 'ok', `Sparad · ${result.w}×${result.h} · ${Math.round(result.blob.size/1024)} kB`);
+  } catch (e) {
+    setStatus(status, 'err', 'Kunde inte skriva filen: ' + e.message);
+  }
+  updateProgress();
+}
+
+const slotEls = SLOTS.map(buildSlot);
+
+async function tryLoadExisting() {
+  for (let i = 0; i < SLOTS.length; i++) {
+    const slot = SLOTS[i];
+    const { zone, status } = slotEls[i];
+    try {
+      const fh = await dirHandle.getFileHandle(slot.file, { create: false });
+      const file = await fh.getFile();
+      const url = URL.createObjectURL(file);
+      zone.style.backgroundImage = `url('${url}')`;
+      zone.classList.add('has-image');
+      setStatus(status, 'ok', `Redan sparad · ${Math.round(file.size/1024)} kB — dra en ny bild hit för att ersätta`);
+    } catch (e) {
+      setStatus(status, '', 'Väntar på bild');
+    }
+  }
+  updateProgress();
+}
+
+pickBtn.addEventListener('click', async () => {
+  try {
+    dirHandle = await window.showDirectoryPicker({ id: 'boda-carve-bilder', mode: 'readwrite' });
+    folderStatus.innerHTML = 'Mapp vald: <b>' + dirHandle.name + '</b>';
+    await tryLoadExisting();
+  } catch (e) {
+    if (e.name !== 'AbortError') {
+      folderStatus.textContent = 'Kunde inte öppna mappen: ' + e.message;
+    }
+  }
+});
+
+updateProgress();
+</script>
+</body>
+</html>
