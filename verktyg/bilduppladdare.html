@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Boda Carve — bilduppladdare</title>
+<title>Boda Carve — sajtredigerare</title>
 <style>
   :root {
     --bg: #0c0b09;
@@ -27,7 +27,7 @@
     line-height: 1.6;
     padding: 48px 28px 100px;
   }
-  .wrap { max-width: 980px; margin: 0 auto; }
+  .wrap { max-width: 1180px; margin: 0 auto; }
   .eyebrow {
     font-size: 0.68rem; letter-spacing: 3px; text-transform: uppercase;
     color: var(--gold); opacity: 0.8; margin-bottom: 14px;
@@ -37,7 +37,7 @@
     font-size: clamp(1.7rem, 4vw, 2.3rem);
     margin-bottom: 18px;
   }
-  .lead { color: var(--ink-muted); max-width: 62ch; margin-bottom: 34px; }
+  .lead { color: var(--ink-muted); max-width: 72ch; margin-bottom: 34px; }
   .lead code {
     background: var(--bg-soft); border: 1px solid var(--rule);
     padding: 1px 6px; border-radius: 3px; font-size: 0.9em; color: var(--gold-light);
@@ -46,7 +46,7 @@
   .folderbar {
     display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
     padding: 20px 24px; border: 1px solid var(--rule); background: var(--bg-soft);
-    margin-bottom: 40px;
+    margin-bottom: 4px;
   }
   button {
     font-family: var(--sans); font-size: 0.92rem; cursor: pointer;
@@ -60,63 +60,33 @@
   .folder-status { color: var(--ink-muted); font-size: 0.9rem; }
   .folder-status b { color: var(--ink); font-weight: 600; }
   .progress { margin-left: auto; color: var(--ink-muted); font-size: 0.85rem; letter-spacing: 0.3px; }
-  .progress b { color: var(--gold-light); }
+
+  .tool-status {
+    min-height: 32px; display: flex; align-items: center; gap: 8px;
+    padding: 8px 24px; font-size: 0.82rem; color: var(--ink-faint);
+    border-left: 1px solid var(--rule); border-right: 1px solid var(--rule);
+    background: var(--bg-soft);
+  }
+  .tool-status:empty { padding: 0; min-height: 0; border: none; }
+  .tool-status.ok { color: var(--ok); }
+  .tool-status.err { color: var(--err); }
+  .tool-status.busy { color: var(--gold-light); }
 
   .unsupported {
     display: none; border: 1px solid rgba(201, 112, 90, 0.4); background: rgba(201, 112, 90, 0.07);
     padding: 18px 22px; margin-bottom: 34px; font-size: 0.92rem; color: #e2b3a5;
   }
 
-  .grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 28px;
+  .preview-frame-wrap {
+    border: 1px solid var(--rule); border-top: none; background: #0c0b09; padding: 0;
   }
-  .slot {
-    border: 1px solid var(--rule); background: var(--bg-soft); padding: 18px;
+  iframe#sitePreview {
+    display: block; width: 100%; height: 1300px; max-height: 88vh;
+    border: none; background: #0c0b09; resize: vertical; overflow: auto;
   }
-  .slot h3 {
-    font-family: var(--serif); font-weight: 400; font-size: 1.05rem; margin-bottom: 4px;
+  .preview-hint {
+    font-size: 0.8rem; color: var(--ink-faint); padding: 14px 4px 0; text-align: center;
   }
-  .slot .filename {
-    font-size: 0.72rem; color: var(--ink-faint); letter-spacing: 0.4px; margin-bottom: 3px;
-  }
-  .slot .hint {
-    font-size: 0.8rem; color: var(--ink-muted); margin-bottom: 14px; line-height: 1.5;
-  }
-  .dropzone {
-    position: relative;
-    border: 1.5px dashed rgba(201, 162, 39, 0.4);
-    background-color: #0f0d0a;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    display: flex; align-items: center; justify-content: center;
-    text-align: center;
-    cursor: pointer;
-    aspect-ratio: 4 / 5;
-    transition: border-color 0.2s ease, background-color 0.2s ease;
-    overflow: hidden;
-  }
-  .slot[data-aspect="3/4"] .dropzone { aspect-ratio: 3 / 4; }
-  .dropzone:hover { border-color: var(--gold-light); }
-  .dropzone.dragover { border-color: var(--gold-light); background-color: rgba(201, 162, 39, 0.08); }
-  .dropzone .placeholder-txt {
-    font-size: 0.82rem; color: var(--ink-faint); padding: 20px; line-height: 1.6;
-  }
-  .dropzone.has-image .placeholder-txt { display: none; }
-  .dropzone input[type=file] { display: none; }
-
-  .slot-status {
-    margin-top: 12px; font-size: 0.78rem; display: flex; align-items: center; gap: 8px;
-    color: var(--ink-faint); min-height: 18px;
-  }
-  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ink-faint); flex-shrink: 0; }
-  .slot-status.ok { color: var(--ok); }
-  .slot-status.ok .dot { background: var(--ok); }
-  .slot-status.err { color: var(--err); }
-  .slot-status.err .dot { background: var(--err); }
-  .slot-status.busy { color: var(--gold-light); }
-  .slot-status.busy .dot { background: var(--gold-light); }
 
   .next-steps {
     margin-top: 56px; padding-top: 40px; border-top: 1px solid var(--rule);
@@ -130,94 +100,29 @@
     background: var(--bg-soft); border: 1px solid var(--rule); padding: 14px 18px;
     font-size: 0.82rem; color: var(--gold-light); overflow-x: auto; margin: 10px 0;
   }
-  .video-badge {
-    font-family: var(--sans); font-size: 0.6rem; letter-spacing: 0.5px; text-transform: uppercase;
-    color: var(--gold); border: 1px solid rgba(201, 162, 39, 0.5); border-radius: 3px;
-    padding: 2px 6px; vertical-align: middle; margin-left: 8px;
-  }
-
-  .caption-field { margin-top: 14px; }
-  .caption-field label {
-    display: block; font-size: 0.68rem; color: var(--ink-faint); letter-spacing: 0.6px;
-    text-transform: uppercase; margin-bottom: 6px;
-  }
-  .caption-field textarea {
-    width: 100%; resize: vertical; min-height: 56px;
-    background: #0f0d0a; border: 1px solid var(--rule); color: var(--ink);
-    font-family: var(--sans); font-size: 0.82rem; line-height: 1.5;
-    padding: 8px 10px; border-radius: 2px;
-  }
-  .caption-field textarea:focus { outline: none; border-color: var(--gold-light); }
-  .caption-status {
-    margin-top: 6px; font-size: 0.72rem; color: var(--ink-faint); min-height: 14px;
-  }
-  .caption-status.ok { color: var(--ok); }
-  .caption-status.err { color: var(--err); }
-
-  /* ---------- Portfolio ---------- */
-  .portfolio-section { margin-top: 64px; padding-top: 40px; border-top: 1px solid var(--rule); }
-  .portfolio-section > h2 {
-    font-family: var(--serif); font-weight: 400; font-size: 1.4rem; margin-bottom: 10px;
-  }
-  .portfolio-section > .lead { margin-bottom: 28px; }
-  .portfolio-list { display: flex; flex-direction: column; gap: 24px; margin-bottom: 24px; }
-  .project-card {
-    border: 1px solid var(--rule); background: var(--bg-soft); padding: 20px;
-    display: grid; grid-template-columns: 220px 1fr; gap: 20px;
-  }
-  .project-card .dropzone { aspect-ratio: 4/3; }
-  .project-card .fields { display: flex; flex-direction: column; gap: 12px; }
-  .project-card .fields label {
-    display: block; font-size: 0.68rem; color: var(--ink-faint); letter-spacing: 0.6px;
-    text-transform: uppercase; margin-bottom: 6px;
-  }
-  .project-card input[type=text], .project-card textarea {
-    width: 100%; resize: vertical;
-    background: #0f0d0a; border: 1px solid var(--rule); color: var(--ink);
-    font-family: var(--sans); font-size: 0.86rem; line-height: 1.5;
-    padding: 8px 10px; border-radius: 2px;
-  }
-  .project-card input[type=text]:focus, .project-card textarea:focus { outline: none; border-color: var(--gold-light); }
-  .project-card .ingress-field textarea { min-height: 48px; }
-  .project-card .body-field textarea { min-height: 100px; }
-  .project-card .card-status { font-size: 0.78rem; margin-top: 2px; color: var(--ink-faint); min-height: 16px; }
-  .project-card .card-status.ok { color: var(--ok); }
-  .project-card .card-status.err { color: var(--err); }
-  .project-card .card-actions { display: flex; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
-  .btn-small { font-size: 0.72rem; padding: 6px 12px; }
-  .btn-danger { color: var(--err); border-color: rgba(201, 112, 90, 0.5); }
-  .btn-danger:hover { background: rgba(201, 112, 90, 0.1); border-color: var(--err); }
-  .add-project-btn { margin-top: 4px; }
-
-  @media (max-width: 640px) {
-    .project-card { grid-template-columns: 1fr; }
-  }
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="eyebrow">Boda Carve &middot; internt verktyg</div>
-  <h1>Bilduppladdare</h1>
-  <p class="lead">Välj bildmappen i sajtens repo (<code>bilder</code>), dra in fem foton nedan. Varje bild skalas ner och sparas direkt med rätt filnamn i mappen &mdash; sajten hittar dem automatiskt via <code>index.html</code>, ingen kodändring behövs. Du kan även skriva om texten under varje bild direkt här &mdash; den sparas i <code>bilder/captions.js</code> och sajten hämtar den automatiskt. En av rutorna tar även emot ett kort videoklipp som konverteras till mp4 direkt i webbläsaren. Längre ner kan du lägga till valfritt antal <b>portfolioprojekt</b> med rubrik, ingress, brödtext och bild &mdash; de visas i en egen sektion på sajten och sparas i <code>bilder/portfolio.js</code>. Öppna filen genom att dubbelklicka på den, den behöver ingen server. Fungerar i Chrome och Edge.</p>
+  <h1>Sajtredigerare</h1>
+  <p class="lead">Sidan nedan &auml;r sajten s&aring; som den ser ut live &mdash; klicka direkt p&aring; en rubrik, ett stycke eller en bildtext f&ouml;r att &auml;ndra texten, eller p&aring; en bild f&ouml;r att byta den. En av bildrutorna tar &auml;ven emot ett kort videoklipp, som konverteras till mp4 direkt i webbl&auml;saren. L&auml;ngst ner i portfoliot kan du l&auml;gga till, redigera, flytta och ta bort projekt precis d&auml;r de visas. Allt sparas automatiskt n&auml;r du l&auml;mnar ett f&auml;lt eller v&auml;ljer en ny fil &mdash; v&auml;lj bildmappen nedan f&ouml;rst s&aring; sparas &auml;ndringarna direkt d&auml;r ist&auml;llet f&ouml;r att laddas ner. Fungerar i Chrome och Edge, beh&ouml;ver ingen server &mdash; dubbelklicka bara p&aring; filen.</p>
 
   <div class="unsupported" id="unsupported">
-    Den här webbläsaren stödjer inte direkt filskrivning till en mapp. Öppna sidan i <b>Chrome</b> eller <b>Edge</b> istället &mdash; då kan bilderna sparas direkt i <code>bilder</code>-mappen utan extra steg.
+    Den här webbläsaren stödjer inte direkt filskrivning till en mapp. Öppna sidan i <b>Chrome</b> eller <b>Edge</b> istället &mdash; då kan ändringarna sparas direkt i <code>bilder</code>-mappen utan extra steg.
   </div>
 
   <div class="folderbar">
     <button id="pickBtn">Välj bildmappen&hellip;</button>
-    <span class="folder-status" id="folderStatus">Ingen mapp vald &mdash; välj mappen <b>bilder</b> i sajtens repo (skapa den om den inte redan finns).</span>
+    <span class="folder-status" id="folderStatus">Ingen mapp vald &mdash; ändringar laddas ner istället. Välj mappen <b>bilder</b> i sajtens repo för att spara direkt.</span>
     <span class="progress" id="progress"></span>
   </div>
+  <div class="tool-status" id="toolStatus"></div>
 
-  <div class="grid" id="grid"></div>
-
-  <div class="portfolio-section">
-    <h2>Portfolio</h2>
-    <p class="lead">Lägg till uppdrag med rubrik, ingress, brödtext och en bild &mdash; ett valfritt antal, bara att fylla på. Allt sparas löpande i <code>bilder/portfolio.js</code> och bilderna i <code>bilder/portfolio/</code>. Finns inga projekt visas portfoliosektionen inte alls på sajten.</p>
-    <div class="portfolio-list" id="portfolioList"></div>
-    <button class="add-project-btn" id="addProjectBtn" type="button">+ Lägg till projekt</button>
+  <div class="preview-frame-wrap">
+    <iframe id="sitePreview" src="../index.html" title="Förhandsvisning av sajten, redigerbar"></iframe>
   </div>
+  <p class="preview-hint">Klicka på text för att skriva om den, eller på en bild för att byta den.</p>
 
   <div class="next-steps">
     <h2>När du är klar</h2>
@@ -226,10 +131,10 @@
       <li>Kör:</li>
     </ol>
     <pre>git add bilder
-git commit -m "Lade till bilder"
+git commit -m "Uppdaterade sajttexten"
 git push origin main</pre>
     <ol start="3">
-      <li>GitHub Pages bygger om sajten på en minut eller två. Ladda om med Cmd+Shift+R om du inte ser bilderna direkt &mdash; webbläsaren cachar gärna.</li>
+      <li>GitHub Pages bygger om sajten på en minut eller två. Ladda om med Cmd+Shift+R om du inte ser ändringarna direkt &mdash; webbläsaren cachar gärna.</li>
     </ol>
   </div>
 </div>
@@ -237,52 +142,53 @@ git push origin main</pre>
 <script>
 const MAX_DIM = 1900;
 const JPEG_QUALITY = 0.85;
-
-const SLOTS = [
-  { file: 'bild-01.jpg', aspect: '4/5', label: 'Fräst yta i närbild', hint: 'Makro, sidoljus — verktygsspåren ska synas.', caption: 'BILD 01 — makro på fräst yta, sidoljus,\nverktygsspåren synliga' },
-  { file: 'bild-02.jpg', videoFile: 'bild-02.mp4', video: true, aspect: '4/5', label: 'Uppspänning i fixtur', hint: 'Mitt i bearbetning. Denna ruta tar även emot ett kort videoklipp — det komprimeras automatiskt till mp4 här i webbläsaren.', caption: 'BILD 02 — uppspänning i fixtur,\nmitt i bearbetning' },
-  { file: 'bild-03.jpg', aspect: '4/5', label: 'Hand mot trä', hint: 'Skiss bredvid provbiten.', caption: 'BILD 03 — hand mot trä,\nskiss bredvid provbiten' },
-  { file: 'bild-04.jpg', aspect: '3/4', label: 'Provbitarna, sida vid sida', hint: 'Från caset — försöken som inte blev perfekta första gången.', caption: 'BILD 04 — de tre provbitarna\nbredvid varandra' },
-  { file: 'bild-05.jpg', aspect: '3/4', label: 'Det färdiga arbetet', hint: 'Samma sidoljus som övriga bilder i raden.', caption: 'BILD 05 — det färdiga skalet,\nsamma sidoljus som övriga' },
-];
-
-const CAPTIONS_FILE = 'captions.js';
-function captionKey(slot) { return slot.file.replace(/\.[^.]+$/, ''); }
-const captionsData = {};
-SLOTS.forEach(s => { captionsData[captionKey(s)] = s.caption; });
-
-function renderCaptionsJs(data) {
-  return 'var PLATE_CAPTIONS = ' + JSON.stringify(data, null, 2) + ';\n';
-}
-function parseCaptionsJs(text) {
-  const m = text.match(/var\s+PLATE_CAPTIONS\s*=\s*([\s\S]*?);\s*$/);
-  if (!m) throw new Error('okänt format');
-  return JSON.parse(m[1]);
-}
+const VIDEO_MAX_DIM = 1600;
+const CODEC_CANDIDATES = ['avc1.640028', 'avc1.4d0028', 'avc1.42002a', 'avc1.42001f'];
+const VIDEO_SLOT = 'bild-02';
 
 let dirHandle = null;
+let portfolioDirHandle = null;
 const supported = 'showDirectoryPicker' in window;
 
-const grid = document.getElementById('grid');
 const folderStatus = document.getElementById('folderStatus');
 const progress = document.getElementById('progress');
 const pickBtn = document.getElementById('pickBtn');
+const iframe = document.getElementById('sitePreview');
+let toolStatusTimer = null;
 
 if (!supported) {
   document.getElementById('unsupported').style.display = 'block';
   pickBtn.disabled = true;
 }
 
-function setStatus(el, kind, text) {
-  el.className = 'slot-status' + (kind ? ' ' + kind : '');
-  el.innerHTML = '<span class="dot"></span><span>' + text + '</span>';
+function setToolStatus(text, kind) {
+  const el = document.getElementById('toolStatus');
+  el.textContent = text || '';
+  el.className = 'tool-status' + (kind ? ' ' + kind : '');
+  if (toolStatusTimer) { clearTimeout(toolStatusTimer); toolStatusTimer = null; }
+  if (kind === 'ok' && text) {
+    toolStatusTimer = setTimeout(() => { el.textContent = ''; el.className = 'tool-status'; }, 4000);
+  }
 }
 
-function updateProgress() {
-  const done = document.querySelectorAll('.dropzone.has-image').length;
-  progress.innerHTML = '<b>' + done + '</b> av ' + SLOTS.length + ' bilder sparade';
+function triggerDownload(content, filename, mime) {
+  const blob = (content instanceof Blob) ? content : new Blob([content], { type: mime });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
 }
 
+// ---------- state, seeded by the iframe's own "bc-ready" message ----------
+let contentData = {};
+let captionsData = {};
+let portfolioItems = [];
+
+function updateProgressSummary() {
+  progress.textContent = portfolioItems.length + ' portfolioprojekt';
+}
+
+// ---------- bildskalning (delas av bildplattor och portfoliobilder) ----------
 async function resizeToJpeg(file) {
   let bitmap;
   try {
@@ -301,145 +207,9 @@ async function resizeToJpeg(file) {
   return { blob, w, h };
 }
 
-function buildSlot(slot) {
-  const el = document.createElement('div');
-  el.className = 'slot';
-  el.dataset.aspect = slot.aspect;
-  const filenameText = slot.video ? `bilder/${slot.file} · bilder/${slot.videoFile}` : `bilder/${slot.file}`;
-  const dropHint = slot.video
-    ? 'Dra en bild eller ett videoklipp hit,<br>eller klicka för att välja'
-    : 'Dra en bild hit,<br>eller klicka för att välja';
-  const acceptAttr = slot.video ? 'image/*,video/*' : 'image/*';
-  el.innerHTML = `
-    <h3>${slot.label}${slot.video ? ' <span class="video-badge">tar video</span>' : ''}</h3>
-    <div class="filename">${filenameText}</div>
-    <div class="hint">${slot.hint}</div>
-    <div class="dropzone" tabindex="0">
-      <span class="placeholder-txt">${dropHint}</span>
-      <input type="file" accept="${acceptAttr}">
-    </div>
-    <div class="slot-status"></div>
-    <div class="caption-field">
-      <label>Bildtext (visas på sajten)</label>
-      <textarea class="caption-input" rows="2" placeholder="Text under bilden…"></textarea>
-      <div class="caption-status"></div>
-    </div>
-  `;
-  const zone = el.querySelector('.dropzone');
-  const input = el.querySelector('input[type=file]');
-  const status = el.querySelector('.slot-status');
-  const captionEl = el.querySelector('.caption-input');
-  const captionStatus = el.querySelector('.caption-status');
-  captionEl.value = captionsData[captionKey(slot)] ?? '';
-
-  zone.addEventListener('click', () => input.click());
-  zone.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') input.click(); });
-  input.addEventListener('change', () => { if (input.files[0]) handleFile(slot, input.files[0], zone, status); });
-
-  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
-  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
-  zone.addEventListener('drop', e => {
-    e.preventDefault();
-    zone.classList.remove('dragover');
-    const f = e.dataTransfer.files[0];
-    if (f) handleFile(slot, f, zone, status);
-  });
-
-  captionEl.addEventListener('change', () => saveCaption(slot, captionEl, captionStatus));
-
-  grid.appendChild(el);
-  return { slot, zone, status, captionEl, captionStatus };
-}
-
-async function saveCaption(slot, captionEl, captionStatus) {
-  captionsData[captionKey(slot)] = captionEl.value;
-  if (!dirHandle) {
-    const blob = new Blob([renderCaptionsJs(captionsData)], { type: 'text/javascript' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob); a.download = CAPTIONS_FILE; a.click();
-    captionStatus.textContent = 'Nedladdad som captions.js — flytta filen till bilder-mappen manuellt.';
-    captionStatus.className = 'caption-status ok';
-    return;
-  }
-  captionStatus.textContent = 'Sparar…';
-  captionStatus.className = 'caption-status';
-  try {
-    const fh = await dirHandle.getFileHandle(CAPTIONS_FILE, { create: true });
-    const writable = await fh.createWritable();
-    await writable.write(renderCaptionsJs(captionsData));
-    await writable.close();
-    captionStatus.textContent = 'Text sparad';
-    captionStatus.className = 'caption-status ok';
-  } catch (e) {
-    captionStatus.textContent = 'Kunde inte spara: ' + e.message;
-    captionStatus.className = 'caption-status err';
-  }
-}
-
-async function loadCaptionsFromFolder() {
-  try {
-    const fh = await dirHandle.getFileHandle(CAPTIONS_FILE, { create: false });
-    const file = await fh.getFile();
-    const parsed = parseCaptionsJs(await file.text());
-    Object.assign(captionsData, parsed);
-  } catch (e) {
-    // Filen saknas eller går inte att tolka — behåll de förifyllda texterna.
-  }
-}
-
-async function handleFile(slot, file, zone, status) {
-  const isVideo = file.type.startsWith('video/');
-  if (isVideo && !slot.video) {
-    setStatus(status, 'err', 'Den här rutan tar bara bilder, inte video.');
-    return;
-  }
-  if (isVideo) {
-    return handleVideoFile(slot, file, zone, status);
-  }
-  setStatus(status, 'busy', 'Skalar om…');
-  let result;
-  try {
-    result = await resizeToJpeg(file);
-  } catch (e) {
-    setStatus(status, 'err', e.message);
-    return;
-  }
-
-  const url = URL.createObjectURL(result.blob);
-  zone.style.backgroundImage = `url('${url}')`;
-  zone.classList.add('has-image');
-
-  if (!dirHandle) {
-    // Ingen mapp vald — erbjud nedladdning istället.
-    const a = document.createElement('a');
-    a.href = url; a.download = slot.file;
-    a.click();
-    setStatus(status, 'ok', `Nedladdad som ${slot.file} (${Math.round(result.blob.size/1024)} kB) — flytta filen till bilder-mappen manuellt.`);
-    updateProgress();
-    return;
-  }
-
-  setStatus(status, 'busy', 'Sparar i mappen…');
-  try {
-    const fh = await dirHandle.getFileHandle(slot.file, { create: true });
-    const writable = await fh.createWritable();
-    await writable.write(result.blob);
-    await writable.close();
-    setStatus(status, 'ok', `Sparad · ${result.w}×${result.h} · ${Math.round(result.blob.size/1024)} kB`);
-  } catch (e) {
-    setStatus(status, 'err', 'Kunde inte skriva filen: ' + e.message);
-  }
-  updateProgress();
-}
-
-
 // --- Video: avkodas nativt av webbläsaren (samma <video>-element som redan används för
-// bildrutan nedan — alltså hårdvaruaccelererat, redan bevisat klara HEVC-klipp), kodas om
-// till H.264 med WebCodecs och paketeras till mp4 med mp4-muxer. Ingen wasm-avkodning,
-// ingen SharedArrayBuffer, ingen lokal server behövs. ---
-const VIDEO_MAX_DIM = 1600;
-const CODEC_CANDIDATES = ['avc1.640028', 'avc1.4d0028', 'avc1.42002a', 'avc1.42001f'];
-
+// bildrutan), kodas om till H.264 med WebCodecs och paketeras till mp4 med mp4-muxer.
+// Ingen wasm-avkodning, ingen SharedArrayBuffer, ingen lokal server behövs. ---
 function loadScript(src) {
   return new Promise((resolve, reject) => {
     const el = document.createElement('script');
@@ -498,10 +268,11 @@ async function captureVideoFrame(file) {
   }
 }
 
-async function transcodeToMp4(file, status) {
+async function transcodeToMp4(file, report) {
   const Mp4Muxer = await loadMp4Muxer();
+  report = report || function () {};
 
-  setStatus(status, 'busy', 'Läser videoklippet…');
+  report('Läser videoklippet…');
   const srcUrl = URL.createObjectURL(file);
   const video = document.createElement('video');
   video.muted = true;
@@ -540,7 +311,7 @@ async function transcodeToMp4(file, status) {
     });
     encoder.configure({ codec, width: w, height: h, bitrate: 2000000, framerate: 30 });
 
-    setStatus(status, 'busy', 'Konverterar video…');
+    report('Konverterar video…');
     let frameCount = 0;
     const CONVERT_TIMEOUT_MS = 120000;
 
@@ -564,7 +335,7 @@ async function transcodeToMp4(file, status) {
           return;
         }
         frameCount++;
-        setStatus(status, 'busy', `Konverterar video… bildruta ${frameCount}`);
+        report(`Konverterar video… bildruta ${frameCount}`);
         if (video.ended) { finish(); return; }
         video.requestVideoFrameCallback(onFrame);
       }
@@ -594,313 +365,220 @@ async function transcodeToMp4(file, status) {
   }
 }
 
-async function handleVideoFile(slot, file, zone, status) {
-  let poster;
-  try {
-    setStatus(status, 'busy', 'Tar en bildruta ur klippet…');
-    poster = await captureVideoFrame(file);
-  } catch (e) {
-    setStatus(status, 'err', e.message);
-    return;
-  }
-  const posterUrl = URL.createObjectURL(poster.blob);
-  zone.style.backgroundImage = `url('${posterUrl}')`;
-  zone.classList.add('has-image');
-
-  let videoBlob;
-  try {
-    videoBlob = await transcodeToMp4(file, status);
-  } catch (e) {
-    setStatus(status, 'err', e.message);
-    return;
-  }
-
-  if (!dirHandle) {
-    const a1 = document.createElement('a'); a1.href = URL.createObjectURL(poster.blob); a1.download = slot.file; a1.click();
-    const a2 = document.createElement('a'); a2.href = URL.createObjectURL(videoBlob); a2.download = slot.videoFile; a2.click();
-    setStatus(status, 'ok', `Nedladdad som ${slot.file} + ${slot.videoFile} (${Math.round(videoBlob.size/1024)} kB) — flytta filerna till bilder-mappen manuellt.`);
-    updateProgress();
-    return;
-  }
-
-  setStatus(status, 'busy', 'Sparar i mappen…');
-  try {
-    const fh1 = await dirHandle.getFileHandle(slot.file, { create: true });
-    const w1 = await fh1.createWritable(); await w1.write(poster.blob); await w1.close();
-    const fh2 = await dirHandle.getFileHandle(slot.videoFile, { create: true });
-    const w2 = await fh2.createWritable(); await w2.write(videoBlob); await w2.close();
-    setStatus(status, 'ok', `Video sparad · ${Math.round(videoBlob.size/1024)} kB (+ stillbild som reserv)`);
-  } catch (e) {
-    setStatus(status, 'err', 'Kunde inte skriva filerna: ' + e.message);
-  }
-  updateProgress();
-}
-
-// --- Portfolio: valfritt antal uppdrag med rubrik, ingress, brödtext och bild.
-// Sparas i bilder/portfolio.js + bilder/portfolio/<id>.jpg. Tom lista = sektionen
-// visas inte alls på sajten (se index.html). ---
-const PORTFOLIO_FILE = 'portfolio.js';
-const PORTFOLIO_DIR = 'portfolio';
-
-let portfolioItems = [];
-let portfolioDirHandle = null;
-
+// ---------- spara till bilder/content.js, bilder/captions.js, bilder/portfolio.js ----------
+function renderContentJs(data) { return 'var SITE_CONTENT = ' + JSON.stringify(data, null, 2) + ';\n'; }
+function renderCaptionsJs(data) { return 'var PLATE_CAPTIONS = ' + JSON.stringify(data, null, 2) + ';\n'; }
 function renderPortfolioJs(items) {
   const clean = items.map(({ id, title, ingress, body, image }) => ({ id, title, ingress, body, image }));
   return 'var PORTFOLIO_ITEMS = ' + JSON.stringify(clean, null, 2) + ';\n';
 }
-function parsePortfolioJs(text) {
-  const m = text.match(/var\s+PORTFOLIO_ITEMS\s*=\s*(\[[\s\S]*?\]);\s*$/);
-  if (!m) throw new Error('okänt format');
-  const parsed = JSON.parse(m[1]);
-  if (!Array.isArray(parsed)) throw new Error('okänt format');
-  return parsed;
+
+async function saveTextFile(filename, text, okMessage) {
+  if (!dirHandle) {
+    triggerDownload(text, filename, 'text/javascript');
+    setToolStatus(`Nedladdad som ${filename} — flytta filen till bilder-mappen manuellt.`, 'ok');
+    return;
+  }
+  try {
+    const fh = await dirHandle.getFileHandle(filename, { create: true });
+    const w = await fh.createWritable();
+    await w.write(text);
+    await w.close();
+    setToolStatus(okMessage || 'Sparat', 'ok');
+  } catch (e) {
+    setToolStatus(`Kunde inte spara ${filename}: ` + e.message, 'err');
+  }
 }
 
-function nextProjectId() {
-  let max = 0;
-  portfolioItems.forEach(item => {
-    const m = /^p(\d+)$/.exec(item.id || '');
-    if (m) max = Math.max(max, parseInt(m[1], 10));
-  });
-  return 'p' + (max + 1);
-}
+function saveContentJs() { return saveTextFile('content.js', renderContentJs(contentData), 'Text sparad'); }
+function saveCaptionsJs() { return saveTextFile('captions.js', renderCaptionsJs(captionsData), 'Bildtext sparad'); }
+function savePortfolioJs() { return saveTextFile('portfolio.js', renderPortfolioJs(portfolioItems), 'Portfolio sparad'); }
 
 async function getPortfolioDirHandle(create) {
   if (!dirHandle) return null;
   if (!portfolioDirHandle) {
-    portfolioDirHandle = await dirHandle.getDirectoryHandle(PORTFOLIO_DIR, { create });
+    portfolioDirHandle = await dirHandle.getDirectoryHandle('portfolio', { create });
   }
   return portfolioDirHandle;
 }
 
-async function savePortfolioJs(cardStatusEl) {
-  const text = renderPortfolioJs(portfolioItems);
-  if (!dirHandle) {
-    const blob = new Blob([text], { type: 'text/javascript' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob); a.download = PORTFOLIO_FILE; a.click();
-    if (cardStatusEl) { cardStatusEl.textContent = 'Nedladdad som portfolio.js — flytta filen till bilder-mappen manuellt.'; cardStatusEl.className = 'card-status ok'; }
+function replyImageSaved(kind, extra, imageBlob, videoBlob) {
+  iframe.contentWindow.postMessage(Object.assign({ type: 'bc-image-saved', kind, imageBlob, videoBlob: videoBlob || null }, extra), '*');
+}
+
+// ---------- meddelanden från förhandsvisningen ----------
+async function handleContentChange(msg) {
+  contentData[msg.id] = msg.text;
+  await saveContentJs();
+}
+
+async function handleCaptionChange(msg) {
+  captionsData[msg.slot] = msg.text;
+  await saveCaptionsJs();
+}
+
+async function handlePortfolioUpdate(msg) {
+  portfolioItems = msg.items || [];
+  updateProgressSummary();
+  await savePortfolioJs();
+}
+
+async function handleImageFile(msg) {
+  const slot = msg.slot;
+  const file = msg.file;
+  const isVideo = file.type.startsWith('video/');
+  const isVideoSlot = slot === VIDEO_SLOT;
+
+  if (isVideo && !isVideoSlot) {
+    setToolStatus('Den rutan tar bara bilder, inte video.', 'err');
     return;
   }
-  try {
-    const fh = await dirHandle.getFileHandle(PORTFOLIO_FILE, { create: true });
-    const writable = await fh.createWritable();
-    await writable.write(text);
-    await writable.close();
-    if (cardStatusEl) { cardStatusEl.textContent = 'Sparat'; cardStatusEl.className = 'card-status ok'; }
-  } catch (e) {
-    if (cardStatusEl) { cardStatusEl.textContent = 'Kunde inte spara: ' + e.message; cardStatusEl.className = 'card-status err'; }
-  }
-}
+  if (isVideo) return handleVideoForSlot(slot, file);
 
-async function loadPortfolioFromFolder() {
-  try {
-    const fh = await dirHandle.getFileHandle(PORTFOLIO_FILE, { create: false });
-    const file = await fh.getFile();
-    portfolioItems = parsePortfolioJs(await file.text());
-  } catch (e) {
-    portfolioItems = [];
-  }
-}
-
-const portfolioList = document.getElementById('portfolioList');
-const addProjectBtn = document.getElementById('addProjectBtn');
-
-function buildProjectCard(entry) {
-  const el = document.createElement('div');
-  el.className = 'project-card';
-  el.innerHTML = `
-    <div class="dropzone" tabindex="0">
-      <span class="placeholder-txt">Dra en bild hit,<br>eller klicka för att välja</span>
-      <input type="file" accept="image/*">
-    </div>
-    <div class="fields">
-      <div class="title-field">
-        <label>Rubrik</label>
-        <input type="text" class="proj-title" placeholder="T.ex. Nationalpark som relief">
-      </div>
-      <div class="ingress-field">
-        <label>Ingress</label>
-        <textarea class="proj-ingress" rows="2" placeholder="Kort sammanfattning, en eller två meningar…"></textarea>
-      </div>
-      <div class="body-field">
-        <label>Brödtext</label>
-        <textarea class="proj-body" rows="5" placeholder="Längre beskrivning av uppdraget…"></textarea>
-      </div>
-      <div class="card-status"></div>
-      <div class="card-actions">
-        <button type="button" class="btn-small move-up">&uarr; Flytta upp</button>
-        <button type="button" class="btn-small move-down">&darr; Flytta ner</button>
-        <button type="button" class="btn-small btn-danger remove-project">Ta bort</button>
-      </div>
-    </div>
-  `;
-  const zone = el.querySelector('.dropzone');
-  const input = el.querySelector('input[type=file]');
-  const titleEl = el.querySelector('.proj-title');
-  const ingressEl = el.querySelector('.proj-ingress');
-  const bodyEl = el.querySelector('.proj-body');
-  const cardStatus = el.querySelector('.card-status');
-
-  titleEl.value = entry.title || '';
-  ingressEl.value = entry.ingress || '';
-  bodyEl.value = entry.body || '';
-  if (entry._previewUrl) {
-    zone.style.backgroundImage = `url('${entry._previewUrl}')`;
-    zone.classList.add('has-image');
-  }
-
-  zone.addEventListener('click', () => input.click());
-  zone.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') input.click(); });
-  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
-  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
-  zone.addEventListener('drop', e => {
-    e.preventDefault();
-    zone.classList.remove('dragover');
-    const f = e.dataTransfer.files[0];
-    if (f) handleProjectImage(entry, f, zone, cardStatus);
-  });
-  input.addEventListener('change', () => { if (input.files[0]) handleProjectImage(entry, input.files[0], zone, cardStatus); });
-
-  titleEl.addEventListener('change', () => { entry.title = titleEl.value; savePortfolioJs(cardStatus); });
-  ingressEl.addEventListener('change', () => { entry.ingress = ingressEl.value; savePortfolioJs(cardStatus); });
-  bodyEl.addEventListener('change', () => { entry.body = bodyEl.value; savePortfolioJs(cardStatus); });
-
-  el.querySelector('.move-up').addEventListener('click', () => moveProject(entry, -1));
-  el.querySelector('.move-down').addEventListener('click', () => moveProject(entry, 1));
-  el.querySelector('.remove-project').addEventListener('click', () => removeProject(entry));
-
-  return el;
-}
-
-async function handleProjectImage(entry, file, zone, cardStatus) {
-  cardStatus.textContent = 'Skalar om…';
-  cardStatus.className = 'card-status';
+  setToolStatus('Skalar om bild…', 'busy');
   let result;
   try {
     result = await resizeToJpeg(file);
   } catch (e) {
-    cardStatus.textContent = e.message;
-    cardStatus.className = 'card-status err';
+    setToolStatus(e.message, 'err');
     return;
   }
-  const url = URL.createObjectURL(result.blob);
-  entry._previewUrl = url;
-  zone.style.backgroundImage = `url('${url}')`;
-  zone.classList.add('has-image');
 
-  const filename = entry.id + '.jpg';
+  const filename = slot + '.jpg';
   if (!dirHandle) {
-    const a = document.createElement('a');
-    a.href = url; a.download = filename; a.click();
-    entry.image = filename;
-    cardStatus.textContent = `Nedladdad som ${filename} — flytta filen till bilder/portfolio/ manuellt.`;
-    cardStatus.className = 'card-status ok';
+    triggerDownload(result.blob, filename, 'image/jpeg');
+    setToolStatus(`Nedladdad som ${filename} — flytta filen till bilder-mappen manuellt.`, 'ok');
+    replyImageSaved('plate', { slot }, result.blob, null);
+    return;
+  }
+  setToolStatus('Sparar bild…', 'busy');
+  try {
+    const fh = await dirHandle.getFileHandle(filename, { create: true });
+    const w = await fh.createWritable();
+    await w.write(result.blob);
+    await w.close();
+    setToolStatus(`Bild sparad · ${result.w}×${result.h} · ${Math.round(result.blob.size / 1024)} kB`, 'ok');
+    replyImageSaved('plate', { slot }, result.blob, null);
+  } catch (e) {
+    setToolStatus('Kunde inte spara bilden: ' + e.message, 'err');
+  }
+}
+
+async function handleVideoForSlot(slot, file) {
+  let poster;
+  try {
+    setToolStatus('Tar en bildruta ur klippet…', 'busy');
+    poster = await captureVideoFrame(file);
+  } catch (e) {
+    setToolStatus(e.message, 'err');
+    return;
+  }
+
+  let videoBlob;
+  try {
+    videoBlob = await transcodeToMp4(file, (text) => setToolStatus(text, 'busy'));
+  } catch (e) {
+    setToolStatus(e.message, 'err');
+    return;
+  }
+
+  const imgFilename = slot + '.jpg';
+  const vidFilename = slot + '.mp4';
+
+  if (!dirHandle) {
+    triggerDownload(poster.blob, imgFilename, 'image/jpeg');
+    triggerDownload(videoBlob, vidFilename, 'video/mp4');
+    setToolStatus(`Nedladdad som ${imgFilename} + ${vidFilename} — flytta filerna till bilder-mappen manuellt.`, 'ok');
+    replyImageSaved('plate', { slot }, poster.blob, videoBlob);
+    return;
+  }
+
+  setToolStatus('Sparar video…', 'busy');
+  try {
+    const fh1 = await dirHandle.getFileHandle(imgFilename, { create: true });
+    const w1 = await fh1.createWritable(); await w1.write(poster.blob); await w1.close();
+    const fh2 = await dirHandle.getFileHandle(vidFilename, { create: true });
+    const w2 = await fh2.createWritable(); await w2.write(videoBlob); await w2.close();
+    setToolStatus(`Video sparad · ${Math.round(videoBlob.size / 1024)} kB (+ stillbild som reserv)`, 'ok');
+    replyImageSaved('plate', { slot }, poster.blob, videoBlob);
+  } catch (e) {
+    setToolStatus('Kunde inte spara filerna: ' + e.message, 'err');
+  }
+}
+
+async function handlePortfolioImageFile(msg) {
+  const id = msg.id;
+  const file = msg.file;
+
+  setToolStatus('Skalar om bild…', 'busy');
+  let result;
+  try {
+    result = await resizeToJpeg(file);
+  } catch (e) {
+    setToolStatus(e.message, 'err');
+    return;
+  }
+
+  const filename = id + '.jpg';
+  const item = portfolioItems.find(p => p.id === id);
+  if (item) item.image = filename;
+
+  if (!dirHandle) {
+    triggerDownload(result.blob, filename, 'image/jpeg');
+    setToolStatus(`Nedladdad som ${filename} — flytta filen till bilder/portfolio/ manuellt.`, 'ok');
+    replyImageSaved('portfolio', { id, filename }, result.blob, null);
     await savePortfolioJs();
     return;
   }
 
-  cardStatus.textContent = 'Sparar…';
+  setToolStatus('Sparar bild…', 'busy');
   try {
     const dir = await getPortfolioDirHandle(true);
     const fh = await dir.getFileHandle(filename, { create: true });
-    const writable = await fh.createWritable();
-    await writable.write(result.blob);
-    await writable.close();
-    entry.image = filename;
+    const w = await fh.createWritable();
+    await w.write(result.blob);
+    await w.close();
+    setToolStatus(`Bild sparad · ${result.w}×${result.h} · ${Math.round(result.blob.size / 1024)} kB`, 'ok');
+    replyImageSaved('portfolio', { id, filename }, result.blob, null);
     await savePortfolioJs();
-    cardStatus.textContent = `Bild sparad · ${result.w}×${result.h} · ${Math.round(result.blob.size/1024)} kB`;
-    cardStatus.className = 'card-status ok';
   } catch (e) {
-    cardStatus.textContent = 'Kunde inte spara bilden: ' + e.message;
-    cardStatus.className = 'card-status err';
+    setToolStatus('Kunde inte spara bilden: ' + e.message, 'err');
   }
 }
 
-function rebuildPortfolioList() {
-  portfolioList.innerHTML = '';
-  portfolioItems.forEach(entry => portfolioList.appendChild(buildProjectCard(entry)));
-}
+window.addEventListener('message', (ev) => {
+  if (ev.source !== iframe.contentWindow) return;
+  const msg = ev.data;
+  if (!msg || !msg.type) return;
 
-function moveProject(entry, dir) {
-  const i = portfolioItems.indexOf(entry);
-  const j = i + dir;
-  if (i < 0 || j < 0 || j >= portfolioItems.length) return;
-  [portfolioItems[i], portfolioItems[j]] = [portfolioItems[j], portfolioItems[i]];
-  rebuildPortfolioList();
-  savePortfolioJs();
-}
-
-async function removeProject(entry) {
-  if (!confirm('Ta bort det här projektet? Går inte att ångra.')) return;
-  portfolioItems = portfolioItems.filter(e => e !== entry);
-  rebuildPortfolioList();
-  if (dirHandle && entry.image) {
-    try {
-      const dir = await getPortfolioDirHandle(false);
-      if (dir) await dir.removeEntry(entry.image);
-    } catch (e) { /* filen kanske redan saknas — ignorera */ }
+  if (msg.type === 'bc-ready') {
+    contentData = Object.assign({}, msg.content || {});
+    captionsData = Object.assign({}, msg.captions || {});
+    portfolioItems = (msg.portfolio || []).slice();
+    updateProgressSummary();
+  } else if (msg.type === 'bc-content-change') {
+    handleContentChange(msg);
+  } else if (msg.type === 'bc-caption-change') {
+    handleCaptionChange(msg);
+  } else if (msg.type === 'bc-image-file') {
+    handleImageFile(msg);
+  } else if (msg.type === 'bc-portfolio-image-file') {
+    handlePortfolioImageFile(msg);
+  } else if (msg.type === 'bc-portfolio-update') {
+    handlePortfolioUpdate(msg);
   }
-  await savePortfolioJs();
-}
-
-addProjectBtn.addEventListener('click', () => {
-  const entry = { id: nextProjectId(), title: '', ingress: '', body: '', image: '' };
-  portfolioItems.push(entry);
-  portfolioList.appendChild(buildProjectCard(entry));
 });
 
-async function loadExistingPortfolioImages() {
-  if (!dirHandle) return;
-  const dir = await getPortfolioDirHandle(false).catch(() => null);
-  if (!dir) return;
-  for (const entry of portfolioItems) {
-    if (!entry.image) continue;
-    try {
-      const fh = await dir.getFileHandle(entry.image, { create: false });
-      const file = await fh.getFile();
-      entry._previewUrl = URL.createObjectURL(file);
-    } catch (e) { /* bilden saknas — visa tomt */ }
-  }
-}
-
-const slotEls = SLOTS.map(buildSlot);
-
-async function tryLoadExisting() {
-  for (let i = 0; i < SLOTS.length; i++) {
-    const slot = SLOTS[i];
-    const { zone, status } = slotEls[i];
-    try {
-      const fh = await dirHandle.getFileHandle(slot.file, { create: false });
-      const file = await fh.getFile();
-      const url = URL.createObjectURL(file);
-      zone.style.backgroundImage = `url('${url}')`;
-      zone.classList.add('has-image');
-      let hasVideo = false;
-      if (slot.video) {
-        try { await dirHandle.getFileHandle(slot.videoFile, { create: false }); hasVideo = true; } catch (e) {}
-      }
-      setStatus(status, 'ok', hasVideo
-        ? `Video redan sparad — dra en ny videofil eller bild hit för att ersätta`
-        : `Redan sparad · ${Math.round(file.size/1024)} kB — dra en ny bild hit för att ersätta`);
-    } catch (e) {
-      setStatus(status, '', slot.video ? 'Väntar på bild eller video' : 'Väntar på bild');
-    }
-  }
-  updateProgress();
-}
+iframe.addEventListener('load', () => {
+  portfolioDirHandle = null;
+  iframe.contentWindow.postMessage({ type: 'bc-init' }, '*');
+});
 
 pickBtn.addEventListener('click', async () => {
   try {
     dirHandle = await window.showDirectoryPicker({ id: 'boda-carve-bilder', mode: 'readwrite' });
-    folderStatus.innerHTML = 'Mapp vald: <b>' + dirHandle.name + '</b>';
-    await loadCaptionsFromFolder();
-    slotEls.forEach(({ slot, captionEl }) => { captionEl.value = captionsData[captionKey(slot)] ?? ''; });
-    await tryLoadExisting();
-    await loadPortfolioFromFolder();
-    await loadExistingPortfolioImages();
-    rebuildPortfolioList();
+    portfolioDirHandle = null;
+    folderStatus.innerHTML = 'Mapp vald: <b>' + dirHandle.name + '</b> — ändringar sparas nu direkt där.';
   } catch (e) {
     if (e.name !== 'AbortError') {
       folderStatus.textContent = 'Kunde inte öppna mappen: ' + e.message;
@@ -908,7 +586,7 @@ pickBtn.addEventListener('click', async () => {
   }
 });
 
-updateProgress();
+updateProgressSummary();
 </script>
 </body>
 </html>

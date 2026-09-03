@@ -405,6 +405,101 @@
     .topbar .brand-sub { display: none; }
     .toolpath-wrap { padding-bottom: 88px; }
   }
+
+  /* ---------- Redigeringsläge (aktiveras endast av verktyg/bilduppladdare.html
+     via postMessage — helt overksamt för vanliga besökare) ---------- */
+  body.bc-editing [data-content],
+  body.bc-editing .plate span[data-slot],
+  body.bc-editing .project [data-content-editable] {
+    cursor: text;
+    border-radius: 2px;
+    box-shadow: 0 0 0 0 transparent;
+    transition: box-shadow 0.15s ease, background-color 0.15s ease;
+  }
+  body.bc-editing [data-content]:hover,
+  body.bc-editing .plate span[data-slot]:hover,
+  body.bc-editing .project [data-content-editable]:hover {
+    box-shadow: 0 0 0 2px rgba(201, 162, 39, 0.35);
+  }
+  body.bc-editing [data-content]:focus,
+  body.bc-editing .plate span[data-slot]:focus,
+  body.bc-editing .project [data-content-editable]:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--gold-light);
+    background-color: rgba(201, 162, 39, 0.06);
+  }
+  body.bc-editing [data-content]:empty::before,
+  body.bc-editing .project [data-content-editable]:empty::before {
+    content: attr(data-placeholder);
+    color: var(--ink-faint);
+  }
+  body.bc-editing .plate[data-image-slot] { cursor: pointer; }
+  body.bc-editing .plate[data-image-slot]::after {
+    content: "Byt bild";
+    position: absolute;
+    top: 10px; right: 10px;
+    background: rgba(12, 11, 9, 0.75);
+    border: 1px solid rgba(201, 162, 39, 0.5);
+    color: var(--gold-light);
+    font-family: var(--sans);
+    font-size: 0.64rem;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    z-index: 3;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+  body.bc-editing .plate[data-image-slot]:hover::after { opacity: 1; }
+  body.bc-editing .project-media {
+    cursor: pointer;
+    position: relative;
+    min-height: 120px;
+    background: var(--bg-soft);
+    border: 1px dashed rgba(201, 162, 39, 0.3);
+  }
+  body.bc-editing .project-media::after {
+    content: "Klicka för att välja bild";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 16px;
+    background: rgba(12, 11, 9, 0.6);
+    color: var(--gold-light);
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    letter-spacing: 0.4px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  body.bc-editing .project-media:hover::after { opacity: 1; }
+  body.bc-editing .bc-project-controls {
+    display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap;
+  }
+  body.bc-editing .bc-mini-btn {
+    font-family: var(--sans); font-size: 0.68rem; letter-spacing: 0.3px;
+    text-transform: uppercase; cursor: pointer;
+    background: transparent; color: var(--gold-light);
+    border: 1px solid rgba(201, 162, 39, 0.5);
+    padding: 6px 12px; transition: all 0.2s ease;
+  }
+  body.bc-editing .bc-mini-btn:hover { background: rgba(201, 162, 39, 0.1); }
+  body.bc-editing .bc-mini-btn-danger { color: #e2b3a5; border-color: rgba(201, 112, 90, 0.5); }
+  body.bc-editing .bc-mini-btn-danger:hover { background: rgba(201, 112, 90, 0.1); }
+  body.bc-editing .bc-add-project {
+    display: block; margin: 48px auto 0; font-family: var(--sans);
+    font-size: 0.85rem; letter-spacing: 0.3px; cursor: pointer;
+    background: transparent; color: var(--gold-light);
+    border: 1px solid rgba(201, 162, 39, 0.5);
+    padding: 12px 26px; transition: all 0.2s ease;
+  }
+  body.bc-editing .bc-add-project:hover { background: rgba(201, 162, 39, 0.1); }
+  body.bc-editing #portfolio .eyebrow,
+  body.bc-editing #portfolio h2 { cursor: text; }
 </style>
 </head>
 <body>
@@ -448,10 +543,10 @@
 <!-- HERO -->
 <section class="hero">
   <div class="wrap reveal">
-    <div class="eyebrow">Boda Carve &mdash; verkstad för prototyper i trä</div>
-    <h1>Boda Carve är en liten CNC-verkstad som tar sig an dubbelkrökta ytor, tunna gods och geometri som inte går att beskriva i ord.</h1>
-    <p class="manifest">Vi räknar inte kvadratmeter. Vi räknar antalet försök som krävs för att lyckas.</p>
-    <p class="lead">Vi arbetar gärna med konstnärer, formgivare och arkitekter &mdash; oftast från en skiss, inte från en färdig fil.</p>
+    <div class="eyebrow" data-content="hero-eyebrow">Boda Carve &mdash; verkstad för prototyper i trä</div>
+    <h1 data-content="hero-h1">Boda Carve är en liten CNC-verkstad som tar sig an dubbelkrökta ytor, tunna gods och geometri som inte går att beskriva i ord.</h1>
+    <p class="manifest" data-content="hero-manifest">Vi räknar inte kvadratmeter. Vi räknar antalet försök som krävs för att lyckas.</p>
+    <p class="lead" data-content="hero-lead">Vi arbetar gärna med konstnärer, formgivare och arkitekter &mdash; oftast från en skiss, inte från en färdig fil.</p>
   </div>
 </section>
 
@@ -629,9 +724,9 @@
   <div class="wrap-wide reveal">
     <div class="eyebrow">Arbetet</div>
     <div class="plate-row">
-      <div class="plate" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-01.jpg');"><span data-slot="bild-01">BILD 01 &mdash; makro på fräst yta, sidoljus,<br>verktygsspåren synliga</span></div>
-      <div class="plate" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-02.jpg');"><video autoplay muted loop playsinline poster="bilder/bild-02.jpg" onerror="this.style.display='none'"><source src="bilder/bild-02.mp4" type="video/mp4"></video><span data-slot="bild-02">BILD 02 &mdash; uppspänning i fixtur,<br>mitt i bearbetning</span></div>
-      <div class="plate" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-03.jpg');"><span data-slot="bild-03">BILD 03 &mdash; hand mot trä,<br>skiss bredvid provbiten</span></div>
+      <div class="plate" data-image-slot="bild-01" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-01.jpg');"><span data-slot="bild-01">BILD 01 &mdash; makro på fräst yta, sidoljus,<br>verktygsspåren synliga</span></div>
+      <div class="plate" data-image-slot="bild-02" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-02.jpg');"><video autoplay muted loop playsinline poster="bilder/bild-02.jpg" onerror="this.style.display='none'"><source src="bilder/bild-02.mp4" type="video/mp4"></video><span data-slot="bild-02">BILD 02 &mdash; uppspänning i fixtur,<br>mitt i bearbetning</span></div>
+      <div class="plate" data-image-slot="bild-03" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-03.jpg');"><span data-slot="bild-03">BILD 03 &mdash; hand mot trä,<br>skiss bredvid provbiten</span></div>
     </div>
   </div>
 </section>
@@ -639,8 +734,8 @@
 <!-- GÖR / GÖR INTE -->
 <section>
   <div class="wrap reveal">
-    <div class="eyebrow">Avgränsning</div>
-    <h2>Vad vi tar oss an &mdash; och vad vi inte gör</h2>
+    <div class="eyebrow" data-content="avgransning-eyebrow">Avgränsning</div>
+    <h2 data-content="avgransning-h2">Vad vi tar oss an &mdash; och vad vi inte gör</h2>
     <div class="split">
       <div>
         <ul class="list">
@@ -667,16 +762,16 @@
 <!-- CITAT -->
 <section>
   <div class="wrap reveal">
-    <p class="pull">Toleransen är sällan det svåra. Det svåra är att veta vad ytan ska göra med ljuset.</p>
+    <p class="pull" data-content="citat-text">Toleransen är sällan det svåra. Det svåra är att veta vad ytan ska göra med ljuset.</p>
   </div>
 </section>
 
 <!-- ETT UPPDRAG -->
 <section id="uppdrag">
   <div class="wrap reveal">
-    <div class="eyebrow">Ett uppdrag</div>
-    <h2>Nationalpark som relief &mdash; från skiss till provbit</h2>
-    <p class="muted">Beställaren ville ha en nationalpark utformad som en relief i trä. Ingen fil, inga mått. Ytan var dubbelkrökt och godset skulle ner till åtta millimeter på det tunnaste stället.</p>
+    <div class="eyebrow" data-content="uppdrag-eyebrow">Ett uppdrag</div>
+    <h2 data-content="uppdrag-h2">Nationalpark som relief &mdash; från skiss till provbit</h2>
+    <p class="muted" data-content="uppdrag-intro">Beställaren ville ha en nationalpark utformad som en relief i trä. Ingen fil, inga mått. Ytan var dubbelkrökt och godset skulle ner till åtta millimeter på det tunnaste stället.</p>
 
     <ol class="steps">
       <li>
@@ -702,8 +797,8 @@
     </ol>
 
     <div class="plate-row" style="margin-top:64px">
-      <div class="plate tall" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-04.jpg');"><span data-slot="bild-04">BILD 04 &mdash; de tre provbitarna<br>bredvid varandra</span></div>
-      <div class="plate tall" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-05.jpg');"><span data-slot="bild-05">BILD 05 &mdash; det färdiga skalet,<br>samma sidoljus som övriga</span></div>
+      <div class="plate tall" data-image-slot="bild-04" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-04.jpg');"><span data-slot="bild-04">BILD 04 &mdash; de tre provbitarna<br>bredvid varandra</span></div>
+      <div class="plate tall" data-image-slot="bild-05" style="background-image: radial-gradient(ellipse at 30% 20%, rgba(201, 162, 39, 0.05), transparent 60%), linear-gradient(to top, rgba(12,11,9,.88), rgba(12,11,9,0) 62%), url('bilder/bild-05.jpg');"><span data-slot="bild-05">BILD 05 &mdash; det färdiga skalet,<br>samma sidoljus som övriga</span></div>
     </div>
   </div>
 </section>
@@ -711,8 +806,8 @@
 <!-- PORTFOLIO -->
 <section id="portfolio">
   <div class="wrap-wide reveal">
-    <div class="eyebrow">Portfolio</div>
-    <h2>Fler uppdrag</h2>
+    <div class="eyebrow" data-content="portfolio-eyebrow">Portfolio</div>
+    <h2 data-content="portfolio-h2">Fler uppdrag</h2>
     <div class="projects-list" id="portfolio-list"></div>
   </div>
 </section>
@@ -720,7 +815,7 @@
 <!-- MASKIN & MATERIAL -->
 <section id="maskin">
   <div class="wrap-wide reveal">
-    <div class="eyebrow">Maskin &amp; material</div>
+    <div class="eyebrow" data-content="maskin-eyebrow">Maskin &amp; material</div>
     <div class="cards">
       <div class="card">
         <div class="num">01</div>
@@ -744,21 +839,21 @@
 <!-- OM OSS -->
 <section id="om-oss">
   <div class="wrap reveal">
-    <div class="eyebrow">Om oss</div>
-    <h2>En verkstad, ett par händer och maskininlärning</h2>
-    <p class="lead">Boda Carve är litet med avsikt. Vi tar ett fåtal uppdrag åt gången eftersom den sortens arbete sällan går att köra parallellt &mdash; en form som ska hittas kräver ofta att jag står kvar vid maskinen och granskar vid flera tillfällen.</p>
-    <p class="muted">Vi kommer från tillverkning av plastskuplturer på internationell nivå men Boda Carve jobbar bara med trä och metall. Vi har en ambitiöst miljöinriktning och har lärt oss CNC för att kunna göra det som inte gick för hand. Kombinationen är poängen: maskinen bestämmer inte formen, den utför den.</p>
+    <div class="eyebrow" data-content="omoss-eyebrow">Om oss</div>
+    <h2 data-content="omoss-h2">En verkstad, ett par händer och maskininlärning</h2>
+    <p class="lead" data-content="omoss-lead">Boda Carve är litet med avsikt. Vi tar ett fåtal uppdrag åt gången eftersom den sortens arbete sällan går att köra parallellt &mdash; en form som ska hittas kräver ofta att jag står kvar vid maskinen och granskar vid flera tillfällen.</p>
+    <p class="muted" data-content="omoss-muted">Vi kommer från tillverkning av plastskuplturer på internationell nivå men Boda Carve jobbar bara med trä och metall. Vi har en ambitiöst miljöinriktning och har lärt oss CNC för att kunna göra det som inte gick för hand. Kombinationen är poängen: maskinen bestämmer inte formen, den utför den.</p>
   </div>
 </section>
 
 <!-- KONTAKT -->
 <section id="kontakt">
   <div class="wrap reveal">
-    <div class="eyebrow">Kontakt</div>
-    <h2>Skicka skissen. Även om den är på en servett.</h2>
-    <p class="muted">Berätta vad du vill göra och vad du är osäker på. Vi återkommer med en bedömning av vad som är svårt, ungefär hur lång tid det tar, och om vi är rätt verkstad för det.</p>
+    <div class="eyebrow" data-content="kontakt-eyebrow">Kontakt</div>
+    <h2 data-content="kontakt-h2">Skicka skissen. Även om den är på en servett.</h2>
+    <p class="muted" data-content="kontakt-muted">Berätta vad du vill göra och vad du är osäker på. Vi återkommer med en bedömning av vad som är svårt, ungefär hur lång tid det tar, och om vi är rätt verkstad för det.</p>
     <p style="margin-top:38px"><a class="contact-link" href="mailto:info@bodacarve.se">fredrik.laaksonen@gmail.com</a></p>
-    <div class="meta">
+    <div class="meta" data-content="kontakt-meta">
       Boda Carve<br>
       Verkstad i Boda<br>
       Besök efter överenskommelse
@@ -766,7 +861,7 @@
   </div>
 </section>
 
-<footer>
+<footer data-content="footer-text">
   &copy; 2026 Boda Carve
 </footer>
 
@@ -795,6 +890,21 @@
   })();
 </script>
 
+<!-- Sajttexter: skrivs av verktyg/bilduppladdare.html, saknas filen visas texten i koden ovan som fallback -->
+<script src="bilder/content.js"></script>
+<script>
+  (function () {
+    if (typeof SITE_CONTENT !== 'object' || !SITE_CONTENT) return;
+    document.querySelectorAll('[data-content]').forEach(function (el) {
+      var text = SITE_CONTENT[el.getAttribute('data-content')];
+      if (text === undefined || text === null) return;
+      var esc = document.createElement('div');
+      esc.textContent = text;
+      el.innerHTML = esc.innerHTML.replace(/\n/g, '<br>');
+    });
+  })();
+</script>
+
 <!-- Bildtexter: skrivs av verktyg/bilduppladdare.html, saknas filen visas texten ovan som fallback -->
 <script src="bilder/captions.js"></script>
 <script>
@@ -811,70 +921,339 @@
 </script>
 
 <!-- Portfolio: skrivs av verktyg/bilduppladdare.html. Saknas filen eller är listan
-     tom visas hela sektionen inte alls. -->
+     tom visas hela sektionen inte alls (utom i redigeringsläge, se nedan). -->
 <script src="bilder/portfolio.js"></script>
 <script>
-  (function () {
+  var bcPortfolioItems = (typeof PORTFOLIO_ITEMS !== 'undefined' && Array.isArray(PORTFOLIO_ITEMS))
+    ? PORTFOLIO_ITEMS.slice()
+    : [];
+
+  function bcAppendLines(el, text) {
+    String(text).split('\n').forEach(function (line, i) {
+      if (i > 0) el.appendChild(document.createElement('br'));
+      el.appendChild(document.createTextNode(line));
+    });
+  }
+
+  function bcNextProjectId() {
+    var max = 0;
+    bcPortfolioItems.forEach(function (item) {
+      var m = /^p(\d+)$/.exec(item.id || '');
+      if (m) max = Math.max(max, parseInt(m[1], 10));
+    });
+    return 'p' + (max + 1);
+  }
+
+  function renderPortfolio(edit) {
     var section = document.getElementById('portfolio');
     var navLink = document.querySelector('.side-menu a[href="#portfolio"]');
-    if (typeof PORTFOLIO_ITEMS === 'undefined' || !Array.isArray(PORTFOLIO_ITEMS) || PORTFOLIO_ITEMS.length === 0) {
+    var list = document.getElementById('portfolio-list');
+    if (!list) return;
+    list.innerHTML = '';
+
+    if (!edit && bcPortfolioItems.length === 0) {
       if (section) section.style.display = 'none';
       if (navLink) navLink.style.display = 'none';
       return;
     }
-    var list = document.getElementById('portfolio-list');
+    if (section) section.style.display = '';
+    if (navLink) navLink.style.display = '';
 
-    function appendLines(el, text) {
-      String(text).split('\n').forEach(function (line, i) {
-        if (i > 0) el.appendChild(document.createElement('br'));
-        el.appendChild(document.createTextNode(line));
+    bcPortfolioItems.forEach(function (item, index) {
+      list.appendChild(bcBuildProjectEl(item, index, edit));
+    });
+
+    if (edit) {
+      var addBtn = document.createElement('button');
+      addBtn.type = 'button';
+      addBtn.className = 'bc-add-project';
+      addBtn.textContent = '+ Lägg till projekt';
+      addBtn.addEventListener('click', function () {
+        var entry = { id: bcNextProjectId(), title: '', ingress: '', body: '', image: '' };
+        bcPortfolioItems.push(entry);
+        bcPost({ type: 'bc-portfolio-update', items: bcPortfolioItems });
+        renderPortfolio(true);
+        var els = list.querySelectorAll('.project');
+        var last = els[els.length - 1];
+        var titleEl = last && last.querySelector('h3[data-content-editable]');
+        if (titleEl) titleEl.focus();
       });
+      list.appendChild(addBtn);
+    }
+  }
+
+  function bcBuildProjectEl(item, index, edit) {
+    var proj = document.createElement('div');
+    proj.className = 'project';
+    proj.setAttribute('data-project-id', item.id);
+
+    var media = document.createElement('div');
+    media.className = 'project-media';
+    if (item.image) {
+      var img = document.createElement('img');
+      img.src = 'bilder/portfolio/' + item.image;
+      img.alt = item.title || '';
+      img.loading = 'lazy';
+      img.onerror = function () { if (!edit) media.style.display = 'none'; };
+      media.appendChild(img);
+    }
+    if (item.image || edit) proj.appendChild(media);
+
+    var body = document.createElement('div');
+    body.className = 'project-body';
+
+    var h3 = document.createElement('h3');
+    if (item.title) h3.textContent = item.title;
+    if (edit || item.title) body.appendChild(h3);
+
+    var lead = document.createElement('p');
+    lead.className = 'lead';
+    if (item.ingress) bcAppendLines(lead, item.ingress);
+    if (edit || item.ingress) body.appendChild(lead);
+
+    var muted = document.createElement('p');
+    muted.className = 'muted';
+    if (item.body) bcAppendLines(muted, item.body);
+    if (edit || item.body) body.appendChild(muted);
+
+    proj.appendChild(body);
+
+    if (edit) {
+      var input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.style.display = 'none';
+      media.appendChild(input);
+      media.addEventListener('click', function () { input.click(); });
+      input.addEventListener('change', function () {
+        if (input.files[0]) bcPost({ type: 'bc-portfolio-image-file', id: item.id, file: input.files[0] });
+        input.value = '';
+      });
+
+      h3.setAttribute('data-content-editable', 'true');
+      h3.setAttribute('data-placeholder', 'Rubrik');
+      bcMakeEditable(h3, { multiline: false, onChange: function (text) {
+        item.title = text;
+        bcPost({ type: 'bc-portfolio-update', items: bcPortfolioItems });
+      } });
+
+      lead.setAttribute('data-content-editable', 'true');
+      lead.setAttribute('data-placeholder', 'Ingress — kort sammanfattning');
+      bcMakeEditable(lead, { multiline: true, onChange: function (text) {
+        item.ingress = text;
+        bcPost({ type: 'bc-portfolio-update', items: bcPortfolioItems });
+      } });
+
+      muted.setAttribute('data-content-editable', 'true');
+      muted.setAttribute('data-placeholder', 'Brödtext');
+      bcMakeEditable(muted, { multiline: true, onChange: function (text) {
+        item.body = text;
+        bcPost({ type: 'bc-portfolio-update', items: bcPortfolioItems });
+      } });
+
+      var controls = document.createElement('div');
+      controls.className = 'bc-project-controls';
+      controls.appendChild(bcMiniBtn('&uarr; Flytta upp', function () { bcMoveProject(index, -1); }));
+      controls.appendChild(bcMiniBtn('&darr; Flytta ner', function () { bcMoveProject(index, 1); }));
+      controls.appendChild(bcMiniBtn('&times; Ta bort', function () { bcRemoveProject(index); }, true));
+      body.appendChild(controls);
     }
 
-    PORTFOLIO_ITEMS.forEach(function (item) {
-      var proj = document.createElement('div');
-      proj.className = 'project';
+    return proj;
+  }
 
-      if (item.image) {
-        var media = document.createElement('div');
-        media.className = 'project-media';
-        var img = document.createElement('img');
-        img.src = 'bilder/portfolio/' + item.image;
-        img.alt = item.title || '';
-        img.loading = 'lazy';
-        img.onerror = function () { media.style.display = 'none'; };
-        media.appendChild(img);
-        proj.appendChild(media);
-      }
+  function bcMiniBtn(html, onClick, danger) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'bc-mini-btn' + (danger ? ' bc-mini-btn-danger' : '');
+    b.innerHTML = html;
+    b.addEventListener('click', onClick);
+    return b;
+  }
 
-      var body = document.createElement('div');
-      body.className = 'project-body';
+  function bcMoveProject(index, dir) {
+    var j = index + dir;
+    if (j < 0 || j >= bcPortfolioItems.length) return;
+    var tmp = bcPortfolioItems[index];
+    bcPortfolioItems[index] = bcPortfolioItems[j];
+    bcPortfolioItems[j] = tmp;
+    bcPost({ type: 'bc-portfolio-update', items: bcPortfolioItems });
+    renderPortfolio(true);
+  }
 
-      if (item.title) {
-        var h3 = document.createElement('h3');
-        h3.textContent = item.title;
-        body.appendChild(h3);
-      }
-      if (item.ingress) {
-        var lead = document.createElement('p');
-        lead.className = 'lead';
-        appendLines(lead, item.ingress);
-        body.appendChild(lead);
-      }
-      if (item.body) {
-        String(item.body).split(/\n\s*\n/).forEach(function (para) {
-          if (!para.trim()) return;
-          var p = document.createElement('p');
-          p.className = 'muted';
-          appendLines(p, para);
-          body.appendChild(p);
-        });
-      }
+  function bcRemoveProject(index) {
+    if (!window.confirm('Ta bort det här projektet? Går inte att ångra.')) return;
+    bcPortfolioItems.splice(index, 1);
+    bcPost({ type: 'bc-portfolio-update', items: bcPortfolioItems });
+    renderPortfolio(true);
+  }
 
-      proj.appendChild(body);
-      list.appendChild(proj);
+  renderPortfolio(false);
+</script>
+
+<!-- ===========================================================================
+     Redigeringsbrygga: aktiveras ENDAST om sidan ligger inbäddad i en iframe och
+     tar emot en "bc-init"-signal via postMessage från verktyg/bilduppladdare.html.
+     Utan den signalen är allt nedan helt overksamt — vanliga besökare påverkas inte.
+     =========================================================================== -->
+<script>
+(function () {
+  var editModeOn = false;
+
+  function bcPost(msg) {
+    try { if (window.parent && window.parent !== window) window.parent.postMessage(msg, '*'); }
+    catch (e) { /* ignorera */ }
+  }
+  window.bcPost = bcPost; // används av portfolio-scriptet ovan
+
+  function bcContentEditableToText(el) {
+    var html = el.innerHTML;
+    var withBreaks = html
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(/<\/(div|p)>/gi, '\n')
+      .replace(/<(div|p)[^>]*>/gi, '');
+    var tmp = document.createElement('div');
+    tmp.innerHTML = withBreaks;
+    var text = tmp.textContent || '';
+    return text.replace(/\n{2,}/g, '\n').replace(/^\n+|\n+$/g, '');
+  }
+  window.bcContentEditableToText = bcContentEditableToText;
+
+  function bcMakeEditable(el, opts) {
+    opts = opts || {};
+    el.contentEditable = 'true';
+    el.spellcheck = false;
+    el.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        if (opts.multiline === false) { e.preventDefault(); el.blur(); return; }
+        e.preventDefault();
+        document.execCommand('insertLineBreak');
+      }
     });
-  })();
+    el.addEventListener('paste', function (e) {
+      e.preventDefault();
+      var text = (e.clipboardData || window.clipboardData).getData('text/plain');
+      document.execCommand('insertText', false, text);
+    });
+    el.addEventListener('blur', function () {
+      var text = bcContentEditableToText(el);
+      if (opts.onChange) opts.onChange(text);
+    });
+  }
+  window.bcMakeEditable = bcMakeEditable;
+
+  function bcWireImageSlot(el) {
+    var slotId = el.getAttribute('data-image-slot');
+    var isVideoSlot = !!el.querySelector('video');
+    var input = document.createElement('input');
+    input.type = 'file';
+    input.accept = isVideoSlot ? 'image/*,video/*' : 'image/*';
+    input.style.display = 'none';
+    el.appendChild(input);
+
+    el.addEventListener('click', function (e) {
+      if (e.target.closest && e.target.closest('[data-slot]')) return;
+      input.click();
+    });
+    input.addEventListener('change', function () {
+      if (input.files[0]) bcPost({ type: 'bc-image-file', slot: slotId, file: input.files[0] });
+      input.value = '';
+    });
+  }
+
+  function bcApplyPlateImage(msg) {
+    var plate = document.querySelector('.plate[data-image-slot="' + msg.slot + '"]');
+    if (!plate) return;
+    if (msg.imageBlob) {
+      var url = URL.createObjectURL(msg.imageBlob);
+      plate.style.backgroundImage = plate.style.backgroundImage.replace(/url\((['"]?)[^)]*\1\)$/, "url('" + url + "')");
+    }
+    if (msg.videoBlob) {
+      var video = plate.querySelector('video');
+      var source = video && video.querySelector('source');
+      if (video && source) {
+        source.src = URL.createObjectURL(msg.videoBlob);
+        video.style.display = '';
+        video.load();
+        video.play().catch(function () {});
+      }
+    }
+  }
+
+  function bcApplyPortfolioImage(msg) {
+    var item = bcPortfolioItems.filter(function (p) { return p.id === msg.id; })[0];
+    if (item) item.image = msg.filename;
+    var proj = document.querySelector('.project[data-project-id="' + msg.id + '"]');
+    if (!proj) return;
+    var media = proj.querySelector('.project-media');
+    if (!media) return;
+    var img = media.querySelector('img');
+    if (!img) {
+      img = document.createElement('img');
+      img.loading = 'lazy';
+      media.insertBefore(img, media.firstChild);
+    }
+    img.src = URL.createObjectURL(msg.imageBlob);
+  }
+
+  function bcInitEditMode() {
+    editModeOn = true;
+    document.body.classList.add('bc-editing');
+    document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in'); });
+
+    // Fånga nuvarande text som fallback-standardvärden innan de görs redigerbara,
+    // så verktyget har vettiga startvärden även om content.js/captions.js saknas.
+    var contentSnapshot = {};
+    document.querySelectorAll('[data-content]').forEach(function (el) {
+      contentSnapshot[el.getAttribute('data-content')] = el.textContent.replace(/\s+/g, ' ').trim() === ''
+        ? ''
+        : bcContentEditableToText(el);
+    });
+    var captionsSnapshot = {};
+    document.querySelectorAll('.plate span[data-slot]').forEach(function (span) {
+      captionsSnapshot[span.getAttribute('data-slot')] = bcContentEditableToText(span);
+    });
+
+    document.querySelectorAll('[data-content]').forEach(function (el) {
+      bcMakeEditable(el, { multiline: true, onChange: function (text) {
+        bcPost({ type: 'bc-content-change', id: el.getAttribute('data-content'), text: text });
+      } });
+    });
+
+    document.querySelectorAll('.plate span[data-slot]').forEach(function (span) {
+      bcMakeEditable(span, { multiline: true, onChange: function (text) {
+        bcPost({ type: 'bc-caption-change', slot: span.getAttribute('data-slot'), text: text });
+      } });
+    });
+
+    document.querySelectorAll('.plate[data-image-slot]').forEach(bcWireImageSlot);
+
+    renderPortfolio(true);
+
+    bcPost({
+      type: 'bc-ready',
+      content: (typeof SITE_CONTENT === 'object' && SITE_CONTENT) ? SITE_CONTENT : contentSnapshot,
+      contentDefaults: contentSnapshot,
+      captions: (typeof PLATE_CAPTIONS === 'object' && PLATE_CAPTIONS) ? PLATE_CAPTIONS : captionsSnapshot,
+      captionDefaults: captionsSnapshot,
+      portfolio: bcPortfolioItems
+    });
+  }
+
+  window.addEventListener('message', function (ev) {
+    var msg = ev.data;
+    if (!msg || !msg.type) return;
+    if (msg.type === 'bc-init') {
+      if (!editModeOn) bcInitEditMode();
+    } else if (msg.type === 'bc-image-saved') {
+      if (msg.kind === 'plate') bcApplyPlateImage(msg);
+      else if (msg.kind === 'portfolio') bcApplyPortfolioImage(msg);
+    }
+  });
+
+  // Om sidan öppnas inbäddad men förälderns signal av någon anledning uteblir
+  // (t.ex. gammal cachad kopia) förblir sidan i vanligt visningsläge — helt säkert.
+})();
 </script>
 
 </body>
