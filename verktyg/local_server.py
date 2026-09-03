@@ -52,8 +52,12 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
             try:
                 subprocess.run(
-                    ['ffmpeg', '-y', '-i', src, '-c:v', 'libx264', '-pix_fmt', 'yuv420p',
-                     '-crf', '18', '-preset', 'medium', '-c:a', 'aac', '-movflags', '+faststart', dst],
+                    ['ffmpeg', '-y', '-i', src,
+                     '-vf', "scale='min(1600,iw)':-2",
+                     '-c:v', 'libx264', '-pix_fmt', 'yuv420p',
+                     '-b:v', '2M', '-maxrate', '2.5M', '-bufsize', '4M',
+                     '-preset', 'medium', '-c:a', 'aac', '-b:a', '128k',
+                     '-movflags', '+faststart', dst],
                     check=True, capture_output=True, timeout=300,
                 )
             except subprocess.CalledProcessError as e:
