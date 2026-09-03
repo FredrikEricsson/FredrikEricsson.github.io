@@ -193,8 +193,22 @@
     max-width: 920px;
     margin: 0 auto;
     padding: 10px 20px 130px;
+    perspective: 1600px;
   }
-  .toolpath-wrap svg { width: 100%; height: auto; display: block; }
+  .toolpath-wrap svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    animation: bc-toolpath-spin 36s linear infinite;
+    will-change: transform;
+  }
+  @keyframes bc-toolpath-spin {
+    from { transform: rotateX(10deg) rotateY(0deg); }
+    to   { transform: rotateX(10deg) rotateY(360deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .toolpath-wrap svg { animation: none; }
+  }
   .toolpath-cap {
     margin-top: 26px;
     text-align: center;
