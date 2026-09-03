@@ -1,6 +1,6 @@
 var SITE_CONTENT = {
   "hero-eyebrow": "Boda Carve — verkstad för prototyper i trä",
-  "hero-h1": "Boda Carve är en liten CNC-verkstad som tar sig an dubbelkrökta ytor, tunna gods och geometri som är svårförklarad",
+  "hero-h1": "Boda Carve är en liten CNC-verkstad som tar sig an dubbelkrökta ytor, tunna gods och geometri som är svårförklarad.",
   "hero-manifest": "Vi räknar inte kvadratmeter utan antalet försök som krävs för att lyckas.",
   "hero-lead": "Vi arbetar gärna med konstnärer, formgivare och arkitekter — oftast från en skiss, sällan från en färdig fil.",
   "avgransning-eyebrow": "Avgränsning",

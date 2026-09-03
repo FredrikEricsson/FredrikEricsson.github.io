@@ -369,6 +369,23 @@ async function transcodeToMp4(file, report) {
   }
 }
 
+// Fallback nar webblasaren inte kan avkoda klippet sjalv (t.ex. Apple ProRes):
+// skicka ravdata till den lokala serverns /convert-rutt, som anvander riktig ffmpeg.
+async function convertViaServer(file, report) {
+  if (report) report('Webblasaren kan inte lasa det har videoformatet direkt (t.ex. Apple ProRes) - forsoker konvertera med ffmpeg pa datorn...');
+  let resp;
+  try {
+    resp = await fetch('/convert', { method: 'POST', body: file });
+  } catch (e) {
+    throw new Error('Ingen lokal konverteringsserver tillganglig (kor \'sajt\' via terminalen, inte genom att oppna filen direkt).');
+  }
+  if (!resp.ok) {
+    const text = await resp.text().catch(() => '');
+    throw new Error(text || ('Serverkonvertering misslyckades (' + resp.status + ')'));
+  }
+  return await resp.blob();
+}
+
 // ---------- spara till bilder/content.js, bilder/captions.js, bilder/portfolio.js ----------
 function renderContentJs(data) { return 'var SITE_CONTENT = ' + JSON.stringify(data, null, 2) + ';\n'; }
 function renderCaptionsJs(data) { return 'var PLATE_CAPTIONS = ' + JSON.stringify(data, null, 2) + ';\n'; }
@@ -469,18 +486,22 @@ async function handleImageFile(msg) {
 }
 
 async function handleVideoForSlot(slot, file) {
-  let poster;
-  try {
-    setToolStatus('Tar en bildruta ur klippet…', 'busy');
-    poster = await captureVideoFrame(file);
-  } catch (e) {
-    setToolStatus(e.message, 'err');
-    return;
-  }
-
   let videoBlob;
   try {
     videoBlob = await transcodeToMp4(file, (text) => setToolStatus(text, 'busy'));
+  } catch (e) {
+    try {
+      videoBlob = await convertViaServer(file, (text) => setToolStatus(text, 'busy'));
+    } catch (e2) {
+      setToolStatus('Kunde inte konvertera videon: ' + e2.message + ' Prova annars QuickTime Player \u2192 Arkiv \u2192 Exportera som \u2192 1080p och ladda upp den filen istallet.', 'err');
+      return;
+    }
+  }
+
+  let poster;
+  try {
+    setToolStatus('Tar en bildruta ur klippet…', 'busy');
+    poster = await captureVideoFrame(videoBlob);
   } catch (e) {
     setToolStatus(e.message, 'err');
     return;
