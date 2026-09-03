@@ -293,7 +293,7 @@ async function transcodeToMp4(file, report) {
     w -= w % 2; h -= h % 2; // encodern kräver jämna mått
     if (w < 2 || h < 2) {
       console.warn('Video utan läsbara bildmått:', { videoWidth: video.videoWidth, videoHeight: video.videoHeight, duration: video.duration, fileType: file.type, fileSize: file.size, fileName: file.name });
-      throw new Error('Videon verkar sakna bildinnehåll. Detta beror oftast på HDR-video (Dolby Vision) från iPhone, som Chrome inte kan läsa — inte på filstorlek eller längd. Öppna klippet i QuickTime Player på Mac och välj Arkiv → Exportera som → 1080p, ladda sedan upp den exporterade filen istället. (På iPhone kan du också stänga av det under Inställningar → Kamera → Format → Mest kompatibel, så slipper du problemet i framtiden.)');
+      throw new Error('Videon verkar sakna bildinnehåll. Klippet ligger troligen i ett format webbläsare inte kan spela upp alls — t.ex. Apple ProRes, eller HDR-video (Dolby Vision) från iPhone. Öppna klippet i QuickTime Player på Mac och välj Arkiv → Exportera som → 1080p, ladda sedan upp den exporterade filen istället — det ger alltid vanlig H.264 som fungerar här.');
     }
 
     const codec = await pickSupportedCodec(w, h);
