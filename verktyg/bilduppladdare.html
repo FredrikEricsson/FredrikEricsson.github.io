@@ -183,6 +183,7 @@ function triggerDownload(content, filename, mime) {
 // ---------- state, seeded by the iframe's own "bc-ready" message ----------
 let contentData = {};
 let captionsData = {};
+let positionsData = {};
 let portfolioItems = [];
 
 function updateProgressSummary() {
@@ -389,8 +390,9 @@ async function convertViaServer(file, report) {
 // ---------- spara till bilder/content.js, bilder/captions.js, bilder/portfolio.js ----------
 function renderContentJs(data) { return 'var SITE_CONTENT = ' + JSON.stringify(data, null, 2) + ';\n'; }
 function renderCaptionsJs(data) { return 'var PLATE_CAPTIONS = ' + JSON.stringify(data, null, 2) + ';\n'; }
+function renderPositionsJs(data) { return 'var PLATE_POSITIONS = ' + JSON.stringify(data, null, 2) + ';\n'; }
 function renderPortfolioJs(items) {
-  const clean = items.map(({ id, title, ingress, body, image }) => ({ id, title, ingress, body, image }));
+  const clean = items.map(({ id, title, ingress, body, image, position }) => ({ id, title, ingress, body, image, position }));
   return 'var PORTFOLIO_ITEMS = ' + JSON.stringify(clean, null, 2) + ';\n';
 }
 
@@ -413,6 +415,7 @@ async function saveTextFile(filename, text, okMessage) {
 
 function saveContentJs() { return saveTextFile('content.js', renderContentJs(contentData), 'Text sparad'); }
 function saveCaptionsJs() { return saveTextFile('captions.js', renderCaptionsJs(captionsData), 'Bildtext sparad'); }
+function savePositionsJs() { return saveTextFile('positions.js', renderPositionsJs(positionsData), 'Bildutsnitt sparat'); }
 function savePortfolioJs() { return saveTextFile('portfolio.js', renderPortfolioJs(portfolioItems), 'Portfolio sparad'); }
 
 async function getPortfolioDirHandle(create) {
@@ -436,6 +439,11 @@ async function handleContentChange(msg) {
 async function handleCaptionChange(msg) {
   captionsData[msg.slot] = msg.text;
   await saveCaptionsJs();
+}
+
+async function handlePositionChange(msg) {
+  positionsData[msg.slot] = msg.position;
+  await savePositionsJs();
 }
 
 async function handlePortfolioUpdate(msg) {
@@ -579,12 +587,15 @@ window.addEventListener('message', (ev) => {
   if (msg.type === 'bc-ready') {
     contentData = Object.assign({}, msg.content || {});
     captionsData = Object.assign({}, msg.captions || {});
+    positionsData = Object.assign({}, msg.positions || {});
     portfolioItems = (msg.portfolio || []).slice();
     updateProgressSummary();
   } else if (msg.type === 'bc-content-change') {
     handleContentChange(msg);
   } else if (msg.type === 'bc-caption-change') {
     handleCaptionChange(msg);
+  } else if (msg.type === 'bc-position-change') {
+    handlePositionChange(msg);
   } else if (msg.type === 'bc-image-file') {
     handleImageFile(msg);
   } else if (msg.type === 'bc-portfolio-image-file') {

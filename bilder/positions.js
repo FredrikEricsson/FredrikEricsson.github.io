@@ -1,0 +1,1 @@
+var PLATE_POSITIONS = {};

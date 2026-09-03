@@ -433,7 +433,8 @@
     content: attr(data-placeholder);
     color: var(--ink-faint);
   }
-  body.bc-editing .plate[data-image-slot] { cursor: pointer; }
+  body.bc-editing .plate[data-image-slot] { cursor: grab; -webkit-user-select: none; user-select: none; }
+  body.bc-editing .plate[data-image-slot]:active { cursor: grabbing; }
   body.bc-editing .plate[data-image-slot]::after {
     content: "Byt bild";
     position: absolute;
@@ -459,6 +460,8 @@
     background: var(--bg-soft);
     border: 1px dashed rgba(201, 162, 39, 0.3);
   }
+  body.bc-editing .project-media img { cursor: grab; -webkit-user-select: none; user-select: none; }
+  body.bc-editing .project-media img:active { cursor: grabbing; }
   body.bc-editing .project-media::after {
     content: "Klicka för att välja bild";
     position: absolute;
@@ -920,6 +923,22 @@
   })();
 </script>
 
+<!-- Bildbeskärning: vilken del av varje bild som visas, satt genom att dra i bilden
+     i redigeringsläget. Saknas filen visas bilderna centrerade som vanligt. -->
+<script src="bilder/positions.js"></script>
+<script>
+  (function () {
+    if (typeof PLATE_POSITIONS !== 'object' || !PLATE_POSITIONS) return;
+    document.querySelectorAll('.plate[data-image-slot]').forEach(function (plate) {
+      var pos = PLATE_POSITIONS[plate.getAttribute('data-image-slot')];
+      if (!pos) return;
+      plate.style.backgroundPosition = '0 0, 0 0, ' + pos;
+      var video = plate.querySelector('video');
+      if (video) video.style.objectPosition = pos;
+    });
+  })();
+</script>
+
 <!-- Portfolio: skrivs av verktyg/bilduppladdare.html. Saknas filen eller är listan
      tom visas hela sektionen inte alls (utom i redigeringsläge, se nedan). -->
 <script src="bilder/portfolio.js"></script>
@@ -994,6 +1013,8 @@
       img.src = 'bilder/portfolio/' + item.image;
       img.alt = item.title || '';
       img.loading = 'lazy';
+      img.draggable = false;
+      if (item.position) img.style.objectPosition = item.position;
       img.onerror = function () { if (!edit) media.style.display = 'none'; };
       media.appendChild(img);
     }
@@ -1024,7 +1045,24 @@
       input.accept = 'image/*';
       input.style.display = 'none';
       media.appendChild(input);
-      media.addEventListener('click', function () { input.click(); });
+
+      var mediaDrag = null;
+      var existingImg = media.querySelector('img');
+      if (existingImg) {
+        mediaDrag = bcWireDragReposition(existingImg, {
+          get: function () { return bcParsePosition(item.position); },
+          set: function (x, y) { existingImg.style.objectPosition = x.toFixed(1) + '% ' + y.toFixed(1) + '%'; },
+          commit: function (x, y) {
+            item.position = x.toFixed(1) + '% ' + y.toFixed(1) + '%';
+            bcPost({ type: 'bc-portfolio-update', items: bcPortfolioItems });
+          }
+        });
+      }
+
+      media.addEventListener('click', function () {
+        if (mediaDrag && mediaDrag.wasDragged()) return;
+        input.click();
+      });
       input.addEventListener('change', function () {
         if (input.files[0]) bcPost({ type: 'bc-portfolio-image-file', id: item.id, file: input.files[0] });
         input.value = '';
@@ -1142,6 +1180,67 @@
   }
   window.bcMakeEditable = bcMakeEditable;
 
+  // ---------- drag för att välja vilken del av en bild/video som syns (background-position/object-position) ----------
+  function bcClamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+  function bcParsePosition(str) {
+    var parts = (str || '50% 50%').trim().split(/\s+/);
+    var x = parseFloat(parts[0]);
+    var y = parseFloat(parts[1] !== undefined ? parts[1] : parts[0]);
+    return { x: isNaN(x) ? 50 : x, y: isNaN(y) ? 50 : y };
+  }
+
+  function bcWireDragReposition(el, opts) {
+    var dragging = false, moved = false, startX, startY, startPos, last = null;
+    el.style.touchAction = 'none';
+
+    el.addEventListener('pointerdown', function (e) {
+      if (e.button !== 0) return;
+      dragging = true; moved = false; last = null;
+      startX = e.clientX; startY = e.clientY;
+      startPos = opts.get();
+      try { el.setPointerCapture(e.pointerId); } catch (err) {}
+    });
+
+    el.addEventListener('pointermove', function (e) {
+      if (!dragging) return;
+      var dx = e.clientX - startX, dy = e.clientY - startY;
+      if (!moved && (Math.abs(dx) > 3 || Math.abs(dy) > 3)) moved = true;
+      if (!moved) return;
+      e.preventDefault();
+      var rect = el.getBoundingClientRect();
+      var nx = bcClamp(startPos.x - (dx / rect.width) * 100, 0, 100);
+      var ny = bcClamp(startPos.y - (dy / rect.height) * 100, 0, 100);
+      opts.set(nx, ny);
+      last = { x: nx, y: ny };
+    });
+
+    function finish(e) {
+      if (!dragging) return;
+      dragging = false;
+      try { el.releasePointerCapture(e.pointerId); } catch (err) {}
+      if (moved && last) opts.commit(last.x, last.y);
+    }
+    el.addEventListener('pointerup', finish);
+    el.addEventListener('pointercancel', finish);
+
+    return { wasDragged: function () { return moved; } };
+  }
+
+  function bcSetPlatePosition(plate, x, y) {
+    var pos = x.toFixed(1) + '% ' + y.toFixed(1) + '%';
+    plate.style.backgroundPosition = '0 0, 0 0, ' + pos;
+    var video = plate.querySelector('video');
+    if (video) video.style.objectPosition = pos;
+  }
+
+  function bcGetPlatePosition(plate) {
+    var bp = plate.style.backgroundPosition;
+    if (!bp) return { x: 50, y: 50 };
+    var layers = bp.split(',');
+    return bcParsePosition(layers[layers.length - 1]);
+  }
+
   function bcWireImageSlot(el) {
     var slotId = el.getAttribute('data-image-slot');
     var isVideoSlot = !!el.querySelector('video');
@@ -1151,7 +1250,16 @@
     input.style.display = 'none';
     el.appendChild(input);
 
+    var drag = bcWireDragReposition(el, {
+      get: function () { return bcGetPlatePosition(el); },
+      set: function (x, y) { bcSetPlatePosition(el, x, y); },
+      commit: function (x, y) {
+        bcPost({ type: 'bc-position-change', slot: slotId, position: x.toFixed(1) + '% ' + y.toFixed(1) + '%' });
+      }
+    });
+
     el.addEventListener('click', function (e) {
+      if (drag.wasDragged()) return;
       if (e.target.closest && e.target.closest('[data-slot]')) return;
       input.click();
     });
@@ -1236,6 +1344,7 @@
       contentDefaults: contentSnapshot,
       captions: (typeof PLATE_CAPTIONS === 'object' && PLATE_CAPTIONS) ? PLATE_CAPTIONS : captionsSnapshot,
       captionDefaults: captionsSnapshot,
+      positions: (typeof PLATE_POSITIONS === 'object' && PLATE_POSITIONS) ? PLATE_POSITIONS : {},
       portfolio: bcPortfolioItems
     });
   }
