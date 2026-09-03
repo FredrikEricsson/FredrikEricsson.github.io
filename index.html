@@ -564,16 +564,19 @@
   <div class="toolpath-cap">Ottfj&auml;llets rygg &middot; V&auml;ster- och &Ouml;stertoppen &middot; waterline &middot; konstant Z</div>
 </div>
 
-<!-- Ottfjallet i 3D: samma hojdfalt/waterline-ringar som ovan, nu som en riktig
-     roterande 3D-modell (Three.js) istallet for en platt bild. -->
+<!-- Ottfjallet i 3D: ratt CAD-wireframe av den verkliga STL-modellen
+     (verktyg/ottfjallet.stl, samma fil som anvands for CNC-bearbetningen),
+     roterande, i samma gulda farg som tidigare. -->
 <script src="bilder/terrain.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 <script>
   (function () {
     var mount = document.getElementById('bc-terrain3d');
-    if (!mount || typeof THREE === 'undefined' || typeof TERRAIN_RINGS === 'undefined') return;
-    var rings = TERRAIN_RINGS.rings || [];
-    if (!rings.length) return;
+    if (!mount || typeof THREE === 'undefined' || typeof TERRAIN_MESH === 'undefined') return;
+    var rows = TERRAIN_MESH.rows, cols = TERRAIN_MESH.cols;
+    var heights = TERRAIN_MESH.heights;
+    if (!rows || !cols || !heights || !heights.length) return;
+    var halfX = TERRAIN_MESH.halfX, halfZ = TERRAIN_MESH.halfZ;
 
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
@@ -589,24 +592,40 @@
     group.position.y = -0.5;
     scene.add(group);
 
-    rings.forEach(function (ring) {
-      var pts = ring.pts, z = ring.z;
-      var positions = new Float32Array((pts.length / 2) * 3);
-      for (var i = 0, j = 0; i < pts.length; i += 2, j += 3) {
-        positions[j] = pts[i];
-        positions[j + 1] = z;
-        positions[j + 2] = pts[i + 1];
+    // Bygg ett riktigt triangelnat fran hojdrastret (samma natverk som
+    // CNC-verktyget faktiskt foljer over ytan) och rita bara dess kanter -
+    // en genuin CAD-wireframe av den verkliga modellen, i den gulda fargen.
+    var positions = new Float32Array(rows * cols * 3);
+    for (var r = 0; r < rows; r++) {
+      for (var c = 0; c < cols; c++) {
+        var idx = r * cols + c;
+        positions[idx * 3] = (c / (cols - 1) * 2 - 1) * halfX;
+        positions[idx * 3 + 1] = heights[idx];
+        positions[idx * 3 + 2] = (r / (rows - 1) * 2 - 1) * halfZ;
       }
-      var geo = new THREE.BufferGeometry();
-      geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-      var t = Math.max(0, Math.min(1, z / 1.05));
-      var mat = new THREE.LineBasicMaterial({
-        color: 0xc9a227,
-        transparent: true,
-        opacity: 0.28 + 0.62 * Math.pow(t, 0.8)
-      });
-      group.add(new THREE.LineLoop(geo, mat));
+    }
+    var indices = [];
+    for (var r2 = 0; r2 < rows - 1; r2++) {
+      for (var c2 = 0; c2 < cols - 1; c2++) {
+        var a = r2 * cols + c2;
+        var b = a + 1;
+        var d = a + cols;
+        var e = d + 1;
+        indices.push(a, b, d);
+        indices.push(b, e, d);
+      }
+    }
+    var surfGeo = new THREE.BufferGeometry();
+    surfGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    surfGeo.setIndex(indices);
+
+    var wireGeo = new THREE.WireframeGeometry(surfGeo);
+    var wireMat = new THREE.LineBasicMaterial({
+      color: 0xc9a227,
+      transparent: true,
+      opacity: 0.55
     });
+    group.add(new THREE.LineSegments(wireGeo, wireMat));
 
     function resize() {
       var w = mount.clientWidth, h = mount.clientHeight;
