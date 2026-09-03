@@ -1,6 +1,6 @@
 var SITE_CONTENT = {
   "hero-eyebrow": "Boda Carve — verkstad för prototyper i trä",
-  "hero-h1": "Boda Carve är en liten CNC-verkstad som tar sig an dubbelkrökta ytor, tunna gods och geometri som är svårförklarad.",
+  "hero-h1": "Boda Carve är en liten CNC-verkstad som tar sig an dubbelkrökta ytor, tunna gods och geometri som är svårförklarad",
   "hero-manifest": "Vi räknar inte kvadratmeter utan antalet försök som krävs för att lyckas.",
   "hero-lead": "Vi arbetar gärna med konstnärer, formgivare och arkitekter — oftast från en skiss, sällan från en färdig fil.",
   "avgransning-eyebrow": "Avgränsning",
@@ -20,5 +20,12 @@ var SITE_CONTENT = {
   "kontakt-h2": "Skicka skissen. Även om den är på en servett.",
   "kontakt-muted": "Berätta vad du vill göra och vad du är osäker på. Vi återkommer med en bedömning av vad som är svårt, ungefär hur lång tid det tar och om vi är rätt verkstad för det.",
   "kontakt-meta": "      Boda Carve\n      Verkstad i Boda, Näshulta.\n      Besök efter överenskommelse\n    ",
-  "footer-text": "  © 2026 Boda Carve"
+  "footer-text": "  © 2026 Boda Carve",
+  "avgransning-nej-1": "Stora serier till byggjättar",
+  "uppdrag-steg1-p": "Topografin analyserades och kurvorna byggdes från grunden, så att ytan blev fräsbar utan att tappa sin karaktär.",
+  "uppdrag-steg2-p": "Lanskapet var korrekt men lutade. Fel var inte geometrin utan uppspänningen eftersom reliefen kräver en mycket plan botten. ",
+  "uppdrag-steg3-h3": "Limfogskiva via planfräsning",
+  "uppdrag-steg3-p": "Timmar av arbete för att hitta rätt trä, på rätt plats för att göra topografin rättvis.",
+  "uppdrag-steg4-h3": "Andra provbiten",
+  "uppdrag-steg5-p": " Tiden gick åt till att lista ut hur, inte till att köra maskinen."
 };
