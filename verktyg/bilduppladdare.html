@@ -399,7 +399,7 @@ function renderPortfolioJs(items) {
 async function saveTextFile(filename, text, okMessage) {
   if (!dirHandle) {
     triggerDownload(text, filename, 'text/javascript');
-    setToolStatus(`Nedladdad som ${filename} — flytta filen till bilder-mappen manuellt.`, 'ok');
+    setToolStatus(`Mappen är inte ansluten — ${filename} laddades ner istället och sparades INTE i bilder-mappen. Klicka "Anslut ... igen" ovan och gör om ändringen.`, 'err');
     return;
   }
   try {
@@ -476,7 +476,7 @@ async function handleImageFile(msg) {
   const filename = slot + '.jpg';
   if (!dirHandle) {
     triggerDownload(result.blob, filename, 'image/jpeg');
-    setToolStatus(`Nedladdad som ${filename} — flytta filen till bilder-mappen manuellt.`, 'ok');
+    setToolStatus(`Mappen är inte ansluten — ${filename} laddades ner istället och sparades INTE i bilder-mappen. Klicka "Anslut ... igen" ovan och gör om ändringen.`, 'err');
     replyImageSaved('plate', { slot }, result.blob, null);
     return;
   }
@@ -521,7 +521,7 @@ async function handleVideoForSlot(slot, file) {
   if (!dirHandle) {
     triggerDownload(poster.blob, imgFilename, 'image/jpeg');
     triggerDownload(videoBlob, vidFilename, 'video/mp4');
-    setToolStatus(`Nedladdad som ${imgFilename} + ${vidFilename} — flytta filerna till bilder-mappen manuellt.`, 'ok');
+    setToolStatus(`Mappen är inte ansluten — ${imgFilename} + ${vidFilename} laddades ner istället och sparades INTE i bilder-mappen. Klicka "Anslut ... igen" ovan och gör om ändringen.`, 'err');
     replyImageSaved('plate', { slot }, poster.blob, videoBlob);
     return;
   }
@@ -558,7 +558,7 @@ async function handlePortfolioImageFile(msg) {
 
   if (!dirHandle) {
     triggerDownload(result.blob, filename, 'image/jpeg');
-    setToolStatus(`Nedladdad som ${filename} — flytta filen till bilder/portfolio/ manuellt.`, 'ok');
+    setToolStatus(`Mappen är inte ansluten — ${filename} laddades ner istället och sparades INTE i bilder/portfolio/. Klicka "Anslut ... igen" ovan och gör om ändringen.`, 'err');
     replyImageSaved('portfolio', { id, filename }, result.blob, null);
     await savePortfolioJs();
     return;
