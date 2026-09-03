@@ -75,11 +75,16 @@ for i, lev in enumerate(levels):
         si = np.linspace(0, s[-1], m)
         pts = np.stack([np.interp(si, s, seg[:, 0]), np.interp(si, s, seg[:, 1])], axis=1)
         z = round(float((lev - zmin) * z_scale), 4)
+        # matplotlib klipper konturer som gar utanfor rastret till OPPNA
+        # segment - om vi tvingar ihop dem med en LineLoop far vi ett rakt
+        # streck som skar rakt igenom berget. Markera stangda/oppna sa
+        # rendreringen kan valja LineLoop resp. Line ratt.
+        closed = bool(np.hypot(seg[0, 0] - seg[-1, 0], seg[0, 1] - seg[-1, 1]) < 1e-6)
         flat = []
         for x, y in pts:
             flat.append(round(float((x - cx) * xy_scale), 3))
             flat.append(round(float((y - cy) * xy_scale), 3))
-        out_rings.append({"z": z, "pts": flat})
+        out_rings.append({"z": z, "pts": flat, "closed": closed})
 plt.close(fig)
 
 data = {

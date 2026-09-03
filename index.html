@@ -608,7 +608,10 @@
         transparent: true,
         opacity: 0.24 + 0.56 * Math.pow(t, 0.8)
       });
-      group.add(new THREE.LineLoop(geo, mat));
+      // Konturer som klipps av rastrets kant kommer som OPPNA segment fran
+      // Python-sidan (ring.closed === false) - en LineLoop skulle da rita
+      // ett rakt streck rakt igenom berget for att "stanga" slingan.
+      group.add(ring.closed === false ? new THREE.Line(geo, mat) : new THREE.LineLoop(geo, mat));
     });
 
     function resize() {
