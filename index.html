@@ -1142,6 +1142,8 @@
 
     return { wasDragged: function () { return moved; } };
   }
+  window.bcWireDragReposition = bcWireDragReposition; // används av portfolio-scriptet ovan
+  window.bcParsePosition = bcParsePosition; // används av portfolio-scriptet ovan
 
   function bcSetPlatePosition(plate, x, y) {
     var pos = x.toFixed(1) + '% ' + y.toFixed(1) + '%';
