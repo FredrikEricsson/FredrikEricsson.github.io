@@ -3,3 +3,5 @@
 *.asc
 *.prj
 _stale_locks/
+__pycache__/
+*.pyc
