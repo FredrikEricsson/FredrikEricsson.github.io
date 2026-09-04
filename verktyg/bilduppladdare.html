@@ -61,6 +61,20 @@
   .folder-status b { color: var(--ink); font-weight: 600; }
   .progress { margin-left: auto; color: var(--ink-muted); font-size: 0.85rem; letter-spacing: 0.3px; }
 
+  .filterbar {
+    display: flex; align-items: center; gap: 30px; flex-wrap: wrap;
+    padding: 14px 24px; border: 1px solid var(--rule); border-top: none; background: var(--bg-soft);
+  }
+  .filter-field {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.85rem; color: var(--ink-muted); letter-spacing: 0.3px; white-space: nowrap;
+  }
+  .filter-field input[type="range"] {
+    accent-color: var(--gold);
+    width: 170px;
+  }
+  .filter-field output { color: var(--gold-light); min-width: 2.4em; text-align: right; font-variant-numeric: tabular-nums; }
+
   .tool-status {
     min-height: 32px; display: flex; align-items: center; gap: 8px;
     padding: 8px 24px; font-size: 0.82rem; color: var(--ink-faint);
@@ -118,6 +132,18 @@
     <span class="progress" id="progress"></span>
   </div>
   <div class="tool-status" id="toolStatus"></div>
+
+  <div class="filterbar">
+    <label class="filter-field">Kontrast
+      <input type="range" id="contrastSlider" min="0.7" max="1.4" step="0.01" value="1">
+      <output id="contrastValue">1.00</output>
+    </label>
+    <label class="filter-field">Guld
+      <input type="range" id="goldSlider" min="0" max="1" step="0.01" value="1">
+      <output id="goldValue">100%</output>
+    </label>
+    <span class="filter-field" style="color: var(--ink-faint);">Gäller alla fotografiska bilder och video — inte loggan.</span>
+  </div>
 
   <div class="preview-frame-wrap">
     <iframe id="sitePreview" src="../index.html" title="Förhandsvisning av sajten, redigerbar"></iframe>
@@ -185,6 +211,7 @@ let contentData = {};
 let captionsData = {};
 let positionsData = {};
 let portfolioItems = [];
+let photoFilterData = { contrast: 1, gold: 1 };
 
 function updateProgressSummary() {
   progress.textContent = portfolioItems.length + ' portfolioprojekt';
@@ -420,6 +447,7 @@ function renderPortfolioJs(items) {
   const clean = items.map(({ id, title, ingress, body, image, position }) => ({ id, title, ingress, body, image, position }));
   return 'var PORTFOLIO_ITEMS = ' + JSON.stringify(clean, null, 2) + ';\n';
 }
+function renderPhotoFilterJs(data) { return 'var PHOTO_FILTER = ' + JSON.stringify(data, null, 2) + ';\n'; }
 
 async function saveTextFile(filename, text, okMessage) {
   if (!dirHandle) {
@@ -442,6 +470,7 @@ function saveContentJs() { return saveTextFile('content.js', renderContentJs(con
 function saveCaptionsJs() { return saveTextFile('captions.js', renderCaptionsJs(captionsData), 'Bildtext sparad'); }
 function savePositionsJs() { return saveTextFile('positions.js', renderPositionsJs(positionsData), 'Bildutsnitt sparat'); }
 function savePortfolioJs() { return saveTextFile('portfolio.js', renderPortfolioJs(portfolioItems), 'Portfolio sparad'); }
+function savePhotoFilterJs() { return saveTextFile('photofilter.js', renderPhotoFilterJs(photoFilterData), 'Bildfilter sparat'); }
 
 async function getPortfolioDirHandle(create) {
   if (!dirHandle) return null;
@@ -614,7 +643,9 @@ window.addEventListener('message', (ev) => {
     captionsData = Object.assign({}, msg.captions || {});
     positionsData = Object.assign({}, msg.positions || {});
     portfolioItems = (msg.portfolio || []).slice();
+    photoFilterData = Object.assign({ contrast: 1, gold: 1 }, msg.photofilter || {});
     updateProgressSummary();
+    setPhotoFilterSliders(photoFilterData);
   } else if (msg.type === 'bc-content-change') {
     handleContentChange(msg);
   } else if (msg.type === 'bc-caption-change') {
@@ -629,6 +660,37 @@ window.addEventListener('message', (ev) => {
     handlePortfolioUpdate(msg);
   }
 });
+
+// ---------- reglage: kontrast & guld för alla fotografiska bilder/video ----------
+const contrastSlider = document.getElementById('contrastSlider');
+const goldSlider = document.getElementById('goldSlider');
+const contrastValue = document.getElementById('contrastValue');
+const goldValue = document.getElementById('goldValue');
+
+function setPhotoFilterSliders(data) {
+  contrastSlider.value = data.contrast;
+  goldSlider.value = data.gold;
+  contrastValue.textContent = Number(data.contrast).toFixed(2);
+  goldValue.textContent = Math.round(Number(data.gold) * 100) + '%';
+}
+
+function previewPhotoFilter() {
+  const contrast = parseFloat(contrastSlider.value);
+  const gold = parseFloat(goldSlider.value);
+  contrastValue.textContent = contrast.toFixed(2);
+  goldValue.textContent = Math.round(gold * 100) + '%';
+  iframe.contentWindow.postMessage({ type: 'bc-photofilter-change', contrast, gold }, '*');
+}
+
+function commitPhotoFilter() {
+  photoFilterData = { contrast: parseFloat(contrastSlider.value), gold: parseFloat(goldSlider.value) };
+  savePhotoFilterJs();
+}
+
+contrastSlider.addEventListener('input', previewPhotoFilter);
+goldSlider.addEventListener('input', previewPhotoFilter);
+contrastSlider.addEventListener('change', commitPhotoFilter);
+goldSlider.addEventListener('change', commitPhotoFilter);
 
 iframe.addEventListener('load', () => {
   portfolioDirHandle = null;

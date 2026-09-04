@@ -233,7 +233,7 @@
     align-items: flex-end;
     padding: 22px;
     overflow: hidden;
-    filter: url(#goldDuotone);
+    filter: url(#goldDuotone) contrast(var(--photo-contrast, 1));
   }
   .plate.tall { aspect-ratio: 3 / 4; }
   .plate video {
@@ -341,7 +341,7 @@
     background-color: var(--bg-soft);
     overflow: hidden;
   }
-  .project-media img { width: 100%; height: 100%; object-fit: cover; display: block; filter: url(#goldDuotone); }
+  .project-media img { width: 100%; height: 100%; object-fit: cover; display: block; filter: url(#goldDuotone) contrast(var(--photo-contrast, 1)); }
   .project-body h3 {
     font-size: clamp(1.3rem, 2.6vw, 1.65rem);
     margin-bottom: 16px;
@@ -525,12 +525,33 @@
                                           0.2126 0.7152 0.0722 0 0
                                           0 0 0 1 0"/>
     <feComponentTransfer>
-      <feFuncR type="table" tableValues="0.0471 0.8784"/>
-      <feFuncG type="table" tableValues="0.0431 0.7412"/>
-      <feFuncB type="table" tableValues="0.0353 0.3333"/>
+      <feFuncR id="goldDuotoneR" type="table" tableValues="0.0471 0.8784"/>
+      <feFuncG id="goldDuotoneG" type="table" tableValues="0.0431 0.7412"/>
+      <feFuncB id="goldDuotoneB" type="table" tableValues="0.0353 0.3333"/>
     </feComponentTransfer>
   </filter>
 </svg>
+<script>
+  // Reglagen "Kontrast" och "Guld" i redigeringsverktyget styr detta:
+  // kontrast är en vanlig CSS contrast(), "guld" är hur mycket duotonen
+  // (svart/vitt -> sajtens bakgrundsfärg/guld-light) blandas in ovanpå
+  // vanlig gråskala. gold=0 ger ren gråskala, gold=1 ger full guldton.
+  function bcApplyPhotoFilter(contrast, gold) {
+    var c = (typeof contrast === 'number' && !isNaN(contrast)) ? contrast : 1;
+    var g = (typeof gold === 'number' && !isNaN(gold)) ? Math.max(0, Math.min(1, gold)) : 1;
+    document.documentElement.style.setProperty('--photo-contrast', c);
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function setTable(id, bgVal, goldVal) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.setAttribute('tableValues', lerp(0, bgVal, g).toFixed(4) + ' ' + lerp(1, goldVal, g).toFixed(4));
+    }
+    setTable('goldDuotoneR', 0.0471, 0.8784);
+    setTable('goldDuotoneG', 0.0431, 0.7412);
+    setTable('goldDuotoneB', 0.0353, 0.3333);
+  }
+  window.bcApplyPhotoFilter = bcApplyPhotoFilter;
+</script>
 
 <!-- Topplist -->
 <div class="topbar">
@@ -907,6 +928,17 @@
 
 <!-- Portfolio: skrivs av verktyg/bilduppladdare.html. Saknas filen eller är listan
      tom visas hela sektionen inte alls (utom i redigeringsläge, se nedan). -->
+<!-- Bildfilter: kontrast och mängd guld på fotografiska bilder/video, satt via
+     reglagen i redigeringsverktyget. Saknas filen används full guldton (ingen
+     ändring mot tidigare) utan extra kontrast. -->
+<script src="bilder/photofilter.js"></script>
+<script>
+  (function () {
+    var pf = (typeof PHOTO_FILTER === 'object' && PHOTO_FILTER) ? PHOTO_FILTER : { contrast: 1, gold: 1 };
+    window.bcApplyPhotoFilter(pf.contrast, pf.gold);
+  })();
+</script>
+
 <script src="bilder/portfolio.js"></script>
 <script>
   var bcPortfolioItems = (typeof PORTFOLIO_ITEMS !== 'undefined' && Array.isArray(PORTFOLIO_ITEMS))
@@ -1313,7 +1345,8 @@
       captions: (typeof PLATE_CAPTIONS === 'object' && PLATE_CAPTIONS) ? PLATE_CAPTIONS : captionsSnapshot,
       captionDefaults: captionsSnapshot,
       positions: (typeof PLATE_POSITIONS === 'object' && PLATE_POSITIONS) ? PLATE_POSITIONS : {},
-      portfolio: bcPortfolioItems
+      portfolio: bcPortfolioItems,
+      photofilter: (typeof PHOTO_FILTER === 'object' && PHOTO_FILTER) ? PHOTO_FILTER : { contrast: 1, gold: 1 }
     });
   }
 
@@ -1325,6 +1358,8 @@
     } else if (msg.type === 'bc-image-saved') {
       if (msg.kind === 'plate') bcApplyPlateImage(msg);
       else if (msg.kind === 'portfolio') bcApplyPortfolioImage(msg);
+    } else if (msg.type === 'bc-photofilter-change') {
+      window.bcApplyPhotoFilter(msg.contrast, msg.gold);
     }
   });
 
