@@ -821,6 +821,28 @@
     }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
     els.forEach(function (el) { obs.observe(el); });
   })();
+  // Vissa mobilwebbläsare (t.ex. vid strömsparläge) startar inte
+  // autoplay-videor automatiskt bara för att attributet finns, utan
+  // vill ha ett uttryckligt play()-anrop när elementet syns på skärmen.
+  (function () {
+    var videos = document.querySelectorAll('.plate video');
+    if (!videos.length) return;
+    if (!('IntersectionObserver' in window)) {
+      videos.forEach(function (v) { v.play().catch(function () {}); });
+      return;
+    }
+    var vObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        var v = e.target;
+        if (e.isIntersecting) {
+          v.play().catch(function () {});
+        } else {
+          v.pause();
+        }
+      });
+    }, { threshold: 0.25 });
+    videos.forEach(function (v) { vObs.observe(v); });
+  })();
 </script>
 
 <!-- Sajttexter: skrivs av verktyg/bilduppladdare.html, saknas filen visas texten i koden ovan som fallback -->
