@@ -191,12 +191,37 @@ function updateProgressSummary() {
 }
 
 // ---------- bildskalning (delas av bildplattor och portfoliobilder) ----------
+async function convertImageViaServer(file) {
+  let resp;
+  try {
+    resp = await fetch('/convert-image', {
+      method: 'POST',
+      headers: { 'X-Filename': file.name || '' },
+      body: file,
+    });
+  } catch (e) {
+    throw new Error('Ingen lokal konverteringsserver tillganglig (kör "sajt" via terminalen, inte genom att öppna filen direkt).');
+  }
+  if (!resp.ok) {
+    const text = await resp.text().catch(() => '');
+    throw new Error(text || ('Serverkonvertering misslyckades (' + resp.status + ')'));
+  }
+  return await resp.blob();
+}
+
 async function resizeToJpeg(file) {
   let bitmap;
   try {
     bitmap = await createImageBitmap(file);
   } catch (e) {
-    throw new Error('Kunde inte läsa bilden. Spara som JPG eller PNG och försök igen.');
+    // Chrome kan inte avkoda t.ex. HEIC/HEIF (standardformatet på iPhone-foton)
+    // - försök konvertera via den lokala servern (macOS inbyggda "sips") istället.
+    try {
+      const converted = await convertImageViaServer(file);
+      bitmap = await createImageBitmap(converted);
+    } catch (e2) {
+      throw new Error('Kunde inte läsa bilden (' + (e2.message || e2) + '). Spara som JPG eller PNG och försök igen.');
+    }
   }
   const scale = Math.min(1, MAX_DIM / Math.max(bitmap.width, bitmap.height));
   const w = Math.round(bitmap.width * scale);
