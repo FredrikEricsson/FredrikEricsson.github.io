@@ -1,4 +1,4 @@
 var PHOTO_FILTER = {
-  "contrast": 1,
-  "gold": 1
+  "contrast": 0.92,
+  "gold": 0.51
 };
