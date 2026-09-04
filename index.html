@@ -233,7 +233,7 @@
     align-items: flex-end;
     padding: 22px;
     overflow: hidden;
-    filter: grayscale(1) sepia(0.35);
+    filter: url(#goldDuotone);
   }
   .plate.tall { aspect-ratio: 3 / 4; }
   .plate video {
@@ -341,7 +341,7 @@
     background-color: var(--bg-soft);
     overflow: hidden;
   }
-  .project-media img { width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(1) sepia(0.35); }
+  .project-media img { width: 100%; height: 100%; object-fit: cover; display: block; filter: url(#goldDuotone); }
   .project-body h3 {
     font-size: clamp(1.3rem, 2.6vw, 1.65rem);
     margin-bottom: 16px;
@@ -518,6 +518,19 @@
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="goldDuotone" color-interpolation-filters="sRGB">
+    <feColorMatrix type="matrix" values="0.2126 0.7152 0.0722 0 0
+                                          0.2126 0.7152 0.0722 0 0
+                                          0.2126 0.7152 0.0722 0 0
+                                          0 0 0 1 0"/>
+    <feComponentTransfer>
+      <feFuncR type="table" tableValues="0.0471 0.8784"/>
+      <feFuncG type="table" tableValues="0.0431 0.7412"/>
+      <feFuncB type="table" tableValues="0.0353 0.3333"/>
+    </feComponentTransfer>
+  </filter>
+</svg>
 
 <!-- Topplist -->
 <div class="topbar">
